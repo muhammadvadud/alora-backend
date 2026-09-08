@@ -83,7 +83,7 @@ Model ichida DB bilan bog'liq bo'lmagan hisob-kitob yozilmaydi.
 1. Barcha yo'llar: `/api/v1/...`. Versiya URL'da.
 2. Autentifikatsiya: JWT Bearer. `access` 15 daqiqa, `refresh` 30 kun, rotation + blacklist yoqilgan.
 3. Trailing slash saqlanadi (`/orders/`), DRF default'i bilan mos.
-5. **URL'lar `DefaultRouter` orqali ro'yxatdan o'tadi.** Har bir app'ning `urls.py` sida
+4. **URL'lar `DefaultRouter` orqali ro'yxatdan o'tadi.** Har bir app'ning `urls.py` sida
    `router = DefaultRouter()` yaratilib, ViewSet'lar `router.register(...)` bilan ulanadi;
    `config/urls.py` esa app router'larini `include()` qiladi. Qo'lda `path()` yozish faqat
    ViewSet'ga sig'maydigan alohida view'lar uchun (masalan SSE gateway, `/calc/preview/`)
