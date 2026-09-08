@@ -8,6 +8,45 @@
 
 ---
 
+## 0. QAT'IY QONUN (buzilishi mumkin emas)
+
+> Bu bo'lim boshqa hamma narsadan ustun. Quyidagi qoidalarni buzgan kod
+> **qabul qilinmaydi** — review'dan o'tmaydi, merge qilinmaydi, commit qilinmaydi.
+
+1. **`rules.md` dan chiqib ketish qat'iyan taqiqlanadi.** Bu hujjatda belgilangan
+   arxitektura, tuzilma, nomlash, qatlamlar taqsimoti va texnologiya tanlovidan
+   chetga chiqish — hech qanday bahona bilan ruxsat etilmaydi. "Tezroq bo'lardi",
+   "vaqtinchalik", "keyin tuzataman" — qabul qilinmaydigan sabablar.
+
+2. **Arxitekturani o'zboshimchalik bilan o'zgartirish taqiqlanadi.** Yangi app,
+   yangi qatlam, yangi tashqi bog'liqlik, yangi ma'lumotlar ombori yoki
+   TZ'da yo'q servis qo'shish — faqat oldindan kelishilgandan **va** shu faylga
+   yozib qo'yilgandan keyin.
+
+3. **TZ doirasidan chiqish taqiqlanadi.** `plan/01-BACKEND-TZ.md` da bo'lmagan
+   funksiya o'ylab topilmaydi va yozilmaydi. TZ'da bor narsa esa qisqartirilmaydi.
+   Kamchilik topilsa — kod yozilmaydi, avval savol beriladi.
+
+4. **Qatlamlar buzilmaydi.** `views.py` da biznes-mantiq, `models.py` da hisob-kitob,
+   `services.py` da HTTP bilan ishlash — taqiqlanadi. Ma'lumot oqimi faqat
+   `view → service → selector/model` yo'nalishida boradi.
+
+5. **Yagona manba buzilmaydi.** Hisob formulasi faqat `calculator.py` da,
+   koeffitsient faqat bazada, gRPC shartnoma faqat `protos/alora.proto` da.
+   Ikkinchi nusxa yaratish — taqiqlanadi.
+
+6. **Test o'tmagan ish "bajarildi" deb belgilanmaydi** va commit qilinmaydi.
+
+7. **Ziddiyat bo'lsa tartib shunday:** TZ > `rules.md` > shaxsiy fikr.
+   `rules.md` ni o'zgartirish kerak bo'lsa — avval shu fayl tahrirlanadi,
+   sabab yoziladi, keyin kod yoziladi. Teskarisi emas.
+
+**Chetga chiqish qanday rasmiylashtiriladi:** o'zgarish sababi, ta'sir doirasi va
+muqobil variantlar yozilib, `rules.md` ga kiritiladi va alohida commit qilinadi.
+Yozilmagan chetga chiqish — mavjud emas, ya'ni xato hisoblanadi.
+
+---
+
 ## 1. Umumiy tamoyillar
 
 1. **Source of truth bitta.** Mahsulot, narx, koeffitsient va bilimlar bazasi faqat Django'da yashaydi. Go agent nusxa (cache) bilan ishlaydi.
