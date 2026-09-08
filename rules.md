@@ -83,10 +83,20 @@ Model ichida DB bilan bog'liq bo'lmagan hisob-kitob yozilmaydi.
 1. Barcha yo'llar: `/api/v1/...`. Versiya URL'da.
 2. Autentifikatsiya: JWT Bearer. `access` 15 daqiqa, `refresh` 30 kun, rotation + blacklist yoqilgan.
 3. Trailing slash saqlanadi (`/orders/`), DRF default'i bilan mos.
-4. **Pagination:** barcha ro'yxatlar cursor-pagination (`apps.common.pagination.StandardCursorPagination`), default 20, max 100.
-5. **Filtr va qidiruv:** `django-filter` + `?search=`. Har bir ro'yxat endpointida `search` bo'ladi.
-6. **PATCH qisman yangilashni** qo'llab-quvvatlaydi (mobil formdan faqat o'zgargan maydon keladi).
-7. **Xato formati yagona** (`apps.common.exceptions.custom_exception_handler`):
+5. **URL'lar `DefaultRouter` orqali ro'yxatdan o'tadi.** Har bir app'ning `urls.py` sida
+   `router = DefaultRouter()` yaratilib, ViewSet'lar `router.register(...)` bilan ulanadi;
+   `config/urls.py` esa app router'larini `include()` qiladi. Qo'lda `path()` yozish faqat
+   ViewSet'ga sig'maydigan alohida view'lar uchun (masalan SSE gateway, `/calc/preview/`)
+   ruxsat etiladi va `router.urls` dan **keyin** qo'shiladi.
+   - `basename` har doim aniq beriladi: `router.register("products", ProductViewSet, basename="product")`.
+   - Qo'shimcha amallar (`confirm`, `status`, `bulk-price`, `rollback`) `@action` dekoratori
+     orqali o'sha ViewSet ichida yoziladi — alohida view yaratilmaydi.
+   - Ichma-ich resurslar (`/products/{id}/images/`) `@action(detail=True)` yoki
+     `drf-nested-routers` bilan beriladi, URL qo'lda yopishtirilmaydi.
+5. **Pagination:** barcha ro'yxatlar cursor-pagination (`apps.common.pagination.StandardCursorPagination`), default 20, max 100.
+6. **Filtr va qidiruv:** `django-filter` + `?search=`. Har bir ro'yxat endpointida `search` bo'ladi.
+7. **PATCH qisman yangilashni** qo'llab-quvvatlaydi (mobil formdan faqat o'zgargan maydon keladi).
+8. **Xato formati yagona** (`apps.common.exceptions.custom_exception_handler`):
 
 ```json
 {
@@ -97,10 +107,10 @@ Model ichida DB bilan bog'liq bo'lmagan hisob-kitob yozilmaydi.
 ```
 
    Validatsiya xatolari **maydon bo'yicha** qaytadi — mobil ilova formda ko'rsatadi.
-8. Xato matnlari **o'zbek tilida** (i18n uz/ru tayyorlab qo'yiladi).
-9. Serializer ikkiga bo'linadi: `XxxReadSerializer` (nested, o'qish) va `XxxWriteSerializer` (yassi, yozish). N+1 ni oldini olish uchun `select_related` / `prefetch_related` selektorda beriladi.
-10. `cost_price` (tannarx) **hech qachon** employee/manager javobiga tushmaydi va AI'ga yuborilmaydi — faqat `admin` roli ko'radi. Buni serializer darajasida test bilan qopla.
-11. Rasm yuklashda server avtomatik siqadi: thumbnail 300px, to'liq 1200px (Celery task).
+9. Xato matnlari **o'zbek tilida** (i18n uz/ru tayyorlab qo'yiladi).
+10. Serializer ikkiga bo'linadi: `XxxReadSerializer` (nested, o'qish) va `XxxWriteSerializer` (yassi, yozish). N+1 ni oldini olish uchun `select_related` / `prefetch_related` selektorda beriladi.
+11. `cost_price` (tannarx) **hech qachon** employee/manager javobiga tushmaydi va AI'ga yuborilmaydi — faqat `admin` roli ko'radi. Buni serializer darajasida test bilan qopla.
+12. Rasm yuklashda server avtomatik siqadi: thumbnail 300px, to'liq 1200px (Celery task).
 
 ---
 
