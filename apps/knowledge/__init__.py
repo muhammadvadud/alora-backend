@@ -1,0 +1,1 @@
+"""Bilimlar bazasi ilovasi."""

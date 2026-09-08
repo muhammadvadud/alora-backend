@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 68 / 189 bajarildi (3 jarayonda)
+**Umumiy holat:** 96 / 189 bajarildi (3 jarayonda)
 
 ---
 
@@ -82,37 +82,37 @@
 
 ## Bosqich 4 — `apps/pricing` (narx va hisob)
 
-- [ ] 4.1 `CalcRule` — key, value, unit, description, applies_to
-- [ ] 4.2 `ServicePrice` — sewing, install, delivery, tape, hook, weight_tape
-- [ ] 4.3 `DiscountTier` — min_amount, percent
-- [ ] 4.4 `DiscountPolicy` — qo'lda chegirma chegaralari, stack_with_tier
-- [ ] 4.5 `OrderDefaults` — prepayment_percent, delivery_amount, deadline_days
-- [ ] 4.6 `ModelPricing` — LLM narxlari va usd_to_uzs kursi
-- [ ] 4.7 Boshlang'ich qiymatlar migratsiyasi (coef_default, seam_allowance, hem_allowance, hook_step, round_area_to, round_total_to, min_order_amount, waste_warn_percent)
-- [ ] 4.8 `calculator.py` — yuza hisobi (bo'lak, koeffitsient, zapas)
-- [ ] 4.9 Narx birligi bo'yicha hisob: `per_sqm`, `per_piece`, `per_meter`
-- [ ] 4.10 Chiqindi (waste) hisobi va `waste_warn_percent` ogohlantirishi
-- [ ] 4.11 Xizmat qatorlari hisobi (tikuv, montaj, tasma, ilgich, yetkazish)
-- [ ] 4.12 Chegirma qo'llash: tier tanlash + qo'lda chegirma chegarasi
-- [ ] 4.13 Yaxlitlash tartibi (yuza → qator → jami)
-- [ ] 4.14 `POST /calc/preview/` endpointi
-- [ ] 4.15 `GET/PATCH /pricing/calc-rules/`
-- [ ] 4.16 `GET/PATCH /pricing/services/`
-- [ ] 4.17 `GET/POST/PATCH/DELETE /pricing/discount-tiers/`
-- [ ] 4.18 `GET/PATCH /pricing/discount-policy/`
-- [ ] 4.19 `GET/PATCH /pricing/order-defaults/`
-- [ ] 4.20 `ModelPricing` CRUD (faqat admin)
-- [ ] 4.21 `tests/fixtures/calc_cases.json` — 20 ta etalon misol (Go bilan umumiy)
-- [ ] 4.22 Etalon testlar: 20 misol 1:1 mos kelishi
-- [ ] 4.23 Chekka holat testlari: 10 bo'lakli parda, nol o'lcham, manfiy narx
+- [x] 4.1 `CalcRule` — key, value, unit, description, applies_to
+- [x] 4.2 `ServicePrice` — sewing, install, delivery, tape, hook, weight_tape
+- [x] 4.3 `DiscountTier` — min_amount, percent
+- [x] 4.4 `DiscountPolicy` — qo'lda chegirma chegaralari, stack_with_tier
+- [x] 4.5 `OrderDefaults` — prepayment_percent, delivery_amount, deadline_days
+- [x] 4.6 `ModelPricing` — LLM narxlari va usd_to_uzs kursi
+- [x] 4.7 Boshlang'ich qiymatlar migratsiyasi (coef_default, seam_allowance, hem_allowance, hook_step, round_area_to, round_total_to, min_order_amount, waste_warn_percent)
+- [x] 4.8 `calculator.py` — yuza hisobi (bo'lak, koeffitsient, zapas)
+- [x] 4.9 Narx birligi bo'yicha hisob: `per_sqm`, `per_piece`, `per_meter`
+- [x] 4.10 Chiqindi (waste) hisobi va `waste_warn_percent` ogohlantirishi
+- [x] 4.11 Xizmat qatorlari hisobi (tikuv, montaj, tasma, ilgich, yetkazish)
+- [x] 4.12 Chegirma qo'llash: tier tanlash + qo'lda chegirma chegarasi
+- [x] 4.13 Yaxlitlash tartibi (yuza → qator → jami)
+- [x] 4.14 `POST /calc/preview/` endpointi
+- [x] 4.15 `GET/PATCH /pricing/calc-rules/`
+- [x] 4.16 `GET/PATCH /pricing/services/`
+- [x] 4.17 `GET/POST/PATCH/DELETE /pricing/discount-tiers/`
+- [x] 4.18 `GET/PATCH /pricing/discount-policy/`
+- [x] 4.19 `GET/PATCH /pricing/order-defaults/`
+- [x] 4.20 `ModelPricing` CRUD (faqat admin)
+- [x] 4.21 `tests/fixtures/calc_cases.json` — 20 ta etalon misol (Go bilan umumiy)
+- [x] 4.22 Etalon testlar: 20 misol 1:1 mos kelishi
+- [x] 4.23 Chekka holat testlari: 10 bo'lakli parda, nol o'lcham, manfiy narx
 
 ## Bosqich 5 — `apps/knowledge` (sotuv bilimlari)
 
-- [ ] 5.1 `KnowledgeRule` — kind, condition (JSON), recommendation, priority
-- [ ] 5.2 `GET/POST/PATCH/DELETE /knowledge/rules/` (manager+)
-- [ ] 5.3 Shartga mos qoidalarni tanlash selektori (priority bo'yicha)
-- [ ] 5.4 Go'ga sinxronlash uchun serializatsiya formati
-- [ ] 5.5 Testlar: shart moslashuvi, ustuvorlik tartibi
+- [x] 5.1 `KnowledgeRule` — kind, condition (JSON), recommendation, priority
+- [x] 5.2 `GET/POST/PATCH/DELETE /knowledge/rules/` (manager+)
+- [x] 5.3 Shartga mos qoidalarni tanlash selektori (priority bo'yicha)
+- [x] 5.4 Go'ga sinxronlash uchun serializatsiya formati
+- [x] 5.5 Testlar: shart moslashuvi, ustuvorlik tartibi
 
 ## Bosqich 6 — gRPC shartnoma va klient
 
