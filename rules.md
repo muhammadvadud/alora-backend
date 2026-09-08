@@ -232,6 +232,11 @@ Ketma-ketlik qat'iy (TZ 5.2):
 
 ## 10. Kod sifati
 
+0. **Bog'liqliklar manbai — `pyproject.toml`.** Paket qo'shish yoki o'chirish faqat shu
+   fayl orqali. `requirements.txt` va `requirements-dev.txt` undan generatsiya qilinadi
+   (`.venv/bin/python scripts/gen_requirements.py`) va **qo'lda tahrirlanmaydi** — ular
+   Docker va CI uchun qadalgan (pinned) nusxa. pyproject o'zgarsa ikkalasi qayta yoziladi.
+
 1. **Format:** `ruff format` (line-length 100). **Lint:** `ruff check`. **Tip:** `mypy` (django-stubs, `strict_optional`).
 2. `pre-commit` majburiy: ruff, ruff-format, mypy, migratsiya tekshiruvi, `detect-secrets`.
 3. Type hint — barcha `services.py` va `selectors.py` funksiyalarida majburiy.
