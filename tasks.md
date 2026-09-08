@@ -10,32 +10,32 @@
 
 ## Bosqich 0 — Poydevor (infratuzilma)
 
-- [ ] 0.1 Repo boshlanishi: `.gitignore`, `README.md`, `LICENSE`, `.editorconfig`
-- [ ] 0.2 `pyproject.toml` — Python 3.12, bog'liqliklar, ruff/mypy/pytest sozlamalari
-- [ ] 0.3 Django 5.x loyihasi: `config/` + `settings/{base,dev,prod}.py`
-- [ ] 0.4 `.env.example` va `django-environ` orqali sozlash
-- [ ] 0.5 PostgreSQL 16 ulanishi va `dj_database_url`
-- [ ] 0.6 Redis ulanishi (cache + Celery broker + pub/sub)
-- [ ] 0.7 `config/celery.py` — app, navbatlar (`default`, `usage`, `heavy`), beat jadvali
-- [ ] 0.8 ASGI sozlash (`config/asgi.py`, Uvicorn)
-- [ ] 0.9 `structlog` JSON logging + Sentry
-- [ ] 0.10 `pre-commit`: ruff, ruff-format, mypy, detect-secrets, migratsiya tekshiruvi
-- [ ] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)
-- [ ] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server
-- [ ] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate
-- [ ] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)
+- [~] 0.1 Repo boshlanishi: `.gitignore`, `README.md`, `LICENSE`, `.editorconfig`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.2 `pyproject.toml` — Python 3.13, bog'liqliklar, ruff/mypy/pytest sozlamalari  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.3 Django 5.x loyihasi: `config/` + `settings/{base,dev,prod}.py`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.4 `.env.example` va `django-environ` orqali sozlash  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.5 PostgreSQL 16 ulanishi va `dj_database_url`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.6 Redis ulanishi (cache + Celery broker + pub/sub)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.7 `config/celery.py` — app, navbatlar (`default`, `usage`, `heavy`), beat jadvali  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.8 ASGI sozlash (`config/asgi.py`, Uvicorn)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.9 `structlog` JSON logging + Sentry  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.10 `pre-commit`: ruff, ruff-format, mypy, detect-secrets, migratsiya tekshiruvi  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate  — kod yozildi, tekshiruv kutilmoqda
+- [~] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)  — kod yozildi, tekshiruv kutilmoqda
 
 ## Bosqich 1 — `apps/common` (umumiy poydevor)
 
-- [ ] 1.1 `BaseModel` — UUID pk, `created_at`, `updated_at`, `is_active`
-- [ ] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)
-- [ ] 1.3 `StandardCursorPagination` (default 20, max 100)
-- [ ] 1.4 Yagona xato formati: `custom_exception_handler` + `errors` maydoni
-- [ ] 1.5 Rol permission klasslari: `IsEmployee`, `IsManager`, `IsAdmin`, `IsOwnerOrManager`
-- [ ] 1.6 Umumiy `TextChoices` to'plamlari (role, price_unit, part_role, status)
-- [ ] 1.7 `factory_boy` bazaviy fabrikalar va `conftest.py`
-- [ ] 1.8 i18n karkasi (uz asosiy, ru zaxira), xato matnlari o'zbekcha
-- [ ] 1.9 Testlar: pagination, xato formati, tenant scoping
+- [~] 1.1 `BaseModel` — UUID pk, `created_at`, `updated_at`, `is_active`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.3 `StandardCursorPagination` (default 20, max 100)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.4 Yagona xato formati: `custom_exception_handler` + `errors` maydoni  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.5 Rol permission klasslari: `IsEmployee`, `IsManager`, `IsAdmin`, `IsOwnerOrManager`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.6 Umumiy `TextChoices` to'plamlari (role, price_unit, part_role, status)  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.7 `factory_boy` bazaviy fabrikalar va `conftest.py`  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.8 i18n karkasi (uz asosiy, ru zaxira), xato matnlari o'zbekcha  — kod yozildi, tekshiruv kutilmoqda
+- [~] 1.9 Testlar: pagination, xato formati, tenant scoping  — kod yozildi, tekshiruv kutilmoqda
 
 ## Bosqich 2 — `apps/accounts` (auth va rollar)
 

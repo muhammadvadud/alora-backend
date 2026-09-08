@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Django loyihasi paket sifatida tarqatilmaydi, faqat bog'liqliklar uchun
+packages = ["apps", "config"]
+
+[project]
+name = "alora-backend"
+version = "0.1.0"
+description = "Alora backend loyihasi"
+requires-python = ">=3.13"
+dependencies = [
+    "django==5.*",
+    "djangorestframework",
+    "djangorestframework-simplejwt",
+    "django-filter",
+    "psycopg[binary]",
+    "dj-database-url",
+    "redis",
+    "celery",
+    "django-environ",
+    "structlog",
+    "sentry-sdk",
+    "grpcio",
+    "grpcio-tools",
+    "drf-spectacular",
+    "Pillow",
+    "argon2-cffi",
+    "uvicorn",
+    "gunicorn"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    "factory-boy",
+    "ruff",
+    "mypy",
+    "django-stubs",
+    "djangorestframework-stubs",
+    "pre-commit",
+    "pip-audit"
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "migrations"
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict_optional = true
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+exclude = ["migrations/", "venv/", ".venv/"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.dev"
+python_files = ["test_*.py", "*_test.py"]
+addopts = "--nomigrations --cov=. --cov-report=html"

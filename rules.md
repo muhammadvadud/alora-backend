@@ -4,7 +4,7 @@
 > Kod yozayotgan har bir dasturchi (yoki AI agent) shu qoidalarga rioya qiladi.
 > Qoida bilan TZ ziddiyatga tushsa — TZ ustun, ammo o'zgarish shu faylga ham kiritiladi.
 
-**Stack:** Python 3.12 · Django 5.x · DRF · PostgreSQL 16 · Redis · Celery · grpcio · Uvicorn (ASGI)
+**Stack:** Python 3.13 · Django 5.x · DRF · PostgreSQL 16 · Redis · Celery · grpcio · Uvicorn (ASGI)
 
 ---
 
@@ -327,3 +327,29 @@ tannarx maydoni faqat admin uchun ochiq qilindi.
 2. Ish tugab, test o'tgach `[x]` qilinadi va yoniga qisqa izoh yoziladi.
 3. Shu o'zgarish **ish commit'ining ichida** ketadi — alohida "tasks yangilandi" commit'i qilinmaydi.
 4. Yangi ish paydo bo'lsa `tasks.md` ga tegishli bosqichga qo'shiladi, o'ylab topilgan ish qo'shilmaydi.
+
+---
+
+## 17. Kelishilgan chetlanishlar (jurnal)
+
+> 0-bo'lim 7-bandiga ko'ra TZ yoki qoidadan har qanday chetlanish shu yerga yoziladi.
+> Yozilmagan chetlanish — xato hisoblanadi.
+
+### 17.1 Python 3.12 → 3.13 (2026-09-08)
+
+**Chetlanish:** TZ (`plan/01-BACKEND-TZ.md`) Python 3.12 ni ko'rsatadi, loyiha esa
+Python 3.13 da quriladi.
+
+**Sabab:** ishlab chiqish mashinasida 3.12 mavjud emas (faqat 3.13 va 3.14). Lokal muhit
+3.13, Docker esa 3.12 bo'lsa — ikki xil muhit paydo bo'ladi va "menda ishlaydi" xatolari
+kelib chiqadi. Muhit bir xil bo'lishi kod xavfsizligidan muhimroq deb topildi.
+
+**Ta'sir doirasi:** `pyproject.toml` (`requires-python`, ruff `target-version`,
+mypy `python_version`), `docker/Dockerfile`, `.github/workflows/ci.yml`, `README.md`.
+Django 5.x va boshqa bog'liqliklar 3.13 ni to'liq qo'llab-quvvatlaydi, kod o'zgarishi
+talab qilinmadi.
+
+**Muqobil variantlar:** (a) mashinaga 3.12 o'rnatish — qo'shimcha ish, foydasi yo'q;
+(b) lokal 3.13 / Docker 3.12 — rad etildi, muhitlar farqi xavfli.
+
+**Qaror:** hamma joyda 3.13. Foydalanuvchi tomonidan tasdiqlangan.
