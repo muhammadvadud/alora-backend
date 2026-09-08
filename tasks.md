@@ -4,81 +4,81 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 0 / 149 bajarildi
+**Umumiy holat:** 68 / 189 bajarildi (3 jarayonda)
 
 ---
 
 ## Bosqich 0 — Poydevor (infratuzilma)
 
-- [~] 0.1 Repo boshlanishi: `.gitignore`, `README.md`, `LICENSE`, `.editorconfig`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.2 `pyproject.toml` — Python 3.13, bog'liqliklar, ruff/mypy/pytest sozlamalari  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.3 Django 5.x loyihasi: `config/` + `settings/{base,dev,prod}.py`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.4 `.env.example` va `django-environ` orqali sozlash  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.5 PostgreSQL 16 ulanishi va `dj_database_url`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.6 Redis ulanishi (cache + Celery broker + pub/sub)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.7 `config/celery.py` — app, navbatlar (`default`, `usage`, `heavy`), beat jadvali  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.8 ASGI sozlash (`config/asgi.py`, Uvicorn)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.9 `structlog` JSON logging + Sentry  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.10 `pre-commit`: ruff, ruff-format, mypy, detect-secrets, migratsiya tekshiruvi  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate  — kod yozildi, tekshiruv kutilmoqda
-- [~] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)  — kod yozildi, tekshiruv kutilmoqda
+- [x] 0.1 Repo boshlanishi: `.gitignore`, `README.md`, `LICENSE`, `.editorconfig`
+- [x] 0.2 `pyproject.toml` — Python 3.13, bog'liqliklar, ruff/mypy/pytest sozlamalari
+- [x] 0.3 Django 5.x loyihasi: `config/` + `settings/{base,dev,prod}.py`
+- [x] 0.4 `.env.example` va `django-environ` orqali sozlash
+- [x] 0.5 PostgreSQL 16 ulanishi va `dj_database_url`
+- [x] 0.6 Redis ulanishi (cache + Celery broker + pub/sub)
+- [x] 0.7 `config/celery.py` — app, navbatlar (`default`, `usage`, `heavy`), beat jadvali
+- [x] 0.8 ASGI sozlash (`config/asgi.py`, Uvicorn)
+- [x] 0.9 `structlog` JSON logging + Sentry
+- [x] 0.10 `pre-commit`: ruff, ruff-format, mypy, detect-secrets, migratsiya tekshiruvi
+- [x] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)
+- [x] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server
+- [~] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
+- [x] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)
 
 ## Bosqich 1 — `apps/common` (umumiy poydevor)
 
-- [~] 1.1 `BaseModel` — UUID pk, `created_at`, `updated_at`, `is_active`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.3 `StandardCursorPagination` (default 20, max 100)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.4 Yagona xato formati: `custom_exception_handler` + `errors` maydoni  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.5 Rol permission klasslari: `IsEmployee`, `IsManager`, `IsAdmin`, `IsOwnerOrManager`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.6 Umumiy `TextChoices` to'plamlari (role, price_unit, part_role, status)  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.7 `factory_boy` bazaviy fabrikalar va `conftest.py`  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.8 i18n karkasi (uz asosiy, ru zaxira), xato matnlari o'zbekcha  — kod yozildi, tekshiruv kutilmoqda
-- [~] 1.9 Testlar: pagination, xato formati, tenant scoping  — kod yozildi, tekshiruv kutilmoqda
+- [x] 1.1 `BaseModel` — UUID pk, `created_at`, `updated_at`, `is_active`
+- [x] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)
+- [x] 1.3 `StandardCursorPagination` (default 20, max 100)
+- [x] 1.4 Yagona xato formati: `custom_exception_handler` + `errors` maydoni
+- [x] 1.5 Rol permission klasslari: `IsEmployee`, `IsManager`, `IsAdmin`, `IsOwnerOrManager`
+- [x] 1.6 Umumiy `TextChoices` to'plamlari (role, price_unit, part_role, status)
+- [x] 1.7 `factory_boy` bazaviy fabrikalar va `conftest.py`
+- [x] 1.8 i18n karkasi (uz asosiy, ru zaxira), xato matnlari o'zbekcha
+- [x] 1.9 Testlar: pagination, xato formati, tenant scoping
 
 ## Bosqich 2 — `apps/accounts` (auth va rollar)
 
-- [ ] 2.1 `Tenant` modeli (name, address, phone, currency, timezone)
-- [ ] 2.2 `User` modeli (`AbstractBaseUser`, phone login, role, tenant, device_id)
-- [ ] 2.3 `UserManager` — `create_user`, `create_superuser`
-- [ ] 2.4 JWT sozlash: access 15 daq, refresh 30 kun, rotation + blacklist
-- [ ] 2.5 Token payload: `user_id`, `role`, `tenant_id`
-- [ ] 2.6 `POST /auth/login/` — phone + password
-- [ ] 2.7 `POST /auth/refresh/`
-- [ ] 2.8 `POST /auth/logout/` — refresh bekor qilish
-- [ ] 2.9 `GET /auth/me/` — profil + rol + limit holati
-- [ ] 2.10 Login rate limit (5/daqiqa/IP)
-- [ ] 2.11 Argon2 password hasher
-- [ ] 2.12 Testlar: login, refresh rotation, noto'g'ri parol, bloklangan foydalanuvchi
+- [x] 2.1 `Tenant` modeli (name, address, phone, currency, timezone)
+- [x] 2.2 `User` modeli (`AbstractBaseUser`, phone login, role, tenant, device_id)
+- [x] 2.3 `UserManager` — `create_user`, `create_superuser`
+- [x] 2.4 JWT sozlash: access 15 daq, refresh 30 kun, rotation + blacklist
+- [x] 2.5 Token payload: `user_id`, `role`, `tenant_id`
+- [x] 2.6 `POST /auth/login/` — phone + password
+- [x] 2.7 `POST /auth/refresh/`
+- [x] 2.8 `POST /auth/logout/` — refresh bekor qilish
+- [x] 2.9 `GET /auth/me/` — profil + rol + limit holati
+- [x] 2.10 Login rate limit (5/daqiqa/IP)
+- [x] 2.11 Argon2 password hasher
+- [x] 2.12 Testlar: login, refresh rotation, noto'g'ri parol, bloklangan foydalanuvchi
 
 ## Bosqich 3 — `apps/catalog` (mahsulot bazasi)
 
-- [ ] 3.1 `Category` — parent (self FK), slug, sort_order
-- [ ] 3.2 `Product` — AI atributlari bilan (fabric_type, pattern, style, transparency, density, composition, care, recommended_rooms, recommended_coef, default_width_m, is_sewing_required, segment, tags)
-- [ ] 3.3 `ProductVariant` — sku, color_name, color_hex, width_m, price, price_unit, old_price, cost_price
-- [ ] 3.4 `ProductImage` — product/variant, siqilgan o'lchamlar, is_primary
-- [ ] 3.5 `Fason` shabloni
-- [ ] 3.6 `FasonPart` — role, width_share, height_share, default_coef
-- [ ] 3.7 `FasonAccessory` — category, default_qty, qty_formula
-- [ ] 3.8 Indekslar: `sku`, `code`, `category`, `segment`
-- [ ] 3.9 Read serializerlar (nested variant + rasm) va Write serializerlar
-- [ ] 3.10 `cost_price` faqat admin'ga ko'rinadigan qilib yopish
-- [ ] 3.11 `GET /catalog/categories/`
-- [ ] 3.12 `GET /catalog/products/` — filtr: category, style, room, segment, price_unit, search, min_price, max_price
-- [ ] 3.13 `GET /catalog/products/{id}/` — variant va rasmlar bilan
-- [ ] 3.14 `GET /catalog/variants/{id}/`
-- [ ] 3.15 `POST/PATCH/DELETE /catalog/products/` (manager+)
-- [ ] 3.16 `POST/PATCH/DELETE /catalog/variants/` (manager+)
-- [ ] 3.17 `POST /catalog/variants/bulk-price/` — foiz yoki summa bo'yicha ommaviy narx
-- [ ] 3.18 `POST /catalog/products/{id}/images/` — multipart yuklash
-- [ ] 3.19 `DELETE /catalog/images/{id}/`
-- [ ] 3.20 Rasm siqish Celery task (thumbnail 300px, to'liq 1200px)
-- [ ] 3.21 `POST /catalog/import/` — Excel/CSV import
-- [ ] 3.22 `GET/POST/PATCH/DELETE /catalog/fasons/`
-- [ ] 3.23 Seed skript: kategoriyalar, namuna mahsulot va aksessuarlar
+- [x] 3.1 `Category` — parent (self FK), slug, sort_order
+- [x] 3.2 `Product` — AI atributlari bilan (fabric_type, pattern, style, transparency, density, composition, care, recommended_rooms, recommended_coef, default_width_m, is_sewing_required, segment, tags)
+- [x] 3.3 `ProductVariant` — sku, color_name, color_hex, width_m, price, price_unit, old_price, cost_price
+- [x] 3.4 `ProductImage` — product/variant, siqilgan o'lchamlar, is_primary
+- [x] 3.5 `Fason` shabloni
+- [x] 3.6 `FasonPart` — role, width_share, height_share, default_coef
+- [x] 3.7 `FasonAccessory` — category, default_qty, qty_formula
+- [x] 3.8 Indekslar: `sku`, `code`, `category`, `segment`
+- [x] 3.9 Read serializerlar (nested variant + rasm) va Write serializerlar
+- [x] 3.10 `cost_price` faqat admin'ga ko'rinadigan qilib yopish
+- [x] 3.11 `GET /catalog/categories/`
+- [x] 3.12 `GET /catalog/products/` — filtr: category, style, room, segment, price_unit, search, min_price, max_price
+- [x] 3.13 `GET /catalog/products/{id}/` — variant va rasmlar bilan
+- [x] 3.14 `GET /catalog/variants/{id}/`
+- [x] 3.15 `POST/PATCH/DELETE /catalog/products/` (manager+)
+- [x] 3.16 `POST/PATCH/DELETE /catalog/variants/` (manager+)
+- [x] 3.17 `POST /catalog/variants/bulk-price/` — foiz yoki summa bo'yicha ommaviy narx
+- [x] 3.18 `POST /catalog/products/{id}/images/` — multipart yuklash
+- [x] 3.19 `DELETE /catalog/images/{id}/`
+- [x] 3.20 Rasm siqish Celery task (thumbnail 300px, to'liq 1200px)
+- [x] 3.21 `POST /catalog/import/` — Excel/CSV import
+- [x] 3.22 `GET/POST/PATCH/DELETE /catalog/fasons/`
+- [x] 3.23 Seed skript: kategoriyalar, namuna mahsulot va aksessuarlar
 - [ ] 3.24 N+1 nazorati (`assertNumQueries`) va 300 ms javob testi
-- [ ] 3.25 Testlar: filtr, qidiruv, permission, tannarx yopiqligi
+- [x] 3.25 Testlar: filtr, qidiruv, permission, tannarx yopiqligi
 
 ## Bosqich 4 — `apps/pricing` (narx va hisob)
 
@@ -116,18 +116,18 @@
 
 ## Bosqich 6 — gRPC shartnoma va klient
 
-- [ ] 6.1 `protos/alora.proto` yozilishi (Agent, Catalog, Backend servislari)
-- [ ] 6.2 `scripts/gen_proto.sh` — `grpc_gen/` generatsiyasi
-- [ ] 6.3 Proto'ni Go repo bilan umumiy qilish (submodule yoki CI ko'chirish)
-- [ ] 6.4 `apps/chat/grpc_client.py` — ulanish pool'i, retry, deadline 60s, keep-alive
-- [ ] 6.5 Go ishlamaganda tushunarli xato (503, "AI xizmati vaqtincha ishlamayapti")
-- [ ] 6.6 `Catalog.Snapshot` server tomoni (sahifalab)
-- [ ] 6.7 `Catalog.Watch` stream — delta push
-- [ ] 6.8 `Backend.ReportUsage` qabul qilish
-- [ ] 6.9 `Backend.SaveOrderDraft` qabul qilish
-- [ ] 6.10 `Backend.LogMessage` qabul qilish
-- [ ] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
-- [ ] 6.12 gRPC mock testlari
+- [x] 6.1 `protos/alora.proto` yozilishi (Agent, Catalog, Backend servislari)
+- [~] 6.2 `scripts/gen_proto.sh` — `grpc_gen/` generatsiyasi  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
+- [~] 6.3 Proto'ni Go repo bilan umumiy qilish (submodule yoki CI ko'chirish)  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
+- [x] 6.4 `apps/chat/grpc_client.py` — ulanish pool'i, retry, deadline 60s, keep-alive
+- [x] 6.5 Go ishlamaganda tushunarli xato (503, "AI xizmati vaqtincha ishlamayapti")
+- [x] 6.6 `Catalog.Snapshot` server tomoni (sahifalab)
+- [x] 6.7 `Catalog.Watch` stream — delta push
+- [x] 6.8 `Backend.ReportUsage` qabul qilish
+- [x] 6.9 `Backend.SaveOrderDraft` qabul qilish
+- [x] 6.10 `Backend.LogMessage` qabul qilish
+- [x] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
+- [x] 6.12 gRPC mock testlari
 
 ## Bosqich 7 — `apps/chat` (gateway)
 
