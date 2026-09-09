@@ -4,6 +4,7 @@ from typing import Any
 
 from django.db import transaction
 from django.http import HttpRequest
+from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
@@ -11,7 +12,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.common.permissions import IsAdmin, IsManager
-from apps.pricing.models import CalcRule, DiscountPolicy, DiscountTier, ModelPricing, OrderDefaults, ServicePrice
+from apps.pricing.models import (
+    CalcRule,
+    DiscountPolicy,
+    DiscountTier,
+    ModelPricing,
+    OrderDefaults,
+    ServicePrice,
+)
 from apps.pricing.serializers import (
     CalcRuleSerializer,
     CalcRuleWriteSerializer,
@@ -35,7 +43,7 @@ class ManagerOnlyViewSetMixin:
 
 
 class CalcRuleViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
-    """Hisob qoidalari uchun viewset."""
+    """Hisob qoidalari (CalcRule) uchun viewset."""
 
     queryset = CalcRule.objects.all()
     serializer_class = CalcRuleSerializer
@@ -46,10 +54,16 @@ class CalcRuleViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             return CalcRuleWriteSerializer
         return CalcRuleSerializer
 
+    @extend_schema(responses={200: CalcRuleSerializer(many=True)}, summary="Hisob qoidalari ro'yxati")
     def list(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(self.get_queryset().order_by("key"), many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=CalcRuleWriteSerializer(many=True),
+        responses={200: CalcRuleSerializer(many=True)},
+        summary="Hisob qoidalariini yangilash",
+    )
     def partial_update(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = CalcRuleWriteSerializer(data=self._normalize_payload(request.data), many=True)
         serializer.is_valid(raise_exception=True)
@@ -57,6 +71,7 @@ class CalcRuleViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             rules = upsert_calc_rules(serializer.validated_data)
         return Response(CalcRuleSerializer(rules, many=True).data)
 
+    @extend_schema(responses={200: CalcRuleSerializer}, summary="Bitta hisob qoidasi")
     def retrieve(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         try:
             rule = self.get_queryset().get(key=self.kwargs.get(self.lookup_field))
@@ -87,10 +102,16 @@ class ServicePriceViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             return ServicePriceWriteSerializer
         return ServicePriceSerializer
 
+    @extend_schema(responses={200: ServicePriceSerializer(many=True)}, summary="Xizmat narxlari ro'yxati")
     def list(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(self.get_queryset().order_by("key"), many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        request=ServicePriceWriteSerializer(many=True),
+        responses={200: ServicePriceSerializer(many=True)},
+        summary="Xizmat narxlarini yangilash",
+    )
     def partial_update(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = ServicePriceWriteSerializer(data=self._normalize_payload(request.data), many=True)
         serializer.is_valid(raise_exception=True)
@@ -98,6 +119,7 @@ class ServicePriceViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             service_prices = upsert_service_prices(serializer.validated_data)
         return Response(ServicePriceSerializer(service_prices, many=True).data)
 
+    @extend_schema(responses={200: ServicePriceSerializer}, summary="Bitta xizmat narxi")
     def retrieve(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         try:
             service_price = self.get_queryset().get(key=self.kwargs.get(self.lookup_field))
@@ -135,9 +157,15 @@ class DiscountPolicyViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             raise NotFound("Chegirma siyosati topilmadi")
         return instance
 
+    @extend_schema(responses={200: DiscountPolicySerializer}, summary="Chegirma siyosati")
     def retrieve(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         return Response(self.get_serializer(self.get_object()).data)
 
+    @extend_schema(
+        request=DiscountPolicySerializer,
+        responses={200: DiscountPolicySerializer},
+        summary="Chegirma siyosatini yangilash",
+    )
     def partial_update(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         instance = self.get_object()
         serializer = DiscountPolicySerializer(instance, data=request.data, partial=True)
@@ -158,9 +186,15 @@ class OrderDefaultsViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             raise NotFound("Buyurtma standartlari topilmadi")
         return instance
 
+    @extend_schema(responses={200: OrderDefaultsSerializer}, summary="Buyurtma standartlari")
     def retrieve(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         return Response(self.get_serializer(self.get_object()).data)
 
+    @extend_schema(
+        request=OrderDefaultsSerializer,
+        responses={200: OrderDefaultsSerializer},
+        summary="Buyurtma standartlarini yangilash",
+    )
     def partial_update(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         instance = self.get_object()
         serializer = OrderDefaultsSerializer(instance, data=request.data, partial=True)
@@ -177,6 +211,12 @@ class ModelPricingViewSet(viewsets.ModelViewSet):
     serializer_class = ModelPricingSerializer
 
 
+@extend_schema(
+    request=PreviewRequestSerializer,
+    responses=PreviewResultSerializer,
+    summary="Kalkulyatsiya preview",
+    description="Berilgan o'lchovlar va parametrlar asosida narxni oldindan hisoblaydi.",
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def calc_preview_view(request: HttpRequest) -> Response:

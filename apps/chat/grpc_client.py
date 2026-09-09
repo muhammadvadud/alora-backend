@@ -174,11 +174,13 @@ def chat_stream(
         context=ctx_map,
     )
 
-    def _do_stream() -> Iterator[Any]:
+    def _do_stream() -> Any:
         return stub.Chat(request, timeout=deadline_seconds)
 
     try:
-        yield from _retry_with_backoff(lambda: list(_do_stream()))
+        # Retry only for the initial connection/call creation
+        call = _retry_with_backoff(_do_stream)
+        return call
     except grpc.RpcError as e:
         code = e.code()  # type: ignore[union-attr]
         if code == grpc.StatusCode.UNAVAILABLE:

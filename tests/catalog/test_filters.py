@@ -1,9 +1,10 @@
 import pytest
-from rest_framework import status
 from django.urls import reverse
-from apps.common.factories import EmployeeFactory, TenantFactory
+
 from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.choices import PriceUnit
+from apps.common.factories import EmployeeFactory, TenantFactory
+
 
 @pytest.fixture
 def api_client_auth(client):
@@ -19,7 +20,7 @@ def api_client_auth(client):
 @pytest.mark.django_db
 class TestFilters:
     def test_product_filters(self, api_client_auth):
-        client, tenant, user = api_client_auth
+        client, tenant, _user = api_client_auth
         
         # create categories
         cat1 = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")

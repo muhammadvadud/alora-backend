@@ -13,25 +13,24 @@ from apps.pricing.views import (
     calc_preview_view,
 )
 
-
 router = DefaultRouter()
-router.register("calc-rules", CalcRuleViewSet, basename="calc-rule")
-router.register("services", ServicePriceViewSet, basename="service-price")
 router.register("discount-tiers", DiscountTierViewSet, basename="discount-tier")
-router.register("discount-policy", DiscountPolicyViewSet, basename="discount-policy")
-router.register("order-defaults", OrderDefaultsViewSet, basename="order-defaults")
 router.register("model-pricings", ModelPricingViewSet, basename="model-pricing")
 
-calc_rule_root = CalcRuleViewSet.as_view({"get": "list", "patch": "partial_update"})
-service_price_root = ServicePriceViewSet.as_view({"get": "list", "patch": "partial_update"})
-discount_policy_root = DiscountPolicyViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
-order_defaults_root = OrderDefaultsViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
+calc_rule_list = CalcRuleViewSet.as_view({"get": "list", "patch": "partial_update"})
+calc_rule_detail = CalcRuleViewSet.as_view({"get": "retrieve"})
+service_price_list = ServicePriceViewSet.as_view({"get": "list", "patch": "partial_update"})
+service_price_detail = ServicePriceViewSet.as_view({"get": "retrieve"})
+discount_policy_detail = DiscountPolicyViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
+order_defaults_detail = OrderDefaultsViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
 
 urlpatterns = [
-    path("calc-rules/", calc_rule_root, name="calc-rule-root"),
-    path("services/", service_price_root, name="service-price-root"),
-    path("discount-policy/", discount_policy_root, name="discount-policy-root"),
-    path("order-defaults/", order_defaults_root, name="order-defaults-root"),
+    path("calc-rules/", calc_rule_list, name="calc-rule-root"),
+    path("calc-rules/<str:key>/", calc_rule_detail, name="calc-rule-detail"),
+    path("services/", service_price_list, name="service-price-root"),
+    path("services/<str:key>/", service_price_detail, name="service-price-detail"),
+    path("discount-policy/", discount_policy_detail, name="discount-policy-root"),
+    path("order-defaults/", order_defaults_detail, name="order-defaults-root"),
     path("calc/preview/", calc_preview_view, name="calc-preview"),
     path("", include(router.urls)),
 ]

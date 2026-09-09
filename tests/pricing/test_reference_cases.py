@@ -8,11 +8,10 @@ from uuid import UUID
 import pytest
 
 from apps.catalog.models import Category, Product, ProductVariant
-from apps.common.choices import PriceUnit, UserRole
+from apps.common.choices import UserRole
 from apps.common.factories import TenantFactory
 from apps.pricing.models import CalcRule, DiscountPolicy, DiscountTier, OrderDefaults, ServicePrice
 from apps.pricing.services.calculator import calculate_preview
-
 
 FIXTURE_PATH = Path(__file__).resolve().parents[1] / "fixtures" / "calc_cases.json"
 

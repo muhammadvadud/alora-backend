@@ -4,7 +4,6 @@ from decimal import Decimal
 
 from django.db import migrations
 
-
 DEFAULT_RULES: list[dict[str, object]] = [
     {
         "key": "coef_default",

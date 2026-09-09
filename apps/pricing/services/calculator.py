@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from decimal import Decimal, ROUND_CEILING, ROUND_HALF_UP
+from decimal import ROUND_CEILING, ROUND_HALF_UP, Decimal
 from typing import Any
 
 from django.core.exceptions import ValidationError
@@ -11,9 +11,8 @@ from apps.catalog.models import ProductVariant
 from apps.common.choices import PriceUnit, UserRole
 from apps.pricing.models import CalcRule, DiscountPolicy, DiscountTier, OrderDefaults, ServicePrice
 
-
-ZERO = Decimal("0")
-ONE = Decimal("1")
+ZERO = Decimal(0)
+ONE = Decimal(1)
 
 
 @dataclass(slots=True)
@@ -42,7 +41,7 @@ def _round_to_step(value: Decimal, step: Decimal) -> Decimal:
 
     if step <= ZERO:
         return value
-    quotient = (value / step).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+    quotient = (value / step).quantize(Decimal(1), rounding=ROUND_HALF_UP)
     return quotient * step
 
 
@@ -236,7 +235,7 @@ def _build_measurement_preview(
         waste_area = raw_area - visible_area
         waste_percent = ZERO
         if visible_area > ZERO:
-            waste_percent = (waste_area / visible_area) * Decimal("100")
+            waste_percent = (waste_area / visible_area) * Decimal(100)
         line_total = _variant_line_total(variant, rounded_area)
         parts_payload.append(
             {
@@ -431,11 +430,10 @@ def calculate_preview(
     else:
         applied_discount_percent = max(tier_discount, manual_applied)
 
-    discount_amount = _quantize_money(subtotal * applied_discount_percent / Decimal("100"))
+    discount_amount = _quantize_money(subtotal * applied_discount_percent / Decimal(100))
     total_before_rounding = subtotal - discount_amount + delivery_amount
     min_order_amount = _rule_value(snapshot, "min_order_amount")
-    if total_before_rounding < min_order_amount:
-        total_before_rounding = min_order_amount
+    total_before_rounding = max(total_before_rounding, min_order_amount)
     total = _quantize_money(_round_to_step(total_before_rounding, _rule_value(snapshot, "round_total_to")))
 
     warnings: list[str] = []

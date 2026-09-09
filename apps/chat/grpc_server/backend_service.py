@@ -61,7 +61,7 @@ def report_usage(data: dict[str, Any]) -> dict[str, Any]:
 
         return {"success": True, "message": ""}
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error("Usage hisobotini qayta ishlashda xato", error=str(e))
         return {"success": False, "error": str(e)}
 
@@ -101,7 +101,7 @@ def save_order_draft(data: dict[str, Any]) -> dict[str, Any]:
             "error": "",
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error("Buyurtma qoralamasini saqlashda xato", error=str(e))
         return {
             "success": False,
@@ -144,7 +144,7 @@ def log_message(data: dict[str, Any]) -> dict[str, Any]:
 
         return {"success": True, "message": ""}
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error("Xabar log'ini qayta ishlashda xato", error=str(e))
         return {"success": False, "error": str(e)}
 

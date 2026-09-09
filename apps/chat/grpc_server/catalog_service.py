@@ -110,17 +110,16 @@ class CatalogServicer:
         from grpc_gen import alora_pb2
 
         try:
-            for delta in self._iter_deltas(
+            yield from self._iter_deltas(
                 from_version=request.from_version,
                 tenant_id=request.tenant_id,
                 pb2=alora_pb2,
-            ):
-                yield delta
+            )
         except grpc.RpcError:
             # Klient stream'ni yopdi — normal holat
             return
 
-    def _build_snapshot(  # noqa: C901 — bo'limlar ketma-ket quriladi
+    def _build_snapshot(
         self,
         page_token: str,
         page_size: int,
@@ -155,7 +154,7 @@ class CatalogServicer:
 
         return Product.objects.filter(is_active=True).count()
 
-    def _products_page(  # noqa: C901 — mahsulot va variantlarni yig'ish
+    def _products_page(
         self,
         offset: int,
         page_size: int,
@@ -280,6 +279,18 @@ class CatalogServicer:
 
     def _iter_deltas(self, from_version: int, tenant_id: str, pb2: Any) -> Any:
         """Redis pub/sub dan delta'larni o'qib uzatadi."""
+        current_version = get_catalog_version()
+        if from_version < current_version:
+            yield pb2.CatalogDelta(
+                version=current_version,
+                entity="catalog",
+                entity_id="",
+                action="FULL_RESYNC",
+                tenant_id=tenant_id,
+                payload_json="",
+            )
+            return
+
         r = redis.from_url(settings.REDIS_URL)
         pubsub = r.pubsub()
         pubsub.subscribe(CATALOG_DELTA_CHANNEL)

@@ -1,10 +1,12 @@
 import pytest
-from rest_framework import status
 from django.urls import reverse
-from apps.common.factories import ManagerFactory, TenantFactory
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.choices import PriceUnit
-from rest_framework_simplejwt.tokens import RefreshToken
+from apps.common.factories import ManagerFactory, TenantFactory
+
 
 @pytest.fixture
 def tenant():

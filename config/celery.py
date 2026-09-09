@@ -1,4 +1,5 @@
 import os
+
 from celery import Celery
 from celery.schedules import crontab
 
@@ -13,7 +14,7 @@ app.autodiscover_tasks()
 app.conf.task_routes = {
     'apps.usage.tasks.*': {'queue': 'usage'},
     'apps.chat.tasks.*': {'queue': 'usage'},
-    'apps.catalog.tasks.compress_image': {'queue': 'heavy'},
+    'apps.catalog.tasks.compress_image_task': {'queue': 'heavy'},
     'apps.usage.tasks.daily_usage_rollup': {'queue': 'heavy'},
     'apps.chat.tasks.archive_old_conversations': {'queue': 'heavy'},
 }

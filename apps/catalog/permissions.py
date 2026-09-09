@@ -1,9 +1,12 @@
 """Katalog uchun ruxsatlar."""
 
 from typing import Any
-from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
-from apps.common.permissions import ROLE_RANK, _role_rank
+
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+
 from apps.common.choices import UserRole
+from apps.common.permissions import ROLE_RANK, _role_rank
+
 
 class IsManagerOrReadOnly(IsAuthenticated):
     """

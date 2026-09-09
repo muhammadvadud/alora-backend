@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.choices import PriceUnit
@@ -19,7 +19,7 @@ class CalcRule(BaseModel):
     value = models.DecimalField(
         max_digits=8,
         decimal_places=3,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Qiymat"),
     )
     unit = models.CharField(max_length=32, verbose_name=_("Birlik"))
@@ -43,7 +43,7 @@ class ServicePrice(BaseModel):
     price = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Narx"),
     )
     unit = models.CharField(max_length=20, choices=PriceUnit.choices, verbose_name=_("Birlik"))
@@ -64,13 +64,13 @@ class DiscountTier(BaseModel):
     min_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Minimal summa"),
     )
     percent = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Foiz"),
     )
     is_active = models.BooleanField(default=True, db_index=True, verbose_name=_("Faol"))
@@ -90,13 +90,13 @@ class DiscountPolicy(BaseModel):
     manual_max_percent_employee = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Xodim uchun maksimal qo'lda chegirma"),
     )
     manual_max_percent_manager = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Menejer uchun maksimal qo'lda chegirma"),
     )
     stack_with_tier = models.BooleanField(default=True, verbose_name=_("Bosqichli chegirma bilan qo'shiladi"))
@@ -115,13 +115,13 @@ class OrderDefaults(BaseModel):
     prepayment_percent = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Avans foizi"),
     )
     delivery_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Yetkazish narxi"),
     )
     deadline_days = models.PositiveIntegerField(verbose_name=_("Muddat (kun)"))
@@ -142,37 +142,37 @@ class ModelPricing(BaseModel):
     input_per_1m = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Kirish narxi / 1M"),
     )
     output_per_1m = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Chiqish narxi / 1M"),
     )
     cached_input_per_1m = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Kesh kirish narxi / 1M"),
     )
     stt_per_minute = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("STT narxi / daqiqa"),
     )
     tts_per_1k_chars = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("TTS narxi / 1K belgi"),
     )
     usd_to_uzs = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0"), message=NON_NEGATIVE_MESSAGE)],
+        validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("USD/UZS kursi"),
     )
 

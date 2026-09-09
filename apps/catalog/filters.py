@@ -1,5 +1,7 @@
 import django_filters
+
 from apps.catalog.models import Product
+
 
 class ProductFilter(django_filters.FilterSet):
     category = django_filters.UUIDFilter(field_name="category_id")

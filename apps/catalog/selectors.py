@@ -1,5 +1,7 @@
 from django.db.models import QuerySet
-from apps.catalog.models import Category, Product, ProductVariant, Fason
+
+from apps.catalog.models import Category, Fason, Product, ProductVariant
+
 
 def get_categories() -> QuerySet:
     return Category.objects.all().select_related("parent")

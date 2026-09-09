@@ -1,7 +1,8 @@
-from django.http import JsonResponse
-from django.db import connection
 import redis
 from django.conf import settings
+from django.db import connection
+from django.http import JsonResponse
+
 
 def health_check(request):
     """
@@ -18,7 +19,9 @@ def health_check(request):
     # DB tekshiruvi
     try:
         connection.ensure_connection()
-    except Exception as e:
+    # Health check hech qachon yiqilmasligi kerak: har qanday nosozlik
+    # javobda holat sifatida qaytadi (TZ 0.14).
+    except Exception as e:  # noqa: BLE001
         status["database"] = "error"
         status["status"] = "error"
         status["database_error"] = str(e)
@@ -27,7 +30,8 @@ def health_check(request):
     try:
         r = redis.from_url(settings.REDIS_URL)
         r.ping()
-    except Exception as e:
+    # Yuqoridagi sabab: nosozlik javobda qaytadi, so'rov yiqilmaydi.
+    except Exception as e:  # noqa: BLE001
         status["redis"] = "error"
         status["status"] = "error"
         status["redis_error"] = str(e)

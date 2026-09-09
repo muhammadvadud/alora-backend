@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 96 / 189 bajarildi (3 jarayonda)
+**Umumiy holat:** 183 / 189 bajarildi (3 jarayonda) · 264 test o'tgan · ruff toza
 
 ---
 
@@ -22,7 +22,7 @@
 - [x] 0.10 `pre-commit`: ruff, ruff-format, mypy, detect-secrets, migratsiya tekshiruvi
 - [x] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)
 - [x] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server
-- [~] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
+- [x] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate (`--cov-fail-under=70`)
 - [x] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)
 
 ## Bosqich 1 — `apps/common` (umumiy poydevor)
@@ -77,7 +77,7 @@
 - [x] 3.21 `POST /catalog/import/` — Excel/CSV import
 - [x] 3.22 `GET/POST/PATCH/DELETE /catalog/fasons/`
 - [x] 3.23 Seed skript: kategoriyalar, namuna mahsulot va aksessuarlar
-- [ ] 3.24 N+1 nazorati (`assertNumQueries`) va 300 ms javob testi
+- [x] 3.24 N+1 nazorati (`assertNumQueries`) va 300 ms javob testi
 - [x] 3.25 Testlar: filtr, qidiruv, permission, tannarx yopiqligi
 
 ## Bosqich 4 — `apps/pricing` (narx va hisob)
@@ -117,8 +117,8 @@
 ## Bosqich 6 — gRPC shartnoma va klient
 
 - [x] 6.1 `protos/alora.proto` yozilishi (Agent, Catalog, Backend servislari)
-- [~] 6.2 `scripts/gen_proto.sh` — `grpc_gen/` generatsiyasi  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
-- [~] 6.3 Proto'ni Go repo bilan umumiy qilish (submodule yoki CI ko'chirish)  — kod yozildi, haqiqiy ishga tushirish sinovi qolgan
+- [x] 6.2 `scripts/gen_proto.sh` — `grpc_gen/` generatsiyasi (ishga tushirildi, `grpc_gen/` generatsiya qilindi)
+- [x] 6.3 Proto'ni Go repo bilan umumiy qilish — `scripts/export_proto.sh` + `docs/GO-CONTRACT.md` (Go repo bu mashinada yo'q, submodule o'rniga eksport skripti)
 - [x] 6.4 `apps/chat/grpc_client.py` — ulanish pool'i, retry, deadline 60s, keep-alive
 - [x] 6.5 Go ishlamaganda tushunarli xato (503, "AI xizmati vaqtincha ishlamayapti")
 - [x] 6.6 `Catalog.Snapshot` server tomoni (sahifalab)
@@ -131,119 +131,119 @@
 
 ## Bosqich 7 — `apps/chat` (gateway)
 
-- [ ] 7.1 `Conversation` modeli — session_id, mode, status, stage, context, order FK
-- [ ] 7.2 `Message` modeli — role, content, tool_calls, tool_result, audio_url, tokenlar
-- [ ] 7.3 Indekslar: `Message.conversation`, `Conversation.session_id`
-- [ ] 7.4 `GET /conversations/` (employee — o'zi, manager — hammasi)
-- [ ] 7.5 `POST /conversations/` — session_id generatsiya
-- [ ] 7.6 `GET /conversations/{id}/messages/` — cursor pagination
-- [ ] 7.7 `POST /conversations/{id}/messages/` — **SSE stream** (asosiy endpoint)
-- [ ] 7.8 SSE oqim mantiqi: JWT → limit → rate limit → conversation → gRPC → frame
-- [ ] 7.9 Klient uzilganda gRPC context cancel
-- [ ] 7.10 `done` event'ida Message + UsageRecord saqlash (Celery)
-- [ ] 7.11 `DELETE /conversations/{id}/` — arxivlash
-- [ ] 7.12 `POST /conversations/{id}/reset/` — kontekst tozalash
-- [ ] 7.13 `GET /conversations/{id}/transcript/` — manager to'liq o'qishi
-- [ ] 7.14 `WS /ws/voice/{conversation_id}/` — ovozli kanal (Channels)
-- [ ] 7.15 Chat rate limit (Redis, rol bo'yicha)
-- [ ] 7.16 Async view ichida bloklovchi ORM chaqiruvi yo'qligini tekshirish
-- [ ] 7.17 Testlar: SSE oqimi (gRPC mock), uzilish, limit 429, permission
+- [x] 7.1 `Conversation` modeli — session_id, mode, status, stage, context, order FK
+- [x] 7.2 `Message` modeli — role, content, tool_calls, tool_result, audio_url, tokenlar
+- [x] 7.3 Indekslar: `Message.conversation`, `Conversation.session_id`
+- [x] 7.4 `GET /conversations/` (employee — o'zi, manager — hammasi)
+- [x] 7.5 `POST /conversations/` — session_id generatsiya
+- [x] 7.6 `GET /conversations/{id}/messages/` — cursor pagination
+- [x] 7.7 `POST /conversations/{id}/messages/` — **SSE stream** (asosiy endpoint)
+- [x] 7.8 SSE oqim mantiqi: JWT → limit → rate limit → conversation → gRPC → frame
+- [x] 7.9 Klient uzilganda gRPC context cancel
+- [x] 7.10 `done` event'ida Message + UsageRecord saqlash (Celery)
+- [x] 7.11 `DELETE /conversations/{id}/` — arxivlash
+- [x] 7.12 `POST /conversations/{id}/reset/` — kontekst tozalash
+- [x] 7.13 `GET /conversations/{id}/transcript/` — manager to'liq o'qishi
+- [x] 7.14 `WS /ws/voice/{conversation_id}/` — ovozli kanal (Channels)
+- [x] 7.15 Chat rate limit (Redis, rol bo'yicha)
+- [x] 7.16 Async view ichida bloklovchi ORM chaqiruvi yo'qligini tekshirish
+- [x] 7.17 Testlar: SSE oqimi (gRPC mock), uzilish, limit 429, permission
 
 ## Bosqich 8 — `apps/orders` (buyurtmalar)
 
-- [ ] 8.1 `Order` modeli — number, status, summalar, chegirma, avans, deadline
-- [ ] 8.2 Buyurtma raqami generatori: `ALR-2026-000123` (poyga holatisiz)
-- [ ] 8.3 `OrderMeasurement` — room_name, cornice_length_m, height_m, layers, coefficient
-- [ ] 8.4 `OrderCurtainPart` — variant, role, o'lcham, koeffitsient, `price_per_sqm` snapshot
-- [ ] 8.5 `OrderAccessory` — variant, qty, unit, `unit_price` snapshot
-- [ ] 8.6 `OrderItem` — xizmat qatorlari, `name_snapshot`
-- [ ] 8.7 Snapshot mantiqi: katalog o'zgarsa buyurtma o'zgarmasligi
-- [ ] 8.8 Status mashinasi va ruxsat etilgan o'tishlar
-- [ ] 8.9 `GET /orders/` — filtr: status, sana, xodim
-- [ ] 8.10 `POST /orders/` — AI draft'idan buyurtma yaratish
-- [ ] 8.11 `GET/PATCH /orders/{id}/`
-- [ ] 8.12 `POST /orders/{id}/confirm/` — tasdiqlash
-- [ ] 8.13 `POST /orders/{id}/status/` — izoh va sana bilan
-- [ ] 8.14 `GET /orders/statuses/` — status ro'yxati va o'tishlar
-- [ ] 8.15 `GET /orders/{id}/pdf/` — kommercheskiy taklif PDF
-- [ ] 8.16 Buyurtma summasini `calculator.py` orqali qayta hisoblash
-- [ ] 8.17 Employee faqat o'z buyurtmasini ko'rishi
-- [ ] 8.18 Testlar: snapshot, status o'tishlari, summa mosligi, permission
+- [x] 8.1 `Order` modeli — number, status, summalar, chegirma, avans, deadline
+- [x] 8.2 Buyurtma raqami generatori: `ALR-2026-000123` (poyga holatisiz)
+- [x] 8.3 `OrderMeasurement` — room_name, cornice_length_m, height_m, layers, coefficient
+- [x] 8.4 `OrderCurtainPart` — variant, role, o'lcham, koeffitsient, `price_per_sqm` snapshot
+- [x] 8.5 `OrderAccessory` — variant, qty, unit, `unit_price` snapshot
+- [x] 8.6 `OrderItem` — xizmat qatorlari, `name_snapshot`
+- [x] 8.7 Snapshot mantiqi: katalog o'zgarsa buyurtma o'zgarmasligi
+- [x] 8.8 Status mashinasi va ruxsat etilgan o'tishlar
+- [x] 8.9 `GET /orders/` — filtr: status, sana, xodim
+- [x] 8.10 `POST /orders/` — AI draft'idan buyurtma yaratish
+- [x] 8.11 `GET/PATCH /orders/{id}/`
+- [x] 8.12 `POST /orders/{id}/confirm/` — tasdiqlash
+- [x] 8.13 `POST /orders/{id}/status/` — izoh va sana bilan
+- [x] 8.14 `GET /orders/statuses/` — status ro'yxati va o'tishlar
+- [x] 8.15 `GET /orders/{id}/pdf/` — kommercheskiy taklif PDF
+- [x] 8.16 Buyurtma summasini `calculator.py` orqali qayta hisoblash
+- [x] 8.17 Employee faqat o'z buyurtmasini ko'rishi
+- [x] 8.18 Testlar: snapshot, status o'tishlari, summa mosligi, permission
 
 ## Bosqich 9 — `apps/usage` (limit va statistika)
 
-- [ ] 9.1 `UsageRecord` — tokenlar, stt/tts, tool_calls, latency, cost_usd/uzs
-- [ ] 9.2 `UsageDaily` rollup jadvali
-- [ ] 9.3 `UsageLimit` — user yoki role, period, is_unlimited, max_*, on_exceed
-- [ ] 9.4 Limit tekshirish mantiqi (shaxsiy > rol > cheksiz)
-- [ ] 9.5 Xarajat hisobi `ModelPricing` bo'yicha (USD → UZS)
-- [ ] 9.6 `GET /usage/summary/?period=day|week|month&user=`
-- [ ] 9.7 `GET /usage/by-user/` — xodimlar reytingi
-- [ ] 9.8 `GET /usage/conversations/` — eng qimmat suhbatlar
-- [ ] 9.9 `GET /analytics/conversion/` — suhbat → buyurtma konversiyasi
-- [ ] 9.10 `POST /team/employees/{id}/limit/` — `is_unlimited` toggle bilan
-- [ ] 9.11 Statistika `UsageDaily` dan o'qilishi (xom jadvaldan emas)
-- [ ] 9.12 Testlar: limit tugaganda 429, cheksiz rejim, rollup to'g'riligi
+- [x] 9.1 `UsageRecord` — tokenlar, stt/tts, tool_calls, latency, cost_usd/uzs
+- [x] 9.2 `UsageDaily` rollup jadvali
+- [x] 9.3 `UsageLimit` — user yoki role, period, is_unlimited, max_*, on_exceed
+- [x] 9.4 Limit tekshirish mantiqi (shaxsiy > rol > cheksiz)
+- [x] 9.5 Xarajat hisobi `ModelPricing` bo'yicha (USD → UZS)
+- [x] 9.6 `GET /usage/summary/?period=day|week|month&user=`
+- [x] 9.7 `GET /usage/by-user/` — xodimlar reytingi
+- [x] 9.8 `GET /usage/conversations/` — eng qimmat suhbatlar
+- [x] 9.9 `GET /analytics/conversion/` — suhbat → buyurtma konversiyasi
+- [x] 9.10 `POST /team/employees/{id}/limit/` — `is_unlimited` toggle bilan
+- [x] 9.11 Statistika `UsageDaily` dan o'qilishi (xom jadvaldan emas)
+- [x] 9.12 Testlar: limit tugaganda 429, cheksiz rejim, rollup to'g'riligi
 
 ## Bosqich 10 — Jamoa boshqaruvi (manager paneli)
 
-- [ ] 10.1 `GET /team/employees/` — xodimlar + bugungi faollik
-- [ ] 10.2 `POST /team/employees/` — xodim qo'shish
-- [ ] 10.3 `PATCH /team/employees/{id}/` — bloklash, rol, limit
-- [ ] 10.4 `GET /team/employees/{id}/conversations/`
-- [ ] 10.5 Ruxsatlar matritsasi bo'yicha to'liq test to'plami
+- [x] 10.1 `GET /team/employees/` — xodimlar + bugungi faollik
+- [x] 10.2 `POST /team/employees/` — xodim qo'shish
+- [x] 10.3 `PATCH /team/employees/{id}/` — bloklash, rol, limit
+- [x] 10.4 `GET /team/employees/{id}/conversations/`
+- [x] 10.5 Ruxsatlar matritsasi bo'yicha to'liq test to'plami
 
 ## Bosqich 11 — System prompt boshqaruvi (admin)
 
-- [ ] 11.1 `PromptVersion` modeli (versiya, matn, muallif, sana)
-- [ ] 11.2 `GET /settings/prompt/` — joriy + tarix
-- [ ] 11.3 `POST /settings/prompt/` — yangi versiya
-- [ ] 11.4 `POST /settings/prompt/{version}/rollback/`
-- [ ] 11.5 Prompt o'zgarganda Go'ga xabar berish
-- [ ] 11.6 Testlar: faqat admin kirishi, rollback to'g'riligi
+- [x] 11.1 `PromptVersion` modeli (versiya, matn, muallif, sana)
+- [x] 11.2 `GET /settings/prompt/` — joriy + tarix
+- [x] 11.3 `POST /settings/prompt/` — yangi versiya
+- [x] 11.4 `POST /settings/prompt/{version}/rollback/`
+- [x] 11.5 Prompt o'zgarganda Go'ga xabar berish
+- [x] 11.6 Testlar: faqat admin kirishi, rollback to'g'riligi
 
 ## Bosqich 12 — Katalog sinxronizatsiyasi (Django → Go)
 
-- [ ] 12.1 `post_save` / `post_delete` signallari (Product, Variant, CalcRule, KnowledgeRule)
-- [ ] 12.2 Redis pub/sub kanaliga delta e'lon qilish
-- [ ] 12.3 Versiya hisoblagichi (Redis `INCR`)
-- [ ] 12.4 `Catalog.Watch` stream orqali Go'ga push
-- [ ] 12.5 Versiya uzilishida qayta snapshot mantiqi
-- [ ] 12.6 Signal ichida og'ir ish yo'qligini tekshirish
-- [ ] 12.7 Testlar: delta e'loni, versiya o'sishi
+- [x] 12.1 `post_save` / `post_delete` signallari (Product, Variant, CalcRule, KnowledgeRule)
+- [x] 12.2 Redis pub/sub kanaliga delta e'lon qilish
+- [x] 12.3 Versiya hisoblagichi (Redis `INCR`)
+- [x] 12.4 `Catalog.Watch` stream orqali Go'ga push
+- [x] 12.5 Versiya uzilishida qayta snapshot mantiqi
+- [x] 12.6 Signal ichida og'ir ish yo'qligini tekshirish
+- [x] 12.7 Testlar: delta e'loni, versiya o'sishi
 
 ## Bosqich 13 — Fon vazifalari (Celery)
 
-- [ ] 13.1 `save_usage_record`
-- [ ] 13.2 `save_message`
-- [ ] 13.3 `generate_conversation_title`
-- [ ] 13.4 `daily_usage_rollup` (har kuni 00:05)
-- [ ] 13.5 `archive_old_conversations` (haftalik, 6 oydan eski)
-- [ ] 13.6 `check_limits_and_notify` (har soat)
-- [ ] 13.7 `catalog_reindex`
-- [ ] 13.8 `stock_low_alert`
-- [ ] 13.9 Idempotentlik va retry testlari
+- [x] 13.1 `save_usage_record`
+- [x] 13.2 `save_message`
+- [x] 13.3 `generate_conversation_title`
+- [x] 13.4 `daily_usage_rollup` (har kuni 00:05)
+- [x] 13.5 `archive_old_conversations` (haftalik, 6 oydan eski)
+- [x] 13.6 `check_limits_and_notify` (har soat)
+- [x] 13.7 `catalog_reindex`
+- [x] 13.8 `stock_low_alert`
+- [x] 13.9 Idempotentlik va retry testlari
 
 ## Bosqich 14 — Sifat, xavfsizlik, ishlash
 
-- [ ] 14.1 Coverage ≥ 70% (pricing va permissions ≥ 90%)
-- [ ] 14.2 Ruxsat testlari to'liq matritsa bo'yicha
-- [ ] 14.3 `pip-audit` va `detect-secrets` CI'da
-- [ ] 14.4 Log maskalash: token, parol, telefon
-- [ ] 14.5 Fayl yuklash validatsiyasi (MIME, ≤ 10MB)
-- [ ] 14.6 Yuk testi: 50 parallel chat sessiyasi
-- [ ] 14.7 Gateway overhead ≤ 150 ms o'lchovi
-- [ ] 14.8 Katalog API ≤ 300 ms o'lchovi
-- [ ] 14.9 DB indekslarini `EXPLAIN` bilan tekshirish
+- [x] 14.1 Coverage ≥ 70% (umumiy 84%, `apps/pricing` 94%, `apps/common/permissions.py` 94%)
+- [x] 14.2 Ruxsat testlari to'liq matritsa bo'yicha
+- [x] 14.3 `pip-audit` va `detect-secrets` CI'da (`.secrets.baseline` qo'shildi)
+- [x] 14.4 Log maskalash: token, parol, telefon
+- [x] 14.5 Fayl yuklash validatsiyasi (MIME, ≤ 10MB)
+- [x] 14.6 Yuk testi: 50 parallel chat sessiyasi
+- [x] 14.7 Gateway overhead ≤ 150 ms o'lchovi
+- [x] 14.8 Katalog API ≤ 300 ms o'lchovi
+- [x] 14.9 DB indekslarini `EXPLAIN` bilan tekshirish
 
 ## Bosqich 15 — Hujjat va yetkazish
 
-- [ ] 15.1 OpenAPI sxemasi (`drf-spectacular`) + `/api/docs/`
-- [ ] 15.2 `README.md` — o'rnatish, ishga tushirish, muhit o'zgaruvchilari
-- [ ] 15.3 Mobil jamoa uchun API qo'llanmasi (xato kodlari, SSE formati)
-- [ ] 15.4 Go jamoasi bilan proto va etalon test kelishuvi hujjati
-- [ ] 15.5 Deploy qo'llanmasi va backup tartibi
-- [ ] 15.6 Django admin — texnik zaxira sifatida minimal sozlash
+- [x] 15.1 OpenAPI sxemasi (`drf-spectacular`) + `/api/docs/` (0 ogohlantirish, 0 xato)
+- [x] 15.2 `README.md` — o'rnatish, ishga tushirish, muhit o'zgaruvchilari
+- [x] 15.3 Mobil jamoa uchun API qo'llanmasi (xato kodlari, SSE formati)
+- [x] 15.4 Go jamoasi bilan proto va etalon test kelishuvi hujjati
+- [x] 15.5 Deploy qo'llanmasi va backup tartibi
+- [x] 15.6 Django admin — texnik zaxira sifatida minimal sozlash
 
 ---
 

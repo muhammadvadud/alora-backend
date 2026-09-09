@@ -1,0 +1,734 @@
+[
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 14
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/accounts/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 12
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 12,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 61
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/accounts/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 16
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 16,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 50,
+      "row": 18
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/catalog/filters.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 18
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 18,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 14
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/catalog/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 12
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 12,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 182
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/catalog/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 16
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 16,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "SIM102",
+    "end_location": {
+      "column": 70,
+      "row": 48
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/catalog/serializers.py",
+    "fix": null,
+    "location": {
+      "column": 9,
+      "row": 47
+    },
+    "message": "Use a single `if` statement instead of nested `if` statements",
+    "name": "collapsible-if",
+    "noqa_row": 47,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/collapsible-if"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 18
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/chat/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 14
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 78
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/chat/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 20
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 20,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "BLE001",
+    "end_location": {
+      "column": 17,
+      "row": 23
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/common/factories.py",
+    "fix": null,
+    "location": {
+      "column": 8,
+      "row": 23
+    },
+    "message": "Do not catch blind exception: `Exception`",
+    "name": "blind-except",
+    "noqa_row": 23,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/blind-except"
+  },
+  {
+    "cell": null,
+    "code": "BLE001",
+    "end_location": {
+      "column": 17,
+      "row": 28
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/common/factories.py",
+    "fix": null,
+    "location": {
+      "column": 8,
+      "row": 28
+    },
+    "message": "Do not catch blind exception: `Exception`",
+    "name": "blind-except",
+    "noqa_row": 28,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/blind-except"
+  },
+  {
+    "cell": null,
+    "code": "BLE001",
+    "end_location": {
+      "column": 21,
+      "row": 58
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/common/factories.py",
+    "fix": null,
+    "location": {
+      "column": 12,
+      "row": 58
+    },
+    "message": "Do not catch blind exception: `Exception`",
+    "name": "blind-except",
+    "noqa_row": 58,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/blind-except"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 45,
+      "row": 11
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/knowledge/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 43,
+      "row": 11
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 11,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 50
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/knowledge/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 13
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 13,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 10,
+      "row": 28
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/knowledge/serializers.py",
+    "fix": null,
+    "location": {
+      "column": 24,
+      "row": 22
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 22,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 45,
+      "row": 14
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/orders/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 43,
+      "row": 14
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 323
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/orders/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 16
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 16,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 17
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/orders/migrations/0002_add_order_conversation.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 14
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 32
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/orders/migrations/0002_add_order_conversation.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 19
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 19,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 45,
+      "row": 13
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 43,
+      "row": 13
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 13,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 176
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 15
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 15,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 49,
+      "row": 152
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/migrations/0002_seed_defaults.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 152
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 152,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 61,
+      "row": 154
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/migrations/0002_seed_defaults.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 154
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 154,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 10,
+      "row": 184
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/models.py",
+    "fix": null,
+    "location": {
+      "column": 23,
+      "row": 182
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 182,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 10,
+      "row": 41
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/serializers.py",
+    "fix": null,
+    "location": {
+      "column": 24,
+      "row": 34
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 34,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 10,
+      "row": 68
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/serializers.py",
+    "fix": null,
+    "location": {
+      "column": 24,
+      "row": 63
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 63,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 42,
+      "row": 3
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/services/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 25,
+      "row": 3
+    },
+    "message": "`.calculator.calculate_preview` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "name": "unused-import",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 65,
+      "row": 3
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/services/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 44,
+      "row": 3
+    },
+    "message": "`.calculator.load_pricing_snapshot` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "name": "unused-import",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 36,
+      "row": 4
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/services/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 19,
+      "row": 4
+    },
+    "message": "`.crud.upsert_calc_rules` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 59,
+      "row": 4
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/pricing/services/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 38,
+      "row": 4
+    },
+    "message": "`.crud.upsert_service_prices` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 16
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/prompts/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 14
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 38
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/prompts/migrations/0001_initial.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 18
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 18,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 18
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/usage/migrations/0001_add_usage_models.py",
+    "fix": null,
+    "location": {
+      "column": 20,
+      "row": 15
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 15,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 6,
+      "row": 96
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/apps/usage/migrations/0001_add_usage_models.py",
+    "fix": null,
+    "location": {
+      "column": 18,
+      "row": 20
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 20,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 12,
+      "row": 24
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/tests/catalog/test_cost_price.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 15,
+            "row": 24
+          },
+          "location": {
+            "column": 9,
+            "row": 24
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `var`"
+    },
+    "location": {
+      "column": 9,
+      "row": 24
+    },
+    "message": "Local variable `var` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 24,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "RUF059",
+    "end_location": {
+      "column": 29,
+      "row": 23
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/tests/catalog/test_filters.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "_user",
+          "end_location": {
+            "column": 29,
+            "row": 23
+          },
+          "location": {
+            "column": 25,
+            "row": 23
+          }
+        }
+      ],
+      "message": "Prefix it with an underscore or any other dummy variable pattern"
+    },
+    "location": {
+      "column": 25,
+      "row": 23
+    },
+    "message": "Unpacked variable `user` is never used",
+    "name": "unused-unpacked-variable",
+    "noqa_row": 23,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-unpacked-variable"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 13,
+      "row": 72
+    },
+    "filename": "/home/muhammadvadud/it/alora/projects/backend/tests/catalog/test_permissions.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 16,
+            "row": 72
+          },
+          "location": {
+            "column": 9,
+            "row": 72
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `prod`"
+    },
+    "location": {
+      "column": 9,
+      "row": 72
+    },
+    "message": "Local variable `prod` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 72,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  }
+]

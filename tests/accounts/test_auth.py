@@ -1,8 +1,9 @@
 import pytest
-from rest_framework import status
-from django.urls import reverse
-from apps.common.factories import UserFactory
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+from rest_framework import status
+
+from apps.common.factories import UserFactory
 
 User = get_user_model()
 

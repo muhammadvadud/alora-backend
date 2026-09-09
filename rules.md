@@ -358,3 +358,57 @@ talab qilinmadi.
 (b) lokal 3.13 / Docker 3.12 — rad etildi, muhitlar farqi xavfli.
 
 **Qaror:** hamma joyda 3.13. Foydalanuvchi tomonidan tasdiqlangan.
+
+### 17.2 `reportlab` bog'liqligi qo'shildi (2026-09-09)
+
+**Chetlanish:** `pyproject.toml` ga yangi tashqi bog'liqlik — `reportlab` (5.0.1,
+sof Python) qo'shildi.
+
+**Sabab:** `tasks.md` 8.15 — `GET /orders/{id}/pdf/` kommercheskiy taklif PDF
+endpointi talab qilinadi. Django standart kutubxonasida PDF generatsiyasi yo'q,
+tashqi kutubxonasiz bu band bajarilmaydi.
+
+**Ta'sir doirasi:** `pyproject.toml`, `requirements.txt` va faqat
+`apps/orders/pdf.py`. Boshqa modullar bu kutubxonaga bog'lanmaydi. Docker
+obraziga qo'shimcha tizim paketi talab qilinmaydi (sof Python).
+
+**Muqobil variantlar:** (a) `weasyprint` — HTML/CSS asosida chiroyliroq natija,
+lekin `libpango`/`libcairo` tizim kutubxonalarini va Dockerfile o'zgarishini
+talab qiladi, rad etildi; (b) PDF'ni mobil ilovada generatsiya qilish — snapshot
+narxlar va yagona hujjat shakli backend'da turishi kerak (1.3-band), rad etildi;
+(c) 8.15 ni TZ'dan chiqarish — TZ qisqartirilmaydi (0-bo'lim 3-band), rad etildi.
+
+**Qaror:** `reportlab` qo'shildi. Foydalanuvchi tomonidan tasdiqlangan.
+
+### 17.3 `RUF012` linter qoidasi o'chirildi (2026-09-09)
+
+**Chetlanish:** `pyproject.toml` da `[tool.ruff.lint] ignore = ["RUF012"]`
+qo'shildi — ya'ni ruff'ning "Mutable default value for class attribute"
+qoidasi butun loyiha bo'ylab o'chirildi.
+
+**Sabab:** RUF012 DRF va Django'ning standart yozuvini xato deb belgilaydi:
+
+    permission_classes = [IsManager]      # ViewSet
+    filter_backends = [SearchFilter]      # ViewSet
+    indexes = [models.Index(...)]         # Model.Meta
+    extra_kwargs = {...}                  # Serializer.Meta
+
+Bu yozuvlarni shu faylning §4.4 bandi MAJBURIY qiladi ("har bir ViewSet'da
+`permission_classes` aniq yoziladi"). Ya'ni linter qoidasi loyiha qoidasiga
+qarshi turadi. Loyihada 13 ta shunday holat topildi va hech biri haqiqiy
+nuqson emas — DRF bu atributlarni klass darajasida o'qiydi va o'zgartirmaydi.
+
+**Ta'sir doirasi:** faqat `pyproject.toml` dagi linter sozlamasi. Kod
+o'zgarmadi. Ilgari qo'yilgan `# noqa: RUF012` izohlari keraksiz bo'lib
+qolgani uchun olib tashlandi (`apps/accounts/serializers.py`,
+`apps/chat/models.py`, `apps/prompts/serializers.py`).
+
+**Muqobil variantlar:**
+- Har bir joyga `ClassVar` annotatsiyasi (`permission_classes: ClassVar[list]`)
+  — texnik jihatdan to'g'ri, lekin 13 joyda kodni og'irlashtiradi va DRF
+  hujjatlaridagi namunalardan chetga chiqadi. Rad etildi.
+- `# noqa: RUF012` izohlarini saqlab qolish — har yangi ViewSet'da takrorlash
+  kerak bo'ladi, unutilishi mumkin. Rad etildi.
+
+**Qaror:** qoida loyiha darajasida o'chirildi. Foydalanuvchi tomonidan
+tasdiqlangan.

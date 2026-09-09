@@ -57,7 +57,7 @@ def _mock_grpc_pb(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.fixture(autouse=True)
 def _mock_channel_pool(monkeypatch: pytest.MonkeyPatch) -> None:
     """Kanal pool'ini mock qiladi — haqiqiy soket ochilmaydi."""
-    import apps.chat.grpc_client as grpc_client
+    from apps.chat import grpc_client
 
     mock_channel = mock.Mock(spec=grpc.Channel)
     mock_channel.close = mock.Mock()

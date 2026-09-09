@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     
     # Bizning ilovalar
+    'channels',
+
+    # Loyiha ilovalari
     'apps.common',
     'apps.accounts',
     'apps.catalog',
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'apps.chat',
     'apps.orders',
     'apps.usage',
+    'apps.prompts',
 ]
 
 MIDDLEWARE = [
@@ -78,8 +82,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
+# Channels — WebSocket qatlami (ovozli suhbat, TZ 5.2)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {'hosts': [env('REDIS_URL', default='redis://localhost:6379/0')]},
+    }
+}
+
 # Ma'lumotlar bazasi
 import dj_database_url
+
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/postgres'),
@@ -148,6 +161,33 @@ REST_FRAMEWORK = {
     },
 }
 
+# drf-spectacular OpenAPI sxemasi
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Alora Backend API",
+    "DESCRIPTION": "Alora — parda va dekorativ to'qimachilik ishlab chiqarish platformasi API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "ENUM_NAME_OVERRIDES": {
+        "RoleEnum": "apps.common.choices.UserRole.choices",
+        "CurtainPartRoleEnum": "apps.common.choices.CurtainPartRole.choices",
+        "PriceUnitEnum": "apps.common.choices.PriceUnit.choices",
+        "OrderStatusEnum": "apps.common.choices.OrderStatus.choices",
+        "ConversationStatusEnum": "apps.chat.models.ConversationStatus.choices",
+    },
+    "TAGS": [
+        {"name": "auth", "description": "Autentifikatsiya (login, logout, token)"},
+        {"name": "accounts", "description": "Foydalanuvchilar va jamoa"},
+        {"name": "catalog", "description": "Katalog: kategoriya, mahsulot, variant"},
+        {"name": "pricing", "description": "Narx hisob-kitobi va chegirmalar"},
+        {"name": "chat", "description": "Suhbat va SSE gateway"},
+        {"name": "orders", "description": "Buyurtmalar"},
+        {"name": "usage", "description": "Foydalanish statistikasi"},
+        {"name": "knowledge", "description": "Bilim qoidalari"},
+        {"name": "prompts", "description": "System prompt boshqaruvi"},
+    ],
+}
+
 # Simple JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
@@ -166,6 +206,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # Logging
 import structlog
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

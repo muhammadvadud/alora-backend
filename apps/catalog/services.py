@@ -1,11 +1,14 @@
 from decimal import Decimal
-from typing import List, Literal
+from typing import Literal
+
 from django.db import transaction
-from apps.catalog.models import ProductVariant, ProductImage, Product
+
+from apps.catalog.models import Product, ProductImage, ProductVariant
+
 
 def bulk_update_variant_prices(
     tenant_id: str,
-    variant_ids: List[str],
+    variant_ids: list[str],
     value: Decimal,
     type: Literal["percent", "amount"]
 ) -> int:
@@ -14,7 +17,7 @@ def bulk_update_variant_prices(
     with transaction.atomic():
         for variant in variants:
             if type == "percent":
-                variant.price = variant.price * (Decimal("1") + value / Decimal("100"))
+                variant.price = variant.price * (Decimal(1) + value / Decimal(100))
             elif type == "amount":
                 variant.price = variant.price + value
             variant.save(update_fields=["price", "updated_at"])

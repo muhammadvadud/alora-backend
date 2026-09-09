@@ -14,7 +14,7 @@ from apps.pricing.models import (
     ServicePrice,
 )
 
-ZERO = Decimal("0")
+ZERO = Decimal(0)
 
 
 class CalcRuleSerializer(serializers.ModelSerializer):

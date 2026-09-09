@@ -1,8 +1,17 @@
 from rest_framework import serializers
+
 from apps.catalog.models import (
-    Category, Product, ProductVariant, ProductImage, Fason, FasonPart, FasonAccessory
+    Category,
+    Fason,
+    FasonAccessory,
+    FasonPart,
+    Product,
+    ProductImage,
+    ProductVariant,
 )
 from apps.common.choices import UserRole
+from apps.common.validators import validate_image_file
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,9 +44,8 @@ class ProductVariantReadSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            if getattr(request.user, "role", None) != UserRole.ADMIN:
-                ret.pop("cost_price", None)
+        if request and hasattr(request, "user") and getattr(request.user, "role", None) != UserRole.ADMIN:
+            ret.pop("cost_price", None)
         return ret
 
 class ProductWriteSerializer(serializers.ModelSerializer):
@@ -93,7 +101,7 @@ class BulkPriceSerializer(serializers.Serializer):
     type = serializers.ChoiceField(choices=["percent", "amount"])
 
 class ImageUploadSerializer(serializers.Serializer):
-    image = serializers.ImageField()
+    image = serializers.ImageField(validators=[validate_image_file])
     variant_id = serializers.UUIDField(required=False, allow_null=True)
     alt = serializers.CharField(required=False, allow_blank=True)
     is_primary = serializers.BooleanField(default=False)

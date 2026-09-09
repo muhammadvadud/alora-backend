@@ -40,7 +40,7 @@ def grpc_health() -> dict[str, str | int]:
             "detail": result["last_error"] or result["status"],
         }
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error("gRPC agent tekshiruvidagi xato", error=str(e))
         return {
             "status": "error",

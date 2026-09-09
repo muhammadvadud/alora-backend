@@ -20,12 +20,12 @@ except ImportError:  # pragma: no cover - fallback
 
 try:
     UserModel = get_user_model()
-except Exception:  # pragma: no cover - settings hali yo'q bo'lishi mumkin
+except Exception:  # noqa: BLE001  # pragma: no cover - settings hali yo'q bo'lishi mumkin
     UserModel = None
 
 try:
     TenantModel = apps.get_model("accounts", "Tenant")
-except Exception:  # pragma: no cover - accounts app keyinroq qo'shiladi
+except Exception:  # noqa: BLE001  # pragma: no cover - accounts app keyinroq qo'shiladi
     TenantModel = None
 
 
@@ -55,7 +55,7 @@ def _model_has_fields(model: type[Any] | None, field_names: tuple[str, ...]) -> 
         return False
     try:
         existing_fields = {field.name for field in meta.get_fields()}
-    except Exception:  # pragma: no cover - fallback himoyasi
+    except Exception:  # noqa: BLE001  # pragma: no cover - fallback himoyasi
         return False
     return set(field_names).issubset(existing_fields)
 

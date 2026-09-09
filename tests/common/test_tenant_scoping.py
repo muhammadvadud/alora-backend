@@ -36,7 +36,7 @@ class DummyQuerySet:
         self.model = model
         self.filters: list[dict[str, object]] = []
 
-    def filter(self, **kwargs: object) -> "DummyQuerySet":
+    def filter(self, **kwargs: object) -> DummyQuerySet:
         self.filters.append(kwargs)
         return self
 

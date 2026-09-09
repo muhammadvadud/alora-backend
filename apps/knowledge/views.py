@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 

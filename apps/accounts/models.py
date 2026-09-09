@@ -1,10 +1,11 @@
 """Accounts modellar."""
 
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.common.models import BaseModel
+
 from apps.common.choices import UserRole
+from apps.common.models import BaseModel
 
 
 class Tenant(BaseModel):
@@ -67,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     objects = UserManager()
 
     USERNAME_FIELD = "phone"
-    REQUIRED_FIELDS = ["full_name"]
+    REQUIRED_FIELDS = ("full_name",)
 
     class Meta:
         verbose_name = _("Foydalanuvchi")

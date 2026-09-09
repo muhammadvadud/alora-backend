@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from apps.common.choices import CurtainPartRole, PriceUnit, ProductSegment
 from apps.common.models import TenantScopedModel
-from apps.common.choices import PriceUnit, CurtainPartRole, ProductSegment
+
 
 class Category(TenantScopedModel):
     name = models.CharField(max_length=255, verbose_name=_("Nomi"))

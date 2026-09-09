@@ -45,7 +45,7 @@ def upsert_calc_rules(items: Any) -> list[CalcRule]:
     for item in normalized_items:
         key = str(item["key"])
         defaults = {
-            "value": _as_decimal(item.get("value", Decimal("0"))),
+            "value": _as_decimal(item.get("value", Decimal(0))),
             "unit": str(item.get("unit", "")),
             "description": str(item.get("description", "")),
             "applies_to": item.get("applies_to", {}) or {},
@@ -66,7 +66,7 @@ def upsert_service_prices(items: Any) -> list[ServicePrice]:
         key = str(item["key"])
         defaults = {
             "name": str(item.get("name", "")),
-            "price": _as_decimal(item.get("price", Decimal("0"))),
+            "price": _as_decimal(item.get("price", Decimal(0))),
             "unit": str(item.get("unit", "")),
             "is_active": bool(item.get("is_active", True)),
         }

@@ -21,12 +21,15 @@ dependencies = [
     "redis",
     "celery",
     "django-environ",
+    "channels",
+    "channels-redis",
     "structlog",
     "sentry-sdk",
     "grpcio",
     "grpcio-tools",
     "drf-spectacular",
     "Pillow",
+    "reportlab",
     "argon2-cffi",
     "uvicorn",
     "gunicorn"
@@ -58,6 +61,13 @@ exclude = [
     "__pycache__",
     "migrations"
 ]
+
+[tool.ruff.lint]
+# RUF012 — "Mutable default value for class attribute".
+# DRF ning standart yozuvi (`permission_classes = [IsManager]`,
+# `filter_backends = [...]`) shu qoidani buzadi, `rules.md` §4.4 esa aynan
+# shu yozuvni MAJBURIY qiladi. Sabab va muqobil variantlar: rules.md §17.3.
+ignore = ["RUF012"]
 
 [tool.mypy]
 python_version = "3.13"

@@ -1,9 +1,11 @@
 import pytest
-from rest_framework import status
 from django.urls import reverse
-from apps.common.factories import EmployeeFactory, ManagerFactory, TenantFactory
-from apps.catalog.models import Category, Product
+from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from apps.catalog.models import Category, Product
+from apps.common.factories import EmployeeFactory, ManagerFactory, TenantFactory
+
 
 @pytest.fixture
 def tenant():
@@ -67,7 +69,7 @@ class TestPermissions:
 
     def test_employee_can_read_product(self, employee_client, tenant):
         cat = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")
-        prod = Product.objects.create(tenant=tenant, code="P1", name="Velvet", category=cat)
+        Product.objects.create(tenant=tenant, code="P1", name="Velvet", category=cat)
         url = reverse("product-list")
         resp = employee_client.get(url)
         assert resp.status_code == status.HTTP_200_OK

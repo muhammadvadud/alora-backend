@@ -1,5 +1,6 @@
 import structlog
 from django.core.management.base import BaseCommand
+
 from apps.accounts.models import Tenant
 from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.choices import PriceUnit

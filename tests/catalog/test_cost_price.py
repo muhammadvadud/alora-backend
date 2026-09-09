@@ -1,10 +1,11 @@
 import pytest
-from rest_framework import status
 from django.urls import reverse
-from apps.common.factories import EmployeeFactory, ManagerFactory, AdminFactory, TenantFactory
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.choices import PriceUnit
-from rest_framework_simplejwt.tokens import RefreshToken
+from apps.common.factories import AdminFactory, EmployeeFactory, ManagerFactory, TenantFactory
+
 
 @pytest.fixture
 def tenant():
@@ -20,7 +21,7 @@ class TestCostPriceVisibility:
     def test_cost_price_visibility(self, client, tenant):
         cat = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")
         prod = Product.objects.create(tenant=tenant, code="P1", name="Velvet", category=cat)
-        var = ProductVariant.objects.create(
+        ProductVariant.objects.create(
             tenant=tenant, sku="P1-V1", product=prod, color_name="Red", 
             price="100000.00", cost_price="50000.00", price_unit=PriceUnit.PER_SQM
         )

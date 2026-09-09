@@ -22,6 +22,8 @@ class KnowledgeConfig(AppConfig):
     def ready(self) -> None:
         from config import urls as project_urls
 
+        from . import signals  # noqa: F401
+
         urlpatterns = getattr(project_urls, "urlpatterns", None)
         if urlpatterns is None:
             return

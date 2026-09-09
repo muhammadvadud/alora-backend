@@ -1,25 +1,29 @@
-from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FormParser
 from django_filters.rest_framework import DjangoFilterBackend
-from apps.common.permissions import IsManager, IsEmployee
-from apps.catalog.permissions import IsManagerOrReadOnly
-from apps.catalog.models import (
-    Category, Product, ProductVariant, ProductImage, Fason
-)
-from apps.catalog.serializers import (
-    CategorySerializer,
-    ProductReadSerializer, ProductWriteSerializer,
-    ProductVariantReadSerializer, ProductVariantWriteSerializer,
-    ProductImageSerializer,
-    FasonReadSerializer, FasonWriteSerializer,
-    BulkPriceSerializer, ImageUploadSerializer
-)
-from apps.catalog.selectors import get_categories, get_products, get_variants, get_fasons
-from apps.catalog.services import bulk_update_variant_prices, upload_product_image
+from drf_spectacular.utils import extend_schema
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
+
 from apps.catalog.filters import ProductFilter
+from apps.catalog.models import ProductImage
+from apps.catalog.permissions import IsManagerOrReadOnly
+from apps.catalog.selectors import get_categories, get_fasons, get_products, get_variants
+from apps.catalog.serializers import (
+    BulkPriceSerializer,
+    CategorySerializer,
+    FasonReadSerializer,
+    FasonWriteSerializer,
+    ImageUploadSerializer,
+    ProductImageSerializer,
+    ProductReadSerializer,
+    ProductVariantReadSerializer,
+    ProductVariantWriteSerializer,
+    ProductWriteSerializer,
+)
+from apps.catalog.services import bulk_update_variant_prices, upload_product_image
+from apps.common.permissions import IsManager
+
 
 class BaseCatalogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsManagerOrReadOnly]
@@ -110,7 +114,14 @@ class FasonViewSet(BaseCatalogViewSet):
 
 class CatalogImportView(viewsets.ViewSet):
     permission_classes = [IsManager]
+    serializer_class = None
 
+    @extend_schema(
+        operation_id="catalog_import_csv",
+        summary="CSV import",
+        description="CSV fayldan katalog ma'lumotlarini import qilish.",
+        responses={200: dict},
+    )
     @action(detail=False, methods=["post"], parser_classes=[MultiPartParser])
     def import_csv(self, request):
         # 3.21 CSV import (Optional logic, returning 200 for now as it's simple)
