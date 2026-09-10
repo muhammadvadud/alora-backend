@@ -38,14 +38,20 @@ Loyiha to'liq konteynerlashtirilgan. Barcha xizmatlar (PostgreSQL, Redis, Django
 - `celery_beat`: Vaqti-vaqti bilan avtomatik bajariladigan task'lar rejalashtiruvchisi.
 - `nginx`: Reverse proxy va statik fayllarni tarqatuvchi xizmat (port: 80, o'z `docker/nginx.conf` fayli bilan). U tashqariga xizmat ko'rsatadi.
 
-## 3. Zaxiralash (Backup) Tartibi
+## 3. Zaxiralash (Backup) va Tiklash (Restore) Tartibi
 
-**Ma'lumotlar bazasi:**
-PostgreSQL ma'lumotlari `postgres_data` Docker volume'ida saqlanadi. Har kuni xavfsiz dump qilib borish zarur. Host mashinada crontab orqali avtomatlashtirish mumkin:
+**Ma'lumotlar bazasi zaxirasi (Backup):**
+`scripts/backup_db.sh` skripti orqali PostgreSQL ma'lumotlar bazasining zaxira nusxasi olinadi. 
+Bu skriptni crontab orqali avtomatlashtirish kerak.
+U S3 bucket'ga nusxalashni ham qo'llab-quvvatlaydi (`BACKUP_S3_BUCKET` o'zgaruvchisi orqali).
+
+**Tiklash (Restore):**
+Olingan zaxira nusxadan tiklash uchun quyidagi buyruqdan foydalaning:
 ```bash
-docker exec -t <container_name_db> pg_dumpall -c -U alora > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+pg_restore --clean --if-exists --no-owner -d "$DATABASE_URL" alora-YYYYMMDD-HHMMSS.dump
 ```
-Olingan `.sql` dump fayllari zudlik bilan boshqa tashqi ob'yekt omboriga (masalan AWS S3) nusxalanishi (sync) shart.
 
-**Media fayllar (Rasmlar, Hujjatlar):**
-Media fayllar odatda S3'da saqlanishi kerak. Agar vaqtincha yoki maxsus holatlarda serverning o'zida saqlansa, loyihadagi tegishli media papkasining barcha tarkibini xuddi shu tarzda S3 bucket ga (misol uchun `aws s3 sync`) jo'natib turish rejalashtiriladi.
+Sinalmagan backup — backup emas. Tiklashni kamida bir marta sinab ko'ring.
+
+**Media fayllar:**
+Media fayllar odatda S3'da saqlanadi. Agar lokal saqlansa, media papkasini ham alohida S3'ga sinxronlash (masalan, `aws s3 sync` orqali) kerak.
