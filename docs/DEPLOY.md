@@ -38,6 +38,10 @@ Loyiha to'liq konteynerlashtirilgan. Barcha xizmatlar (PostgreSQL, Redis, Django
 - `celery_beat`: Vaqti-vaqti bilan avtomatik bajariladigan task'lar rejalashtiruvchisi.
 - `nginx`: Reverse proxy va statik fayllarni tarqatuvchi xizmat (port: 80, o'z `docker/nginx.conf` fayli bilan). U tashqariga xizmat ko'rsatadi.
 
+### 2.1. `go-agent` holati
+
+`go-agent` servisi hozircha `docker-compose.yml`ga qo'shilmagan: Go tomoni alohida repozitoriyda va hali tayyor emas. Tayyor bo'lgach compose'ga qo'shiladi. Backend `go-agent`ni ixtiyoriy bog'liqlik sifatida ko'radi — `/health/` da gRPC yiqilsa tizim `degraded` (200) qaytaradi, `error` emas.
+
 ## 3. Zaxiralash (Backup) va Tiklash (Restore) Tartibi
 
 **Ma'lumotlar bazasi zaxirasi (Backup):**

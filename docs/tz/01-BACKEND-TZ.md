@@ -1,7 +1,7 @@
 # ALORA — Backend TZ (Django)
 
 **Repo:** `alora-backend`
-**Stack:** Python 3.12 · Django 5.x · DRF · PostgreSQL 16 · Redis · Celery · grpcio · Uvicorn (ASGI)
+**Stack:** Python 3.13 · Django 5.x · DRF · PostgreSQL 16 · Redis · Celery · grpcio · Uvicorn (ASGI)
 
 ---
 
@@ -53,7 +53,7 @@ class User(AbstractBaseUser):
     role           # choices: employee | manager | admin
     tenant         # FK Tenant
     is_active
-    last_login_at
+    last_login      # Django standarti (`AbstractBaseUser.last_login`) ishlatiladi
     device_id      # oxirgi qurilma (ixtiyoriy)
 
 class Tenant:       # do'kon / filial
@@ -400,6 +400,8 @@ Go ishlamasa foydalanuvchiga tushunarli xato: "AI xizmati vaqtincha ishlamayapti
 
 Barcha yo'llar: `/api/v1/...`, JWT `Authorization: Bearer <token>`.
 
+> Quyidagi jadvalda yo'llar qisqartirilgan. Haqiqiy to'liq yo'l `/api/v1/<app>/...` shaklida bo'ladi, masalan `/calc/preview/` → `/api/v1/pricing/calc/preview/`. To'liq ro'yxat: `docs/API-GUIDE.md` va OpenAPI sxemasi.
+
 ### 5.1 Auth
 | Method | Endpoint | Izoh |
 |---|---|---|
@@ -498,7 +500,7 @@ Biznes foydalanuvchi unga kirmaydi.
 | POST | `/catalog/variants/bulk-price/` | tanlanganlarga foiz yoki summa bo'yicha narx o'zgartirish |
 | POST | `/catalog/products/{id}/images/` | rasm yuklash (multipart, telefon kamerasidan) |
 | DELETE | `/catalog/images/{id}/` | rasm o'chirish |
-| POST | `/catalog/import/` | Excel/CSV import (ixtiyoriy, dastlabki to'ldirish uchun) |
+| POST | `/catalog/import/` (`/api/v1/catalog/import/import_csv/`) | Excel/CSV import (ixtiyoriy, dastlabki to'ldirish uchun; DRF `@action` marshrutiga mos) |
 
 Mobil UX talablari backend tomondan:
 - Rasm serverda avtomatik siqiladi (thumbnail 300px, to'liq 1200px) — mobil trafik tejaladi
@@ -607,6 +609,7 @@ Product/Variant/CalcRule/KnowledgeRule saqlansa
 ```yaml
 services: postgres, redis, django (uvicorn), celery-worker, celery-beat, go-agent, nginx
 ```
+`go-agent` hozircha compose'ga qo'shilmagan — Go tomoni alohida repozitoriyda va hali tayyor emas. Tayyor bo'lgach compose'ga qo'shiladi. Backend uni ixtiyoriy bog'liqlik sifatida ko'radi: `/health/` da gRPC yiqilsa tizim `degraded` (200) qaytaradi, `error` emas (shu sababli TZdagi servislar ro'yxatida alohida qayd etildi; batafsil: `docs/DEPLOY.md`).
 - `.env` orqali sozlash, sirlar repoga tushmaydi
 - Migratsiyalar avtomatik (`entrypoint.sh`)
 - Backup: Postgres kunlik dump, media S3'da

@@ -120,7 +120,7 @@ Shablondagi `session.Store` interfeysi saqlanadi, `NewPostgres` ishlatiladi. Jad
 | Qatlam | Texnologiya |
 |---|---|
 | Mobil | Flutter 3.x, Dart, Riverpod, Dio, `flutter_sound`/`record`, `just_audio` |
-| Backend | Python 3.12, Django 5.x, DRF, Django ASGI (Uvicorn), Celery, `grpcio` |
+| Backend | Python 3.13, Django 5.x, DRF, Django ASGI (Uvicorn), Celery, `grpcio` |
 | AI | Go 1.26, CloudWeGo Eino, `UzStack/agent` shabloni, `google.golang.org/grpc` |
 | DB | PostgreSQL 16 (umumiy), Redis 7 (cache, pub/sub, Celery broker) |
 | LLM | DeepSeek (asosiy: `deepseek-v4-pro`), Claude/OpenAI — config bilan almashadi |
