@@ -25,9 +25,9 @@ case "${1:-}" in
         ;;
 esac
 
-echo "Migratsiyalarni ishga tushirish..."
 case "${1:-}" in
     celery|gunicorn|uvicorn|python|python3|manage.py)
+        echo "Migratsiyalarni ishga tushirish..."
         python manage.py migrate --noinput
 
         echo "Statik fayllarni yig'ish..."
