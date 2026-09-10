@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 import sentry_sdk
 from django.core.exceptions import ImproperlyConfigured
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -9,6 +11,8 @@ DEBUG = False
 SILENCED_SYSTEM_CHECKS = ['security.W009']
 
 SECRET_KEY = env('SECRET_KEY')
+if not SECRET_KEY:
+    raise ImproperlyConfigured("SECRET_KEY prod muhitida bo'sh bo'lmasligi kerak")
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 if not ALLOWED_HOSTS:
     raise ImproperlyConfigured("ALLOWED_HOSTS prod muhitida bo'sh bo'lmasligi kerak")
@@ -41,7 +45,7 @@ CACHES = {
     },
 }
 
-LOGGING['root']['level'] = env('LOG_LEVEL', default='INFO')
+cast(dict[str, Any], LOGGING['root'])['level'] = env('LOG_LEVEL', default='INFO')
 
 # Sentry sozlamalari
 SENTRY_DSN = env('SENTRY_DSN', default=None)

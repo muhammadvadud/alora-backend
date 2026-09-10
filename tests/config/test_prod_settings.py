@@ -15,7 +15,7 @@ def _load_prod_settings_without(variable: str) -> subprocess.CompletedProcess[st
             'REDIS_URL': 'redis://localhost:6379/0',
         }
     )
-    environment.pop(variable, None)
+    environment[variable] = ''
     return subprocess.run(
         [sys.executable, '-c', 'import config.settings.prod'],
         env=environment,
