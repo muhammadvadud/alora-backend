@@ -2,6 +2,8 @@
 
 Ushbu hujjat mobil ilova va boshqa mijozlar uchun Alora backend API bilan ishlash bo'yicha qo'llanma hisoblanadi.
 
+Backend faqat mobil klient uchun; CORS ataylab sozlanmagan. Web klient qo'shilsa django-cors-headers o'rnatilib MIDDLEWARE ga CommonMiddleware'dan oldin ulanishi kerak.
+
 ## 1. Autentifikatsiya
 
 Tizimda **JWT (JSON Web Token)** asosida autentifikatsiya qilinadi.
