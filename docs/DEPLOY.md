@@ -57,5 +57,37 @@ pg_restore --clean --if-exists --no-owner -d "$DATABASE_URL" alora-YYYYMMDD-HHMM
 
 Sinalmagan backup — backup emas. Tiklashni kamida bir marta sinab ko'ring.
 
+### Tiklash sinovi — bajarilgan (2026-09-10)
+
+Zaxiralash va tiklash tsikli alohida sinov bazasida uchidan-uchiga tekshirilgan:
+
+1. `alora_bkptest` bazasi yaratilib, ichiga marker satrlar yozildi.
+2. `scripts/backup_db.sh` bilan zaxira olindi.
+3. Falokat simulyatsiya qilindi: bir satr o'chirildi, ikkinchisi buzildi.
+4. `pg_restore --clean --if-exists --no-owner` bilan tiklandi.
+5. Natija: ikkala satr ham asl holida qaytdi.
+
+Sinovni takrorlash uchun prod bazasidan FOYDALANMANG — alohida baza yarating.
+
+### `pg_dump` konteyner ichida bo'lgan holat
+
+Docker bilan deploy qilinganda `pg_dump` odatda host'da o'rnatilmagan bo'ladi.
+`scripts/backup_db.sh` buni o'zi aniqlaydi va Postgres konteyneri ichidagi
+`pg_dump` ga o'tadi. Konteyner nomi standartdan farq qilsa,
+`BACKUP_PG_CONTAINER` o'zgaruvchisi bilan bering:
+
+```bash
+BACKUP_DIR=/backups \
+BACKUP_PG_CONTAINER=alora-db-1 \
+DATABASE_URL=postgres://alora:PAROL@localhost:5432/alora \
+./scripts/backup_db.sh
+```
+
+Kunlik zaxira uchun host cron:
+
+```cron
+0 3 * * * cd /srv/alora/backend && BACKUP_DIR=/backups DATABASE_URL=... ./scripts/backup_db.sh >> /var/log/alora-backup.log 2>&1
+```
+
 **Media fayllar:**
 Media fayllar odatda S3'da saqlanadi. Agar lokal saqlansa, media papkasini ham alohida S3'ga sinxronlash (masalan, `aws s3 sync` orqali) kerak.
