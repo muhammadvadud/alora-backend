@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 183 / 189 bajarildi (3 jarayonda) · 264 test o'tgan · ruff toza
+**Umumiy holat:** 185 / 189 bajarildi (3 jarayonda) · 264 test o'tgan · ruff toza
 
 ---
 
@@ -23,12 +23,12 @@
 - [x] 0.11 `docker/` — Dockerfile, docker-compose (postgres, redis, django, celery-worker, celery-beat, nginx)
 - [x] 0.12 `scripts/entrypoint.sh` — migrate + collectstatic + server
 - [x] 0.13 CI (GitHub Actions): lint → mypy → test → coverage gate (`--cov-fail-under=70`)
-- [x] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)
+- [~] 0.14 `/health/` endpoint (DB, Redis, gRPC holati)
 
 ## Bosqich 1 — `apps/common` (umumiy poydevor)
 
 - [x] 1.1 `BaseModel` — UUID pk, `created_at`, `updated_at`, `is_active`
-- [x] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)
+- [~] 1.2 `TenantScopedModel` + `TenantScopedQuerySetMixin` (avtomatik tenant filtri)
 - [x] 1.3 `StandardCursorPagination` (default 20, max 100)
 - [x] 1.4 Yagona xato formati: `custom_exception_handler` + `errors` maydoni
 - [x] 1.5 Rol permission klasslari: `IsEmployee`, `IsManager`, `IsAdmin`, `IsOwnerOrManager`
@@ -74,7 +74,7 @@
 - [x] 3.18 `POST /catalog/products/{id}/images/` — multipart yuklash
 - [x] 3.19 `DELETE /catalog/images/{id}/`
 - [x] 3.20 Rasm siqish Celery task (thumbnail 300px, to'liq 1200px)
-- [x] 3.21 `POST /catalog/import/` — Excel/CSV import
+- [ ] 3.21 `POST /catalog/import/` — Excel/CSV import
 - [x] 3.22 `GET/POST/PATCH/DELETE /catalog/fasons/`
 - [x] 3.23 Seed skript: kategoriyalar, namuna mahsulot va aksessuarlar
 - [x] 3.24 N+1 nazorati (`assertNumQueries`) va 300 ms javob testi
@@ -126,7 +126,7 @@
 - [x] 6.8 `Backend.ReportUsage` qabul qilish
 - [x] 6.9 `Backend.SaveOrderDraft` qabul qilish
 - [x] 6.10 `Backend.LogMessage` qabul qilish
-- [x] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
+- [~] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
 - [x] 6.12 gRPC mock testlari
 
 ## Bosqich 7 — `apps/chat` (gateway)

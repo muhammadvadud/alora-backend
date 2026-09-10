@@ -329,7 +329,11 @@ tannarx maydoni faqat admin uchun ochiq qilindi.
 ## 16. Bajarilgan ishni belgilash tartibi
 
 1. Ish boshlanganda `tasks.md` dagi qator `[~]` (jarayonda) qilinadi.
-2. Ish tugab, test o'tgach `[x]` qilinadi va yoniga qisqa izoh yoziladi.
+2. `[x]` faqat quyidagilar bajarilganda qo'yiladi:
+   (a) kod yozilgan VA API/entrypoint bilan ulangan (import qilinmagan modul — `[~]`),
+   (b) qabul mezonini qoplaydigan test bor va o'tadi,
+   (c) ruff, mypy, pytest uchalasi ham yashil,
+   (d) stub yoki soxta javob qoldirilmagan.
 3. Shu o'zgarish **ish commit'ining ichida** ketadi — alohida "tasks yangilandi" commit'i qilinmaydi.
 4. Yangi ish paydo bo'lsa `tasks.md` ga tegishli bosqichga qo'shiladi, o'ylab topilgan ish qo'shilmaydi.
 
