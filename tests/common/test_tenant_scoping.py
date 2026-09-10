@@ -35,9 +35,14 @@ class DummyQuerySet:
     def __init__(self, model: type[object]) -> None:
         self.model = model
         self.filters: list[dict[str, object]] = []
+        self.is_none = False
 
     def filter(self, **kwargs: object) -> DummyQuerySet:
         self.filters.append(kwargs)
+        return self
+
+    def none(self) -> DummyQuerySet:
+        self.is_none = True
         return self
 
 
@@ -55,14 +60,16 @@ class ScopedView(TenantScopedQuerySetMixin, BaseView):
     """TenantScopedQuerySetMixin tekshiruvi uchun view."""
 
 
-def test_tenant_scoped_queryset_filters_by_request_tenant(tenant: object) -> None:
+def test_tenant_scoped_queryset_filters_by_request_tenant_id() -> None:
     queryset = DummyQuerySet(DummyModel)
     view = ScopedView(queryset)
-    view.request = SimpleNamespace(user=SimpleNamespace(tenant=tenant, tenant_id=None))
+    tenant_id = 123
+    view.request = SimpleNamespace(user=SimpleNamespace(tenant_id=tenant_id))
 
     result = view.get_queryset()
 
-    assert result.filters == [{"tenant": tenant}]
+    assert result.filters == [{"tenant_id": tenant_id}]
+    assert not result.is_none
 
 
 def test_tenant_scoped_queryset_leaves_queryset_unchanged_when_no_tenant_field() -> None:
@@ -71,11 +78,21 @@ def test_tenant_scoped_queryset_leaves_queryset_unchanged_when_no_tenant_field()
 
     queryset = DummyQuerySet(NoTenantModel)
     view = ScopedView(queryset)
-    tenant = SimpleNamespace(id=1)
-    view.request = SimpleNamespace(user=SimpleNamespace(tenant=tenant, tenant_id=None))
+    tenant_id = 123
+    view.request = SimpleNamespace(user=SimpleNamespace(tenant_id=tenant_id))
 
     result = view.get_queryset()
 
     assert result is queryset
     assert result.filters == []
 
+
+def test_tenant_scoped_queryset_fail_closed_when_no_tenant() -> None:
+    queryset = DummyQuerySet(DummyModel)
+    view = ScopedView(queryset)
+    # User object exists but tenant_id is None
+    view.request = SimpleNamespace(user=SimpleNamespace(tenant_id=None))
+
+    result = view.get_queryset()
+
+    assert result.is_none

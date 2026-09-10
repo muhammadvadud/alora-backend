@@ -42,22 +42,19 @@ class TenantScopedQuerySetMixin:
     """ViewSet queryset'ini avtomatik tenant bo'yicha cheklaydi."""
 
     def get_queryset(self) -> Any:
-        """Request dagi tenant asosida queryset ni filtrlaydi."""
-
+        """Request dagi tenant asosida queryset ni filtrlaydi (fail-closed)."""
         queryset = super().get_queryset()
-        user = getattr(self.request, "user", None)
-        tenant = getattr(user, "tenant", None)
-        tenant_id = getattr(user, "tenant_id", None)
-
-        if queryset is None or tenant is None and tenant_id is None:
+        if queryset is None:
             return queryset
-
         model = getattr(queryset, "model", None)
         if model is None or not self._has_tenant_field(model):
             return queryset
-
-        tenant_value = tenant if tenant is not None else tenant_id
-        return queryset.filter(tenant=tenant_value)
+        user = getattr(self.request, "user", None)
+        tenant_id = getattr(user, "tenant_id", None)
+        # Tenant aniqlanmasa — hech narsa ko'rsatilmaydi (ochiq qoldirilmaydi).
+        if tenant_id is None:
+            return queryset.none()
+        return queryset.filter(tenant_id=tenant_id)
 
     @staticmethod
     def _has_tenant_field(model: type[Any]) -> bool:

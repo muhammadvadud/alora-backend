@@ -6,7 +6,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
 from apps.catalog.filters import ProductFilter
-from apps.catalog.models import ProductImage
+from apps.catalog.models import Category, Fason, Product, ProductImage, ProductVariant
 from apps.catalog.permissions import IsManagerOrReadOnly
 from apps.catalog.selectors import get_categories, get_fasons, get_products, get_variants
 from apps.catalog.serializers import (
@@ -32,14 +32,18 @@ class CategoryViewSet(BaseCatalogViewSet):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
-        return get_categories()
+        if getattr(self, "swagger_fake_view", False):
+            return Category.objects.none()
+        return get_categories(tenant_id=self.request.user.tenant_id)
 
 class ProductViewSet(BaseCatalogViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ProductFilter
 
     def get_queryset(self):
-        return get_products()
+        if getattr(self, "swagger_fake_view", False):
+            return Product.objects.none()
+        return get_products(tenant_id=self.request.user.tenant_id)
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
@@ -68,7 +72,9 @@ class ProductViewSet(BaseCatalogViewSet):
 
 class ProductVariantViewSet(BaseCatalogViewSet):
     def get_queryset(self):
-        return get_variants()
+        if getattr(self, "swagger_fake_view", False):
+            return ProductVariant.objects.none()
+        return get_variants(tenant_id=self.request.user.tenant_id)
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
@@ -97,12 +103,16 @@ class ProductImageViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
     serializer_class = ProductImageSerializer
 
     def get_queryset(self):
-        return ProductImage.objects.all()
+        if getattr(self, "swagger_fake_view", False):
+            return ProductImage.objects.none()
+        return ProductImage.objects.filter(tenant_id=self.request.user.tenant_id)
 
 
 class FasonViewSet(BaseCatalogViewSet):
     def get_queryset(self):
-        return get_fasons()
+        if getattr(self, "swagger_fake_view", False):
+            return Fason.objects.none()
+        return get_fasons(tenant_id=self.request.user.tenant_id)
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
