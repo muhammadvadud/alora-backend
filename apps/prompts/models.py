@@ -1,4 +1,9 @@
-"""System prompt versiyalari modellari (Bosqich 11)."""
+"""System prompt versiyalari modellari (Bosqich 11).
+
+`PromptVersion` ATAYLAB global (tenant'siz). Loyiha bitta do'kon uchun
+mo'ljallangan; qaror sanasi 2026-09-10. Ikkinchi tenant qo'shilsa bu qaror
+qayta ko'rib chiqilishi SHART — `docs/ADR-001-pricing-global.md` ga qarang.
+"""
 
 from __future__ import annotations
 

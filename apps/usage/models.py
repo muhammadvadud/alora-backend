@@ -99,7 +99,12 @@ class UsageDaily(TenantScopedModel):
 
 
 class UsageLimit(BaseModel):
-    """Xodim yoki rol uchun foydalanish limiti."""
+    """Xodim yoki rol uchun global foydalanish limiti.
+
+    Bu model ataylab tenantsiz qolgan: loyiha hozircha bitta do'kon uchun.
+    Ikkinchi tenant qo'shilsa qaror qayta ko'rib chiqilishi shart —
+    `docs/ADR-001-pricing-global.md` ga qarang.
+    """
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

@@ -1,3 +1,10 @@
+"""Narx qoidalari ATAYLAB global (tenant'siz).
+
+Sabab: loyiha bitta do'kon uchun mo'ljallangan. Qaror sanasi: 2026-09-10.
+Ikkinchi tenant qo'shilsa bu qaror qayta ko'rib chiqilishi SHART —
+`docs/ADR-001-pricing-global.md` ga qarang.
+"""
+
 from __future__ import annotations
 
 from decimal import Decimal
