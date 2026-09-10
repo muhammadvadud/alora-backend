@@ -134,5 +134,24 @@ class CatalogImportView(viewsets.ViewSet):
     )
     @action(detail=False, methods=["post"], parser_classes=[MultiPartParser])
     def import_csv(self, request):
-        # 3.21 CSV import (Optional logic, returning 200 for now as it's simple)
-        return Response({"status": "imported"})
+        import dataclasses
+
+        from rest_framework.exceptions import ValidationError
+
+        from apps.catalog.services import import_catalog_csv
+
+        file = request.FILES.get("file")
+        if not file:
+            raise ValidationError({"file": "Fayl taqdim etilmadi"})
+            
+        if file.size > 10 * 1024 * 1024:
+            raise ValidationError({"file": "Fayl hajmi 10 MB dan oshmasligi kerak"})
+
+        dry_run = request.query_params.get("dry_run", "false").lower() == "true"
+        
+        result = import_catalog_csv(
+            tenant=request.user.tenant, 
+            file=file, 
+            dry_run=dry_run
+        )
+        return Response(dataclasses.asdict(result))
