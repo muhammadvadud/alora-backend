@@ -2,7 +2,9 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
 import environ
+import structlog
 
 # Loyiha asosiy papkasi
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -91,8 +93,6 @@ CHANNEL_LAYERS = {
 }
 
 # Ma'lumotlar bazasi
-import dj_database_url
-
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/postgres'),
@@ -205,8 +205,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 # Logging
-import structlog
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
