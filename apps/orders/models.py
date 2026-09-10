@@ -71,7 +71,9 @@ class Order(TenantScopedModel):
         db_index=True,
         verbose_name=_("Holat"),
     )
-    subtotal = models.DecimalField(max_digits=14, decimal_places=2, default="0.00", verbose_name=_("Yakuniy summa"))
+    subtotal = models.DecimalField(
+        max_digits=14, decimal_places=2, default="0.00", verbose_name=_("Yakuniy summa")
+    )
     discount_percent = models.DecimalField(
         max_digits=5, decimal_places=2, default="0.00", verbose_name=_("Chegirma foizi")
     )
@@ -87,7 +89,9 @@ class Order(TenantScopedModel):
     delivery_amount = models.DecimalField(
         max_digits=14, decimal_places=2, default="0.00", verbose_name=_("Yetkazish narxi")
     )
-    total = models.DecimalField(max_digits=14, decimal_places=2, default="0.00", verbose_name=_("Jami"))
+    total = models.DecimalField(
+        max_digits=14, decimal_places=2, default="0.00", verbose_name=_("Jami")
+    )
     prepayment_percent = models.DecimalField(
         max_digits=5, decimal_places=2, default="0.00", verbose_name=_("Avans foizi")
     )
@@ -138,10 +142,14 @@ class OrderMeasurement(BaseModel):
         verbose_name=_("Buyurtma"),
     )
     room_name = models.CharField(max_length=255, verbose_name=_("Xona nomi"))
-    cornice_length_m = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Karniz uzunligi (m)"))
+    cornice_length_m = models.DecimalField(
+        max_digits=8, decimal_places=3, verbose_name=_("Karniz uzunligi (m)")
+    )
     height_m = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Balandlik (m)"))
     layers = models.JSONField(default=list, blank=True, verbose_name=_("Qatlamlar"))
-    coefficient = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Burma koeffitsienti"))
+    coefficient = models.DecimalField(
+        max_digits=8, decimal_places=3, verbose_name=_("Burma koeffitsienti")
+    )
     note = models.TextField(blank=True, verbose_name=_("Izoh"))
 
     class Meta:
@@ -170,9 +178,13 @@ class OrderCurtainPart(BaseModel):
     role = models.CharField(max_length=20, choices=CurtainPartRole.choices, verbose_name=_("Rol"))
     width_m = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Kenglik (m)"))
     height_m = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Balandlik (m)"))
-    coefficient = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Burma koeffitsienti"))
+    coefficient = models.DecimalField(
+        max_digits=8, decimal_places=3, verbose_name=_("Burma koeffitsienti")
+    )
     area_sqm = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Yuza (m²)"))
-    price_per_sqm = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("1 m² narxi"))
+    price_per_sqm = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("1 m² narxi")
+    )
     total = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("Summa"))
     sort_order = models.PositiveIntegerField(default=0, verbose_name=_("Tartib"))
 
@@ -204,7 +216,9 @@ class OrderAccessory(BaseModel):
     )
     qty = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Miqdor"))
     unit = models.CharField(max_length=20, choices=PriceUnit.choices, verbose_name=_("Birlik"))
-    unit_price = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("Bir birlik narxi"))
+    unit_price = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("Bir birlik narxi")
+    )
     total = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("Summa"))
     sort_order = models.PositiveIntegerField(default=0, verbose_name=_("Tartib"))
 
@@ -238,7 +252,9 @@ class OrderItem(BaseModel):
     name_snapshot = models.CharField(max_length=255, verbose_name=_("Nomi (snapshot)"))
     qty = models.DecimalField(max_digits=8, decimal_places=3, verbose_name=_("Miqdor"))
     unit = models.CharField(max_length=20, choices=PriceUnit.choices, verbose_name=_("Birlik"))
-    unit_price = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("Bir birlik narxi"))
+    unit_price = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("Bir birlik narxi")
+    )
     total = models.DecimalField(max_digits=14, decimal_places=2, verbose_name=_("Summa"))
     sort_order = models.PositiveIntegerField(default=0, verbose_name=_("Tartib"))
 

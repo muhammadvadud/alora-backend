@@ -54,7 +54,9 @@ class CalcRuleViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             return CalcRuleWriteSerializer
         return CalcRuleSerializer
 
-    @extend_schema(responses={200: CalcRuleSerializer(many=True)}, summary="Hisob qoidalari ro'yxati")
+    @extend_schema(
+        responses={200: CalcRuleSerializer(many=True)}, summary="Hisob qoidalari ro'yxati"
+    )
     def list(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(self.get_queryset().order_by("key"), many=True)
         return Response(serializer.data)
@@ -102,7 +104,9 @@ class ServicePriceViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
             return ServicePriceWriteSerializer
         return ServicePriceSerializer
 
-    @extend_schema(responses={200: ServicePriceSerializer(many=True)}, summary="Xizmat narxlari ro'yxati")
+    @extend_schema(
+        responses={200: ServicePriceSerializer(many=True)}, summary="Xizmat narxlari ro'yxati"
+    )
     def list(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
         serializer = self.get_serializer(self.get_queryset().order_by("key"), many=True)
         return Response(serializer.data)
@@ -113,7 +117,9 @@ class ServicePriceViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
         summary="Xizmat narxlarini yangilash",
     )
     def partial_update(self, request: HttpRequest, *args: Any, **kwargs: Any) -> Response:
-        serializer = ServicePriceWriteSerializer(data=self._normalize_payload(request.data), many=True)
+        serializer = ServicePriceWriteSerializer(
+            data=self._normalize_payload(request.data), many=True
+        )
         serializer.is_valid(raise_exception=True)
         with transaction.atomic():
             service_prices = upsert_service_prices(serializer.validated_data)
@@ -225,5 +231,7 @@ def calc_preview_view(request: HttpRequest) -> Response:
 
     serializer = PreviewRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    result = calculate_preview(serializer.validated_data, user_role=getattr(request.user, "role", None))
+    result = calculate_preview(
+        serializer.validated_data, user_role=getattr(request.user, "role", None)
+    )
     return Response(PreviewResultSerializer(result).data, status=status.HTTP_200_OK)

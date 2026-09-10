@@ -8,6 +8,7 @@ from django.urls import reverse
 def url():
     return reverse("health_check")
 
+
 @pytest.mark.django_db
 class TestHealthCheck:
     @patch("apps.chat.health.grpc_health")
@@ -17,7 +18,7 @@ class TestHealthCheck:
         mock_db.return_value = {"status": "ok"}
         mock_redis.return_value = {"status": "ok"}
         mock_grpc.return_value = {"status": "ok", "version": "1.0", "active_sessions": 0}
-        
+
         resp = client.get(url)
         assert resp.status_code == 200
         data = resp.json()
@@ -31,7 +32,7 @@ class TestHealthCheck:
         mock_db.return_value = {"status": "ok"}
         mock_redis.return_value = {"status": "ok"}
         mock_grpc.return_value = {"status": "error", "detail": "connection refused"}
-        
+
         resp = client.get(url)
         assert resp.status_code == 200
         data = resp.json()
@@ -45,7 +46,7 @@ class TestHealthCheck:
         mock_db.return_value = {"status": "error", "detail": "db down"}
         mock_redis.return_value = {"status": "ok"}
         mock_grpc.return_value = {"status": "ok"}
-        
+
         resp = client.get(url)
         assert resp.status_code == 503
         data = resp.json()

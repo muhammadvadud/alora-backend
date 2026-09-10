@@ -181,9 +181,7 @@ def get_conversion_stats(tenant: Any) -> dict[str, Any]:
     )
     rate = Decimal(0)
     if total:
-        rate = (Decimal(with_order) / Decimal(total) * Decimal(100)).quantize(
-            Decimal("0.01")
-        )
+        rate = (Decimal(with_order) / Decimal(total) * Decimal(100)).quantize(Decimal("0.01"))
     return {
         "total_conversations": total,
         "with_order": with_order,

@@ -130,7 +130,11 @@ class TestUsageByUser:
         worker_a = EmployeeFactory(tenant=manager.tenant, full_name="Zafar")
         worker_b = EmployeeFactory(tenant=manager.tenant, full_name="Aliya")
         UsageDaily.objects.create(
-            tenant=manager.tenant, user=worker_a, date=today, tokens=100, cost_uzs=Decimal("1000.00")
+            tenant=manager.tenant,
+            user=worker_a,
+            date=today,
+            tokens=100,
+            cost_uzs=Decimal("1000.00"),
         )
         UsageDaily.objects.create(
             tenant=manager.tenant, user=worker_b, date=today, tokens=50, cost_uzs=Decimal("2000.00")
@@ -151,7 +155,10 @@ class TestUsageConversations:
         conv_b = uuid_lib.uuid4()
         for _ in range(3):
             UsageRecord.objects.create(
-                tenant=manager.tenant, user=employee, conversation=conv_b, cost_uzs=Decimal("3000.00")
+                tenant=manager.tenant,
+                user=employee,
+                conversation=conv_b,
+                cost_uzs=Decimal("3000.00"),
             )
         UsageRecord.objects.create(
             tenant=manager.tenant, user=employee, conversation=conv_a, cost_uzs=Decimal("500.00")

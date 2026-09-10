@@ -119,7 +119,9 @@ class TestCompressImageTask:
         uploaded = SimpleUploadedFile("katta.jpg", buffer.read(), content_type="image/jpeg")
 
         with override_settings(MEDIA_ROOT=str(tmp_path)):
-            image = ProductImage.objects.create(tenant=product.tenant, product=product, image=uploaded)
+            image = ProductImage.objects.create(
+                tenant=product.tenant, product=product, image=uploaded
+            )
             compress_image_task(str(image.id))
             image.refresh_from_db()
 

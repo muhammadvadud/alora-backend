@@ -48,7 +48,9 @@ def knowledge_rules(db: Any) -> list[KnowledgeRule]:
 def test_select_matching_rules_orders_by_priority(knowledge_rules: list[KnowledgeRule]) -> None:
     """Mos qoidalar ustuvorlik bo'yicha qaytishini tekshiradi."""
 
-    matched = select_matching_rules({"room": "wedding", "style": "classic", "budget": "medium"}, kind="room_style")
+    matched = select_matching_rules(
+        {"room": "wedding", "style": "classic", "budget": "medium"}, kind="room_style"
+    )
 
     assert [rule.priority for rule in matched] == [10, 5]
 
@@ -64,16 +66,27 @@ def test_select_matching_rules_supports_nested_conditions(db: Any) -> None:
         is_active=True,
     )
 
-    matched = select_matching_rules({"room": {"type": "living", "season": "winter", "floor": 12}}, kind="general")
+    matched = select_matching_rules(
+        {"room": {"type": "living", "season": "winter", "floor": 12}}, kind="general"
+    )
 
     assert len(matched) == 1
     assert matched[0].recommendation == "Qalin mato tavsiya qilinadi."
 
 
-def test_knowledge_sync_serializer_exposes_stable_fields(knowledge_rules: list[KnowledgeRule]) -> None:
+def test_knowledge_sync_serializer_exposes_stable_fields(
+    knowledge_rules: list[KnowledgeRule],
+) -> None:
     """Go sinxron formati barqaror ekanini tekshiradi."""
 
     serializer = KnowledgeRuleSyncSerializer(knowledge_rules[0])
 
-    assert set(serializer.data) == {"id", "kind", "condition", "recommendation", "priority", "is_active", "updated_at"}
-
+    assert set(serializer.data) == {
+        "id",
+        "kind",
+        "condition",
+        "recommendation",
+        "priority",
+        "is_active",
+        "updated_at",
+    }

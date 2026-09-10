@@ -29,8 +29,15 @@ from apps.common.models import TenantScopedQuerySetMixin
 from apps.common.pagination import StandardCursorPagination
 
 
-class ConversationViewSet(TenantScopedQuerySetMixin, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class ConversationViewSet(
+    TenantScopedQuerySetMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     """Suhbatlar uchun ViewSet."""
+
     serializer_class = ConversationSerializer
     permission_classes = (IsConversationOwnerOrManager,)
     pagination_class = StandardCursorPagination
@@ -43,10 +50,9 @@ class ConversationViewSet(TenantScopedQuerySetMixin, mixins.ListModelMixin, mixi
 
     def perform_create(self, serializer):
         import uuid
+
         serializer.save(
-            user=self.request.user,
-            tenant=self.request.user.tenant,
-            session_id=str(uuid.uuid4())
+            user=self.request.user, tenant=self.request.user.tenant, session_id=str(uuid.uuid4())
         )
 
     def perform_destroy(self, instance):
@@ -65,7 +71,6 @@ class ConversationViewSet(TenantScopedQuerySetMixin, mixins.ListModelMixin, mixi
         conversation = self.get_object()
         transcript = get_transcript(conversation.id)
         return Response(transcript)
-
 
 
 class ConversationMessagesView(APIView):

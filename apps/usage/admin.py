@@ -5,10 +5,18 @@ from .models import UsageDaily, UsageLimit, UsageRecord
 
 @admin.register(UsageRecord)
 class UsageRecordAdmin(admin.ModelAdmin):
-    list_display = ("user", "tenant", "prompt_tokens", "completion_tokens", "cost_uzs", "created_at")
+    list_display = (
+        "user",
+        "tenant",
+        "prompt_tokens",
+        "completion_tokens",
+        "cost_uzs",
+        "created_at",
+    )
     list_filter = ("tenant", "created_at")
     search_fields = ("user__phone",)
     readonly_fields = ("created_at", "updated_at")
+
 
 @admin.register(UsageDaily)
 class UsageDailyAdmin(admin.ModelAdmin):
@@ -16,6 +24,7 @@ class UsageDailyAdmin(admin.ModelAdmin):
     list_filter = ("date", "tenant")
     search_fields = ("user__phone",)
     readonly_fields = ("created_at", "updated_at")
+
 
 @admin.register(UsageLimit)
 class UsageLimitAdmin(admin.ModelAdmin):

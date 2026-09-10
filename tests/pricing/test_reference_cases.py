@@ -99,7 +99,9 @@ def pricing_reference_data(db: Any) -> dict[str, Any]:
 
 
 @pytest.mark.parametrize("case_index", range(20), ids=lambda index: f"case-{index + 1:02d}")
-def test_reference_cases_match_fixture(pricing_reference_data: dict[str, Any], case_index: int) -> None:
+def test_reference_cases_match_fixture(
+    pricing_reference_data: dict[str, Any], case_index: int
+) -> None:
     """JSON fayldagi 20 ta etalon misol bilan natijani bir xil qiladi."""
 
     case = pricing_reference_data["cases"][case_index]
@@ -115,4 +117,3 @@ def test_reference_fixture_has_twenty_cases() -> None:
 
     assert data["schema_version"] == "alora.pricing.calc_cases.v1"
     assert len(data["cases"]) == 20
-

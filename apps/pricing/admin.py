@@ -16,6 +16,7 @@ class CalcRuleAdmin(admin.ModelAdmin):
     search_fields = ("key",)
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(ServicePrice)
 class ServicePriceAdmin(admin.ModelAdmin):
     list_display = ("key", "name", "price", "unit", "is_active")
@@ -23,21 +24,25 @@ class ServicePriceAdmin(admin.ModelAdmin):
     search_fields = ("key", "name")
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(DiscountTier)
 class DiscountTierAdmin(admin.ModelAdmin):
     list_display = ("min_amount", "percent", "is_active")
     list_filter = ("is_active",)
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(DiscountPolicy)
 class DiscountPolicyAdmin(admin.ModelAdmin):
     list_display = ("manual_max_percent_employee", "manual_max_percent_manager", "stack_with_tier")
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(OrderDefaults)
 class OrderDefaultsAdmin(admin.ModelAdmin):
     list_display = ("prepayment_percent", "delivery_amount", "deadline_days")
     readonly_fields = ("created_at", "updated_at")
+
 
 @admin.register(ModelPricing)
 class ModelPricingAdmin(admin.ModelAdmin):

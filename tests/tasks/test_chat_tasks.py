@@ -85,13 +85,19 @@ class TestGenerateConversationTitle:
     """13.3 — `generate_conversation_title` taski."""
 
     def test_uses_provided_text(self, conversation):
-        title = generate_conversation_title(str(conversation.id), message_text="  Qanday  pardalar bor?\n")
+        title = generate_conversation_title(
+            str(conversation.id), message_text="  Qanday  pardalar bor?\n"
+        )
         conversation.refresh_from_db()
         assert conversation.title == "Qanday pardalar bor?"
         assert title == conversation.title
 
     def test_reads_first_user_message(self, conversation):
-        save_message(conversation_id=str(conversation.id), role=MessageRole.USER, content="Zuvayda mato kerak")
+        save_message(
+            conversation_id=str(conversation.id),
+            role=MessageRole.USER,
+            content="Zuvayda mato kerak",
+        )
         title = generate_conversation_title(str(conversation.id))
         assert title == "Zuvayda mato kerak"
 
@@ -112,7 +118,9 @@ class TestGenerateConversationTitle:
             unit="chars",
             description="Suhbat sarlavhasi uzunligi",
         )
-        title = generate_conversation_title(str(conversation.id), message_text="juda uzun matn " * 10)
+        title = generate_conversation_title(
+            str(conversation.id), message_text="juda uzun matn " * 10
+        )
         assert len(title) == 25
 
     def test_missing_conversation_returns_none(self):

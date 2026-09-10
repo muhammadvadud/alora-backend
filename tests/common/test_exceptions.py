@@ -38,4 +38,3 @@ def test_custom_exception_handler_uses_uzbek_auth_message() -> None:
     assert response.data["detail"] == "Tizimga kirish talab qilinadi"
     assert response.data["code"] == "not_authenticated"
     assert response.data["errors"] == {}
-

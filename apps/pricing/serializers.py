@@ -22,7 +22,17 @@ class CalcRuleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CalcRule
-        fields = ("id", "key", "value", "unit", "description", "applies_to", "is_active", "created_at", "updated_at")
+        fields = (
+            "id",
+            "key",
+            "value",
+            "unit",
+            "description",
+            "applies_to",
+            "is_active",
+            "created_at",
+            "updated_at",
+        )
 
 
 class CalcRuleWriteSerializer(serializers.ModelSerializer):
@@ -53,7 +63,9 @@ class ServicePriceWriteSerializer(serializers.ModelSerializer):
     """Xizmat narxi uchun yozish serializer'i."""
 
     price = serializers.DecimalField(
-        max_digits=14, decimal_places=2, min_value=ZERO,
+        max_digits=14,
+        decimal_places=2,
+        min_value=ZERO,
         error_messages={"min_value": "0 dan kichik bo'lishi mumkin emas"},
     )
 
@@ -96,7 +108,14 @@ class OrderDefaultsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderDefaults
-        fields = ("id", "prepayment_percent", "delivery_amount", "deadline_days", "created_at", "updated_at")
+        fields = (
+            "id",
+            "prepayment_percent",
+            "delivery_amount",
+            "deadline_days",
+            "created_at",
+            "updated_at",
+        )
 
 
 class ModelPricingSerializer(serializers.ModelSerializer):
@@ -133,7 +152,9 @@ class PreviewPartInputSerializer(serializers.Serializer):
         required=False,
         allow_null=True,
     )
-    coef = serializers.DecimalField(max_digits=8, decimal_places=3, min_value=ZERO, required=False, allow_null=True)
+    coef = serializers.DecimalField(
+        max_digits=8, decimal_places=3, min_value=ZERO, required=False, allow_null=True
+    )
 
 
 class PreviewAccessoryInputSerializer(serializers.Serializer):
@@ -156,7 +177,9 @@ class PreviewRequestSerializer(serializers.Serializer):
     """Preview endpoint kirish formati."""
 
     measurements = PreviewMeasurementInputSerializer(many=True)
-    services = serializers.ListField(child=serializers.CharField(), required=False, allow_empty=True, default=list)
+    services = serializers.ListField(
+        child=serializers.CharField(), required=False, allow_empty=True, default=list
+    )
     discount_percent = serializers.DecimalField(
         max_digits=5,
         decimal_places=2,

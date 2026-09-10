@@ -64,8 +64,12 @@ def load_pricing_snapshot() -> PricingSnapshot:
     """Hisoblash uchun kerakli qoidalarni bazadan yuklaydi."""
 
     calc_rules = {rule.key: rule for rule in CalcRule.objects.all()}
-    service_prices = {service.key: service for service in ServicePrice.objects.filter(is_active=True)}
-    discount_tiers = list(DiscountTier.objects.filter(is_active=True).order_by("min_amount", "percent"))
+    service_prices = {
+        service.key: service for service in ServicePrice.objects.filter(is_active=True)
+    }
+    discount_tiers = list(
+        DiscountTier.objects.filter(is_active=True).order_by("min_amount", "percent")
+    )
     discount_policy = _load_singleton(DiscountPolicy)
     order_defaults = _load_singleton(OrderDefaults)
     return PricingSnapshot(
@@ -249,7 +253,9 @@ def _build_measurement_preview(
                 "raw_area_m2": str(raw_area),
                 "area_m2": str(rounded_area),
                 "waste_area_m2": str(waste_area),
-                "waste_percent": str(waste_percent.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)),
+                "waste_percent": str(
+                    waste_percent.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+                ),
                 "price_unit": variant.price_unit,
                 "unit_price": str(variant.price),
                 "line_total": str(line_total),
@@ -379,7 +385,9 @@ def _normalize_measurements(payload: Mapping[str, Any]) -> Sequence[Mapping[str,
     """O'lchovlar ro'yxatini xavfsiz qaytaradi."""
 
     measurement_payloads = payload.get("measurements", [])
-    if not isinstance(measurement_payloads, Sequence) or isinstance(measurement_payloads, (str, bytes)):
+    if not isinstance(measurement_payloads, Sequence) or isinstance(
+        measurement_payloads, (str, bytes)
+    ):
         raise ValidationError({"measurements": "O'lchovlar ro'yxat bo'lishi kerak"})
     return measurement_payloads
 
@@ -434,7 +442,9 @@ def calculate_preview(
     total_before_rounding = subtotal - discount_amount + delivery_amount
     min_order_amount = _rule_value(snapshot, "min_order_amount")
     total_before_rounding = max(total_before_rounding, min_order_amount)
-    total = _quantize_money(_round_to_step(total_before_rounding, _rule_value(snapshot, "round_total_to")))
+    total = _quantize_money(
+        _round_to_step(total_before_rounding, _rule_value(snapshot, "round_total_to"))
+    )
 
     warnings: list[str] = []
     waste_warn_percent = _rule_value(snapshot, "waste_warn_percent")

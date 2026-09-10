@@ -8,6 +8,7 @@ class MessageInline(admin.TabularInline):
     extra = 0
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     list_display = ("title", "user", "tenant", "is_active", "created_at")
@@ -15,6 +16,7 @@ class ConversationAdmin(admin.ModelAdmin):
     search_fields = ("title", "session_id")
     readonly_fields = ("created_at", "updated_at")
     inlines = [MessageInline]
+
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):

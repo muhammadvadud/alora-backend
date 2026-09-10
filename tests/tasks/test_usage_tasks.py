@@ -80,7 +80,9 @@ class TestDailyUsageRollup:
     def _local_datetime(year: int, month: int, day: int, hour: int = 10) -> dt.datetime:
         return dt.datetime(year, month, day, hour, tzinfo=timezone.get_current_timezone())
 
-    def _create_record(self, employee, created_at, *, conversation=None, prompt_tokens=10, cost="100.00"):
+    def _create_record(
+        self, employee, created_at, *, conversation=None, prompt_tokens=10, cost="100.00"
+    ):
         record = UsageRecord.objects.create(
             tenant=employee.tenant,
             user=employee,
@@ -94,8 +96,12 @@ class TestDailyUsageRollup:
     def test_aggregates_usage_into_daily(self, employee):
         target_date = timezone.localdate()
         start = self._local_datetime(target_date.year, target_date.month, target_date.day)
-        self._create_record(employee, start, conversation=uuid.uuid4(), prompt_tokens=100, cost="1200.00")
-        self._create_record(employee, start, conversation=uuid.uuid4(), prompt_tokens=15, cost="800.00")
+        self._create_record(
+            employee, start, conversation=uuid.uuid4(), prompt_tokens=100, cost="1200.00"
+        )
+        self._create_record(
+            employee, start, conversation=uuid.uuid4(), prompt_tokens=15, cost="800.00"
+        )
 
         updated = daily_usage_rollup(date=str(target_date))
 
@@ -131,10 +137,16 @@ class TestDailyUsageRollup:
 
     def test_excludes_other_days(self, employee):
         today = timezone.localdate()
-        self._create_record(employee, self._local_datetime(today.year, today.month, today.day), prompt_tokens=5)
+        self._create_record(
+            employee, self._local_datetime(today.year, today.month, today.day), prompt_tokens=5
+        )
 
         other_day = today - dt.timedelta(days=10)
-        self._create_record(employee, self._local_datetime(other_day.year, other_day.month, other_day.day), prompt_tokens=99)
+        self._create_record(
+            employee,
+            self._local_datetime(other_day.year, other_day.month, other_day.day),
+            prompt_tokens=99,
+        )
 
         updated = daily_usage_rollup(date=str(today))
 

@@ -174,7 +174,9 @@ class OrderPartWriteSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=CurtainPartRole.choices)
     width_m = serializers.DecimalField(max_digits=8, decimal_places=3)
     height_m = serializers.DecimalField(max_digits=8, decimal_places=3)
-    coefficient = serializers.DecimalField(max_digits=8, decimal_places=3, required=False, allow_null=True)
+    coefficient = serializers.DecimalField(
+        max_digits=8, decimal_places=3, required=False, allow_null=True
+    )
     coef = serializers.DecimalField(max_digits=8, decimal_places=3, required=False, allow_null=True)
 
 

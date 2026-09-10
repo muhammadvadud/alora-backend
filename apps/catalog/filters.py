@@ -8,9 +8,15 @@ class ProductFilter(django_filters.FilterSet):
     style = django_filters.CharFilter(field_name="style", lookup_expr="iexact")
     room = django_filters.CharFilter(method="filter_room")
     segment = django_filters.CharFilter(field_name="segment", lookup_expr="iexact")
-    price_unit = django_filters.CharFilter(field_name="variants__price_unit", lookup_expr="iexact", distinct=True)
-    min_price = django_filters.NumberFilter(field_name="variants__price", lookup_expr="gte", distinct=True)
-    max_price = django_filters.NumberFilter(field_name="variants__price", lookup_expr="lte", distinct=True)
+    price_unit = django_filters.CharFilter(
+        field_name="variants__price_unit", lookup_expr="iexact", distinct=True
+    )
+    min_price = django_filters.NumberFilter(
+        field_name="variants__price", lookup_expr="gte", distinct=True
+    )
+    max_price = django_filters.NumberFilter(
+        field_name="variants__price", lookup_expr="lte", distinct=True
+    )
     search = django_filters.CharFilter(method="filter_search")
 
     class Meta:
@@ -23,9 +29,10 @@ class ProductFilter(django_filters.FilterSet):
 
     def filter_search(self, queryset, name, value):
         from django.db.models import Q
+
         return queryset.filter(
-            Q(name__icontains=value) | 
-            Q(code__icontains=value) |
-            Q(description__icontains=value) |
-            Q(tags__contains=[value])
+            Q(name__icontains=value)
+            | Q(code__icontains=value)
+            | Q(description__icontains=value)
+            | Q(tags__contains=[value])
         ).distinct()

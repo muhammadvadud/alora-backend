@@ -116,8 +116,10 @@ def _render_with_reportlab(order: Order) -> bytes:
     story.append(Spacer(1, 6 * mm))
     story.append(
         Paragraph(
-            (f"Jami: {order.total} so'm<br/>Avans: {order.prepayment} so'm<br/>"
-             f"Qoldiq: {order.balance} so'm"),
+            (
+                f"Jami: {order.total} so'm<br/>Avans: {order.prepayment} so'm<br/>"
+                f"Qoldiq: {order.balance} so'm"
+            ),
             styles["Normal"],
         )
     )

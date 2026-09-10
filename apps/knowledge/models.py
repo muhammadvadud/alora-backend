@@ -26,7 +26,9 @@ class KnowledgeRule(BaseModel):
         OBJECTION = "objection", _("E'tiroz")
         GENERAL = "general", _("Umumiy")
 
-    kind = models.CharField(max_length=32, choices=Kind.choices, db_index=True, verbose_name=_("Turi"))
+    kind = models.CharField(
+        max_length=32, choices=Kind.choices, db_index=True, verbose_name=_("Turi")
+    )
     condition = models.JSONField(default=dict, blank=True, verbose_name=_("Shart"))
     recommendation = models.TextField(verbose_name=_("Tavsiya"))
     priority = models.PositiveIntegerField(default=0, db_index=True, verbose_name=_("Ustuvorlik"))

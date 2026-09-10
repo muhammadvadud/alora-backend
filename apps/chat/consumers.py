@@ -125,10 +125,12 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
             raise
         except Exception as exc:  # noqa: BLE001
             logger.warning("voice_stream_failed", error=str(exc))
-            await self.send(text_data=json.dumps(
-                {"kind": "error", "error": "AI xizmati vaqtincha ishlamayapti"},
-                ensure_ascii=False,
-            ))
+            await self.send(
+                text_data=json.dumps(
+                    {"kind": "error", "error": "AI xizmati vaqtincha ishlamayapti"},
+                    ensure_ascii=False,
+                )
+            )
             await self.close(code=1011)
             return
 
@@ -138,7 +140,9 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
                 await self.send(bytes_data=audio)
             text = getattr(event, "text", None)
             if text:
-                await self.send(text_data=json.dumps(
-                    {"kind": getattr(event, "kind", "content"), "content": text},
-                    ensure_ascii=False,
-                ))
+                await self.send(
+                    text_data=json.dumps(
+                        {"kind": getattr(event, "kind", "content"), "content": text},
+                        ensure_ascii=False,
+                    )
+                )

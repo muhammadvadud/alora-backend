@@ -17,8 +17,8 @@ class IsManagerOrReadOnly(IsAuthenticated):
     def has_permission(self, request: Any, view: Any) -> bool:
         if not super().has_permission(request, view):
             return False
-            
+
         if request.method in SAFE_METHODS:
             return True
-            
+
         return _role_rank(request.user) >= ROLE_RANK[UserRole.MANAGER]

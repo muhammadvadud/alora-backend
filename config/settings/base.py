@@ -10,93 +10,88 @@ import structlog
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Environ sozlamalari
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+env = environ.Env(DEBUG=(bool, False))
 
 # .env fayli mavjud bo'lsa o'qiladi (repoga tushmaydi, .env.example namuna)
-_env_file = BASE_DIR / '.env'
+_env_file = BASE_DIR / ".env"
 if _env_file.exists():
     environ.Env.read_env(_env_file)
 
-SECRET_KEY = env('SECRET_KEY', default='insecure-key-for-dev')
-DEBUG = env('DEBUG', default=False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+SECRET_KEY = env("SECRET_KEY", default="insecure-key-for-dev")
+DEBUG = env("DEBUG", default=False)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Tashqi kutubxonalar
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'django_filters',
-    'drf_spectacular',
-    
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
+    "django_filters",
+    "drf_spectacular",
     # Bizning ilovalar
-    'channels',
-
+    "channels",
     # Loyiha ilovalari
-    'apps.common',
-    'apps.accounts',
-    'apps.catalog',
-    'apps.pricing',
-    'apps.knowledge',
-    'apps.chat',
-    'apps.orders',
-    'apps.usage',
-    'apps.prompts',
+    "apps.common",
+    "apps.accounts",
+    "apps.catalog",
+    "apps.pricing",
+    "apps.knowledge",
+    "apps.chat",
+    "apps.orders",
+    "apps.usage",
+    "apps.prompts",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 # Channels — WebSocket qatlami (ovozli suhbat, TZ 5.2)
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {'hosts': [env('REDIS_URL', default='redis://localhost:6379/0')]},
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [env("REDIS_URL", default="redis://localhost:6379/0")]},
     }
 }
 
 # Ma'lumotlar bazasi
 DATABASES = {
-    'default': dj_database_url.config(
-        default=env('DATABASE_URL', default='postgres://postgres:postgres@localhost:5432/postgres'),
+    "default": dj_database_url.config(
+        default=env("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/postgres"),
         conn_max_age=600,
         conn_health_checks=True,
     )
@@ -104,68 +99,66 @@ DATABASES = {
 
 # Parol xavfsizligi
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-    'django.contrib.auth.hashers.ScryptPasswordHasher',
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 # Xalqaro sozlamalar
-LANGUAGE_CODE = 'uz'
-LANGUAGES = [('uz', "O'zbekcha"), ('ru', 'Русский')]
-LOCALE_PATHS = [BASE_DIR / 'apps' / 'common' / 'locale']
-TIME_ZONE = 'Asia/Tashkent'
+LANGUAGE_CODE = "uz"
+LANGUAGES = [("uz", "O'zbekcha"), ("ru", "Русский")]
+LOCALE_PATHS = [BASE_DIR / "apps" / "common" / "locale"]
+TIME_ZONE = "Asia/Tashkent"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom User modeli (keyinchalik accounts app da yaratiladi)
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"
 
 # REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'apps.common.pagination.StandardCursorPagination',
-    'PAGE_SIZE': 20,
-    'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler',
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.ScopedRateThrottle',
+    "DEFAULT_PAGINATION_CLASS": "apps.common.pagination.StandardCursorPagination",
+    "PAGE_SIZE": 20,
+    "EXCEPTION_HANDLER": "apps.common.exceptions.custom_exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'login': '5/minute',
-        'user': '600/hour',
-        'chat': '30/minute',
-        'calc': '120/minute',
-        'upload': '20/minute',
-        'bulk': '10/minute',
+    "DEFAULT_THROTTLE_RATES": {
+        "login": "5/minute",
+        "user": "600/hour",
+        "chat": "30/minute",
+        "calc": "120/minute",
+        "upload": "20/minute",
+        "bulk": "10/minute",
     },
 }
 
@@ -198,19 +191,19 @@ SPECTACULAR_SETTINGS = {
 
 # Simple JWT
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 # Celery va Redis
-REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
+REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
 # Logging
 LOGGING = {

@@ -28,21 +28,30 @@ class IsEmployee(IsAuthenticated):
     """Xodim, menejer yoki admin kirishi mumkin."""
 
     def has_permission(self, request: Any, view: Any) -> bool:
-        return super().has_permission(request, view) and _role_rank(request.user) >= ROLE_RANK[UserRole.EMPLOYEE]
+        return (
+            super().has_permission(request, view)
+            and _role_rank(request.user) >= ROLE_RANK[UserRole.EMPLOYEE]
+        )
 
 
 class IsManager(IsAuthenticated):
     """Menejer yoki admin kirishi mumkin."""
 
     def has_permission(self, request: Any, view: Any) -> bool:
-        return super().has_permission(request, view) and _role_rank(request.user) >= ROLE_RANK[UserRole.MANAGER]
+        return (
+            super().has_permission(request, view)
+            and _role_rank(request.user) >= ROLE_RANK[UserRole.MANAGER]
+        )
 
 
 class IsAdmin(IsAuthenticated):
     """Faqat admin kirishi mumkin."""
 
     def has_permission(self, request: Any, view: Any) -> bool:
-        return super().has_permission(request, view) and _role_rank(request.user) >= ROLE_RANK[UserRole.ADMIN]
+        return (
+            super().has_permission(request, view)
+            and _role_rank(request.user) >= ROLE_RANK[UserRole.ADMIN]
+        )
 
 
 class IsOwnerOrManager(IsAuthenticated):
@@ -67,4 +76,3 @@ def _resolve_owner(obj: Any) -> Any | None:
         if owner is not None:
             return owner
     return None
-

@@ -20,7 +20,9 @@ ORDER_NUMBER_RE = re.compile(r"^ALR-\d{4}-\d{6}$")
 class TestCreateOrder:
     """8.10 — POST /orders/ AI draft'idan buyurtma yaratish."""
 
-    def test_employee_can_create_order_from_draft(self, auth_client, employee, draft_payload, variant):
+    def test_employee_can_create_order_from_draft(
+        self, auth_client, employee, draft_payload, variant
+    ):
         client = auth_client(employee)
         response = client.post(ORDERS_URL, draft_payload(), format="json")
         assert response.status_code == status.HTTP_201_CREATED
@@ -41,7 +43,9 @@ class TestCreateOrder:
     def test_number_sequence_increments(self, auth_client, employee, draft_payload):
         client = auth_client(employee)
         first = client.post(ORDERS_URL, draft_payload(), format="json")
-        second = client.post(ORDERS_URL, draft_payload(customer_phone="+998901234000"), format="json")
+        second = client.post(
+            ORDERS_URL, draft_payload(customer_phone="+998901234000"), format="json"
+        )
         assert first.status_code == status.HTTP_201_CREATED
         assert second.status_code == status.HTTP_201_CREATED
         codes = [first.data["number"], second.data["number"]]
@@ -82,9 +86,7 @@ class TestCreateOrder:
 
     def test_manual_discount_tracks_source(self, auth_client, employee, draft_payload):
         client = auth_client(employee)
-        response = client.post(
-            ORDERS_URL, draft_payload(discount_percent="5.00"), format="json"
-        )
+        response = client.post(ORDERS_URL, draft_payload(discount_percent="5.00"), format="json")
         assert response.status_code == status.HTTP_201_CREATED
         data = response.data
         assert data["discount_source"] == "manual"
@@ -113,7 +115,9 @@ class TestRetrieveAndPatchOrder:
         order.refresh_from_db()
         assert order.total == Decimal("78000.00")
 
-    def test_patch_measurements_recalculates_total(self, auth_client, employee, draft_payload, create_order):
+    def test_patch_measurements_recalculates_total(
+        self, auth_client, employee, draft_payload, create_order
+    ):
         order = create_order(employee)
         client = auth_client(employee)
         payload = draft_payload()
@@ -268,7 +272,9 @@ class TestOrderFilters:
 class TestOrderPdf:
     """8.15 — GET /orders/{id}/pdf/."""
 
-    def test_pdf_returns_503_when_library_missing(self, auth_client, employee, create_order, monkeypatch):
+    def test_pdf_returns_503_when_library_missing(
+        self, auth_client, employee, create_order, monkeypatch
+    ):
         from apps.orders import pdf as pdf_module
 
         monkeypatch.setattr(pdf_module, "_load_pdf_library", lambda: None)

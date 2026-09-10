@@ -106,7 +106,9 @@ class DiscountPolicy(BaseModel):
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Menejer uchun maksimal qo'lda chegirma"),
     )
-    stack_with_tier = models.BooleanField(default=True, verbose_name=_("Bosqichli chegirma bilan qo'shiladi"))
+    stack_with_tier = models.BooleanField(
+        default=True, verbose_name=_("Bosqichli chegirma bilan qo'shiladi")
+    )
 
     class Meta:
         verbose_name = _("Chegirma siyosati")
@@ -187,7 +189,9 @@ class ModelPricing(BaseModel):
         verbose_name = _("Model narxlari")
         verbose_name_plural = _("Model narxlari")
         constraints = [
-            models.UniqueConstraint(fields=("provider", "model"), name="pricing_modelpricing_provider_model_uniq")
+            models.UniqueConstraint(
+                fields=("provider", "model"), name="pricing_modelpricing_provider_model_uniq"
+            )
         ]
         ordering = ("provider", "model")
 

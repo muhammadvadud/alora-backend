@@ -129,7 +129,7 @@ def generate_conversation_title(self, conversation_id: str, message_text: str = 
     if not text:
         return None
 
-    title = " ".join(text.split())[:_title_max_len()]
+    title = " ".join(text.split())[: _title_max_len()]
 
     Conversation.objects.filter(pk=conversation.pk, title="").update(title=title)
     return title

@@ -10,7 +10,16 @@ class KnowledgeRuleReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KnowledgeRule
-        fields = ("id", "kind", "condition", "recommendation", "priority", "is_active", "created_at", "updated_at")
+        fields = (
+            "id",
+            "kind",
+            "condition",
+            "recommendation",
+            "priority",
+            "is_active",
+            "created_at",
+            "updated_at",
+        )
 
 
 class KnowledgeRuleWriteSerializer(serializers.ModelSerializer):
@@ -33,4 +42,12 @@ class KnowledgeRuleSyncSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KnowledgeRule
-        fields = ("id", "kind", "condition", "recommendation", "priority", "is_active", "updated_at")
+        fields = (
+            "id",
+            "kind",
+            "condition",
+            "recommendation",
+            "priority",
+            "is_active",
+            "updated_at",
+        )

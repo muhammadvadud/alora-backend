@@ -13,7 +13,9 @@ class Tenant(BaseModel):
     address = models.TextField(blank=True, verbose_name=_("Manzili"))
     phone = models.CharField(max_length=20, blank=True, verbose_name=_("Telefon"))
     currency = models.CharField(max_length=10, default="UZS", verbose_name=_("Valyuta"))
-    timezone = models.CharField(max_length=50, default="Asia/Tashkent", verbose_name=_("Vaqt mintaqasi"))
+    timezone = models.CharField(
+        max_length=50, default="Asia/Tashkent", verbose_name=_("Vaqt mintaqasi")
+    )
 
     class Meta:
         verbose_name = _("Ijarachi (Tenant)")
@@ -63,7 +65,9 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name=_("Ijarachi"),
     )
     is_staff = models.BooleanField(default=False, verbose_name=_("Xodim (Staff)"))
-    device_id = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Qurilma ID"))
+    device_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Qurilma ID")
+    )
 
     objects = UserManager()
 

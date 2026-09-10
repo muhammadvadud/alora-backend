@@ -55,7 +55,9 @@ class TestPermissions:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_employee_cannot_patch_employee(self, auth_client, employee, manager):
-        response = auth_client(employee).patch(f"{TEAM_LIST_URL}{manager.id}/", {"is_active": False})
+        response = auth_client(employee).patch(
+            f"{TEAM_LIST_URL}{manager.id}/", {"is_active": False}
+        )
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_employee_cannot_set_limit(self, auth_client, employee, manager):
@@ -82,7 +84,7 @@ class TestEmployeeManagement:
         from django.utils import timezone
 
         from apps.usage.models import UsageDaily
-        
+
         UsageDaily.objects.create(
             tenant=manager.tenant,
             user=employee,
@@ -129,9 +131,7 @@ class TestEmployeeManagement:
         assert employee.is_active is False
 
     def test_manager_can_change_role(self, auth_client, manager, employee):
-        response = auth_client(manager).patch(
-            f"{TEAM_LIST_URL}{employee.id}/", {"role": "manager"}
-        )
+        response = auth_client(manager).patch(f"{TEAM_LIST_URL}{employee.id}/", {"role": "manager"})
         assert response.status_code == status.HTTP_200_OK
         employee.refresh_from_db()
         assert employee.role == "manager"

@@ -3,10 +3,13 @@ from typing import Any
 MASKED_KEYS = {"token", "access", "refresh", "password", "authorization", "phone"}
 
 
-def mask_sensitive_data(logger: Any, method_name: str, event_dict: dict[str, Any]) -> dict[str, Any]:
+def mask_sensitive_data(
+    logger: Any, method_name: str, event_dict: dict[str, Any]
+) -> dict[str, Any]:
     """
     Log yozuvlaridagi maxfiy ma'lumotlarni maskalaydi (structlog processor).
     """
+
     def _mask(data: Any) -> Any:
         if isinstance(data, dict):
             new_dict = {}

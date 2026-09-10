@@ -114,7 +114,9 @@ def confirm_order(*, order: Order, user: Any) -> Order:
     if order.status != OrderStatus.DRAFT:
         raise ValidationError({"status": "Faqat draft holatidagi buyurtma tasdiqlanishi mumkin"})
     change_order_status(order=order, target=OrderStatus.CONFIRMED, user=user)
-    logger.info("order_confirmed", order_id=str(order.pk), number=order.number, user_id=str(user.pk))
+    logger.info(
+        "order_confirmed", order_id=str(order.pk), number=order.number, user_id=str(user.pk)
+    )
     return order
 
 
@@ -127,7 +129,7 @@ def change_order_status(
     action_date: date | None = None,
 ) -> Order:
     """Buyurtma statusini ruxsat etilgan o'tish bo'yicha o'zgartiradi.
-    
+
     Qulf (select_for_update) sababi: Ikki parallel so'rov bir vaqtda
     statusni o'zgartirishga urinsa, poyga holati (race condition) orqali
     noto'g'ri (masalan, bekor qilingan buyurtma ishlab chiqarishga o'tishi)
@@ -220,7 +222,9 @@ def _order_to_calc_payload(order: Order) -> dict[str, Any]:
                 }
             )
         for accessory in measurement.accessories.all():
-            payload["accessories"].append({"variant_id": accessory.variant_id, "qty": accessory.qty})
+            payload["accessories"].append(
+                {"variant_id": accessory.variant_id, "qty": accessory.qty}
+            )
         measurements.append(payload)
 
     for item in order.items.all():
@@ -250,7 +254,11 @@ def _apply_prepayment(
     """Avans, qoldiq va to'lov holatini buyurtma summasi asosida hisoblaydi."""
 
     defaults = load_pricing_snapshot().order_defaults
-    percent = prepayment_percent if prepayment_percent is not None else _to_decimal(defaults.prepayment_percent)
+    percent = (
+        prepayment_percent
+        if prepayment_percent is not None
+        else _to_decimal(defaults.prepayment_percent)
+    )
     prepayment = _quantize_money(total * percent / Decimal(100))
     balance = _quantize_money(total - prepayment)
 
@@ -297,7 +305,6 @@ def create_order_from_draft(
     Narx va nomlar (snapshot) buyurtma yaratilgan paytdagi qiymatlari bilan
     saqlanadi — katalog keyin o'zgarsa buyurtma o'zgarmaydi (TZ 3.6).
     """
-
 
     calc_payload = {
         "measurements": [_measurement_to_calc_payload(m) for m in payload.get("measurements", [])],
@@ -381,7 +388,9 @@ def create_order_from_draft(
     return order, result
 
 
-def _build_measurements(order: Order, payload: Mapping[str, Any], result: Mapping[str, Any]) -> None:
+def _build_measurements(
+    order: Order, payload: Mapping[str, Any], result: Mapping[str, Any]
+) -> None:
     """O'lchov, parda bo'laklari va aksessuarlarni snapshot narxlar bilan yaratadi."""
 
     result_measurements = list(result["measurements"])
@@ -421,7 +430,9 @@ def _build_measurements(order: Order, payload: Mapping[str, Any], result: Mappin
         result_accessories = result_measurement.get("accessories", [])
         for accessory_index, accessory_payload in enumerate(accessories_payload):
             result_accessory = (
-                result_accessories[accessory_index] if accessory_index < len(result_accessories) else {}
+                result_accessories[accessory_index]
+                if accessory_index < len(result_accessories)
+                else {}
             )
             OrderAccessory.objects.create(
                 measurement=measurement,
@@ -523,7 +534,13 @@ def update_order_from_draft(
             order.conversation_id = payload["conversation_id"]
             header_fields.append("conversation_id")
 
-        recalc_keys = ("measurements", "services", "delivery", "discount_percent", "prepayment_percent")
+        recalc_keys = (
+            "measurements",
+            "services",
+            "delivery",
+            "discount_percent",
+            "prepayment_percent",
+        )
         needs_recalc = any(key in payload for key in recalc_keys)
         result: dict[str, Any] | None = None
 
@@ -589,8 +606,8 @@ def update_order_from_draft(
 
 def recalculate_order(*, order: Order, user_role: str | None = None) -> dict[str, Any]:
     """Buyurtma summasini apps/pricing/services/calculator.py orqali qayta hisoblaydi.
-    
-    Qulf (select_for_update) sababi: Bir vaqtda bir nechta o'zgarish 
+
+    Qulf (select_for_update) sababi: Bir vaqtda bir nechta o'zgarish
     buyurtmani qayta hisoblaganda poyga holatini (race condition) oldini olish.
     """
 
@@ -630,7 +647,9 @@ def _summarize_order_lines(order: Order) -> Decimal:
     total = ZERO
     for measurement in order.measurements.all():
         total += Decimal(sum((part.total or ZERO) for part in measurement.parts.all()))
-        total += Decimal(sum((accessory.total or ZERO) for accessory in measurement.accessories.all()))
+        total += Decimal(
+            sum((accessory.total or ZERO) for accessory in measurement.accessories.all())
+        )
     total += Decimal(sum((item.total or ZERO) for item in order.items.all()))
     return _quantize_money(total)
 

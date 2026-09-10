@@ -73,7 +73,6 @@ def admin_user(tenant: Any) -> Any:
     return AdminFactory.build(tenant=tenant)
 
 
-
 @pytest.fixture
 def pricing_defaults(db):
     """Narx sozlamalari seed'ini kafolatlaydi.

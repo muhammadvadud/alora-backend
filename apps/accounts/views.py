@@ -26,6 +26,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     # 5/daqiqa rate limit throttling settings da bo'lishi kerak yoki shu yerda beriladi.
     throttle_scope = "login"
 
+
 @extend_schema(summary="Joriy foydalanuvchi ma'lumotlari", responses={200: AuthMeSerializer})
 class AuthMeView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -160,9 +161,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         Conversation = apps.get_model("chat", "Conversation")
         if Conversation is None:
             return Response([])
-        conversations = Conversation.objects.filter(user_id=employee.pk, tenant_id=request.user.tenant_id).order_by(
-            "-last_message_at"
-        )
+        conversations = Conversation.objects.filter(
+            user_id=employee.pk, tenant_id=request.user.tenant_id
+        ).order_by("-last_message_at")
         rows = []
         for conv in conversations:
             rows.append(

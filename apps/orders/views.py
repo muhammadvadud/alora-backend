@@ -116,7 +116,7 @@ class OrderViewSet(
         return OrderWriteSerializer
 
     def get_queryset(self) -> Any:
-        """"Tenant va egalik bo'yicha chegaralangan buyurtmalar.
+        """ "Tenant va egalik bo'yicha chegaralangan buyurtmalar.
 
         Employee faqat o'z buyurtmasini, manager/admin tenant ichidagi
         hammasini ko'radi (8.17).
@@ -155,9 +155,7 @@ class OrderViewSet(
             payload=serializer.validated_data,
             user_role=getattr(request.user, "role", None),
         )
-        return Response(
-            OrderReadSerializer(order, context=self.get_serializer_context()).data
-        )
+        return Response(OrderReadSerializer(order, context=self.get_serializer_context()).data)
 
     @action(detail=True, methods=["post"])
     def confirm(self, request: HttpRequest, pk: str | None = None) -> Response:
@@ -169,9 +167,7 @@ class OrderViewSet(
         except DjangoValidationError as exc:
             raise ValidationError(_django_validation_detail(exc)) from exc
         order.refresh_from_db()
-        return Response(
-            OrderReadSerializer(order, context=self.get_serializer_context()).data
-        )
+        return Response(OrderReadSerializer(order, context=self.get_serializer_context()).data)
 
     @action(detail=True, methods=["post"], url_path="status")
     def status(self, request: HttpRequest, pk: str | None = None) -> Response:
@@ -192,9 +188,7 @@ class OrderViewSet(
         except DjangoValidationError as exc:
             raise ValidationError(_django_validation_detail(exc)) from exc
         order.refresh_from_db()
-        return Response(
-            OrderReadSerializer(order, context=self.get_serializer_context()).data
-        )
+        return Response(OrderReadSerializer(order, context=self.get_serializer_context()).data)
 
     @action(detail=False, methods=["get"], url_path="statuses")
     def statuses(self, request: HttpRequest) -> Response:

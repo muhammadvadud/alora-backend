@@ -27,9 +27,7 @@ class _StubRpcError(grpc.RpcError):
         return self._detail
 
 
-def _make_rpc_error(
-    code: grpc.StatusCode, detail: str = "mock xato"
-) -> grpc.RpcError:
+def _make_rpc_error(code: grpc.StatusCode, detail: str = "mock xato") -> grpc.RpcError:
     """grpc.RpcError ga o'xshash obyekt yaratadi (except grpc.RpcError ushlay oladi)."""
     return _StubRpcError(code=code, detail=detail)
 
@@ -62,9 +60,7 @@ def _mock_channel_pool(monkeypatch: pytest.MonkeyPatch) -> None:
     mock_channel = mock.Mock(spec=grpc.Channel)
     mock_channel.close = mock.Mock()
 
-    patcher = mock.patch.object(
-        grpc_client, "get_agent_channel", return_value=mock_channel
-    )
+    patcher = mock.patch.object(grpc_client, "get_agent_channel", return_value=mock_channel)
     patcher.start()
     yield
     patcher.stop()
@@ -78,9 +74,7 @@ def _agent_stub() -> mock.Mock:
 
 
 class TestChatRetry:
-    def test_unavailable_retries_then_succeeds(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_unavailable_retries_then_succeeds(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """UNAVAILABLE xatosi qayta uriniladi, keyin muvaffaqiyat."""
         from apps.chat import grpc_client
 
@@ -104,9 +98,7 @@ class TestChatRetry:
         assert len(events) == 1
         assert stub.Chat.call_count == 3
 
-    def test_timeout_raises_agent_timeout(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_timeout_raises_agent_timeout(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """DEADLINE_EXCEEDED qayta uriniladi, keyin AgentTimeout ko'tariladi."""
         from apps.chat import grpc_client
         from apps.chat.exceptions import AgentTimeout
@@ -127,9 +119,7 @@ class TestChatRetry:
 
         assert stub.Chat.call_count == 3
 
-    def test_unavailable_raises_agent_unavailable(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_unavailable_raises_agent_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """UNAVAILABLE 3 marta bo'lsa — AgentUnavailable ko'tariladi."""
         from apps.chat import grpc_client
         from apps.chat.exceptions import AgentUnavailable
@@ -150,9 +140,7 @@ class TestChatRetry:
 
         assert stub.Chat.call_count == 3
 
-    def test_non_retryable_error_raises_immediately(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_non_retryable_error_raises_immediately(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Retry qilinmaydigan xato (INVALID_ARGUMENT) — darhol ko'tariladi."""
         from apps.chat import grpc_client
 
@@ -172,9 +160,7 @@ class TestChatRetry:
 
         assert stub.Chat.call_count == 1
 
-    def test_exponential_backoff_sleep_increases(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_exponential_backoff_sleep_increases(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Backoff vaqtlari o'sib borishi tekshiriladi."""
         from apps.chat import grpc_client
 

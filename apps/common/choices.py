@@ -101,5 +101,3 @@ class ProductSegment(models.TextChoices):
     ECONOMY = "economy", _("Ekonom")
     STANDARD = "standard", _("Standart")
     PREMIUM = "premium", _("Premium")
-
-

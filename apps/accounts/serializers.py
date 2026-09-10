@@ -25,6 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ("id", "phone", "full_name", "role", "tenant", "device_id")
         read_only_fields = fields
 
+
 class AuthMeSerializer(serializers.Serializer):
     profile = UserProfileSerializer(source="*")
     limit = serializers.DictField(default=None)
@@ -57,7 +58,9 @@ class EmployeeListSerializer(serializers.ModelSerializer):
 class EmployeeWriteSerializer(serializers.ModelSerializer):
     """Xodim qo'shish uchun yozish serializer'i."""
 
-    password = serializers.CharField(write_only=True, required=False, allow_blank=True, style={"input_type": "password"})
+    password = serializers.CharField(
+        write_only=True, required=False, allow_blank=True, style={"input_type": "password"}
+    )
 
     class Meta:
         model = User

@@ -131,28 +131,29 @@ Bitta pardada **1 tadan 10 tagacha** har xil mato ishlatilishi mumkin (asosiy po
 ikkinchi rang, kant, lambrekan bo'laklari). Shuning uchun fason — bo'laklar to'plami:
 
 ```python
-class Fason:                 # tayyor shablon (ixtiyoriy, AI tez taklif qilishi uchun)
-    name           # "Ikki rangli portyera + tul + lambrekan"
-    style, rooms   # qaysi uslub va xonalarga mos
-    image          # namuna rasm
-    part_count     # nechta matodan iborat
+class Fason:  # tayyor shablon (ixtiyoriy, AI tez taklif qilishi uchun)
+    name  # "Ikki rangli portyera + tul + lambrekan"
+    style, rooms  # qaysi uslub va xonalarga mos
+    image  # namuna rasm
+    part_count  # nechta matodan iborat
     is_active
 
-class FasonPart:             # shablondagi bitta bo'lak
-    fason          # FK
-    role           # portyera | tul | lambrekan | kant | dekor | astar
-    name           # "chap tomon kant"
-    width_share    # karniz kengligining ulushi: 1.0 = butun L, 0.15 = 15%
-    height_share   # balandlik ulushi: 1.0 = butun H, 0.2 = lambrekan
-    default_coef   # shu bo'lakning burma koeffitsienti (tul odatda yuqoriroq)
+
+class FasonPart:  # shablondagi bitta bo'lak
+    fason  # FK
+    role  # portyera | tul | lambrekan | kant | dekor | astar
+    name  # "chap tomon kant"
+    width_share  # karniz kengligining ulushi: 1.0 = butun L, 0.15 = 15%
+    height_share  # balandlik ulushi: 1.0 = butun H, 0.2 = lambrekan
+    default_coef  # shu bo'lakning burma koeffitsienti (tul odatda yuqoriroq)
     sort_order
 ```
 ```python
-class FasonAccessory:        # shablonga kiradigan aksessuar (ixtiyoriy)
-    fason          # FK
-    category       # gul | broshka | podxvat | kisti | bahroma | halqa | magnit
-    default_qty    # dona soni yoki metr; "juft" bo'lsa 2
-    qty_formula    # ixtiyoriy: "per_side" (har tomonga 1 ta), "per_meter" (L bo'yicha)
+class FasonAccessory:  # shablonga kiradigan aksessuar (ixtiyoriy)
+    fason  # FK
+    category  # gul | broshka | podxvat | kisti | bahroma | halqa | magnit
+    default_qty  # dona soni yoki metr; "juft" bo'lsa 2
+    qty_formula  # ixtiyoriy: "per_side" (har tomonga 1 ta), "per_meter" (L bo'yicha)
 ```
 
 `Fason` — majburiy emas: AI bo'laklarni erkin ham yig'a oladi. Shablon shunchaki tez yo'l.
@@ -162,55 +163,60 @@ saqlanadi (3.6-bo'lim).
 ### 3.3 pricing — narx va hisob qoidalari
 
 ```python
-class CalcRule:              # hisoblash koeffitsientlari (admin tahrirlaydi)
-    key            # unique: "coef_default", "seam_allowance", "hem_allowance",
-                   #         "hook_step", "round_area_to", "round_total_to",
-                   #         "min_order_amount", "waste_warn_percent"
-    value          # Decimal
-    unit           # m | % | dona | so'm
-    description    # admin uchun izoh
-    applies_to     # JSON shart: {"style": "classic"} — bo'sh bo'lsa umumiy
+class CalcRule:  # hisoblash koeffitsientlari (admin tahrirlaydi)
+    key  # unique: "coef_default", "seam_allowance", "hem_allowance",
+    #         "hook_step", "round_area_to", "round_total_to",
+    #         "min_order_amount", "waste_warn_percent"
+    value  # Decimal
+    unit  # m | % | dona | so'm
+    description  # admin uchun izoh
+    applies_to  # JSON shart: {"style": "classic"} — bo'sh bo'lsa umumiy
 
-class ServicePrice:          # xizmat narxlari
-    key            # sewing_per_m | sewing_per_sqm | install_per_m | install_flat |
-                   # delivery | tape_per_m | hook_each | weight_tape_per_m
+
+class ServicePrice:  # xizmat narxlari
+    key  # sewing_per_m | sewing_per_sqm | install_per_m | install_flat |
+    # delivery | tape_per_m | hook_each | weight_tape_per_m
     name, price, unit, is_active
 
-class DiscountTier:          # summaga qarab O'SADIGAN chegirma — manager kiritadi
-    min_amount     # masalan 5 000 000
-    percent        # masalan 3
+
+class DiscountTier:  # summaga qarab O'SADIGAN chegirma — manager kiritadi
+    min_amount  # masalan 5 000 000
+    percent  # masalan 3
     is_active
     # manager bosqichlarni o'zi qo'shadi/o'chiradi; mos keladigan eng yuqori bosqich qo'llanadi
 
-class DiscountPolicy:        # umumiy chegirma qoidasi (bitta yozuv)
-    manual_max_percent_employee   # sotuvchi qo'lda necha % gacha bera oladi
-    manual_max_percent_manager    # manager necha % gacha
-    stack_with_tier               # bosqichli chegirma ustiga qo'lda qo'shiladimi (default: yo'q)
 
-class OrderDefaults:         # manager kiritmasa ishlatiladigan qiymatlar (bitta yozuv)
-    prepayment_percent    # default avans foizi, masalan 50
-    delivery_amount       # default yetkazib berish narxi
-    deadline_days         # default tayyorlash muddati (kun)
+class DiscountPolicy:  # umumiy chegirma qoidasi (bitta yozuv)
+    manual_max_percent_employee  # sotuvchi qo'lda necha % gacha bera oladi
+    manual_max_percent_manager  # manager necha % gacha
+    stack_with_tier  # bosqichli chegirma ustiga qo'lda qo'shiladimi (default: yo'q)
 
-class ModelPricing:          # LLM narxi (xarajat hisoblash uchun)
-    provider       # deepseek | openai | claude
-    model          # deepseek-v4-pro
-    input_per_1m   # $ / 1M token
+
+class OrderDefaults:  # manager kiritmasa ishlatiladigan qiymatlar (bitta yozuv)
+    prepayment_percent  # default avans foizi, masalan 50
+    delivery_amount  # default yetkazib berish narxi
+    deadline_days  # default tayyorlash muddati (kun)
+
+
+class ModelPricing:  # LLM narxi (xarajat hisoblash uchun)
+    provider  # deepseek | openai | claude
+    model  # deepseek-v4-pro
+    input_per_1m  # $ / 1M token
     output_per_1m
     cached_input_per_1m
     stt_per_minute
     tts_per_1k_chars
-    usd_to_uzs     # kurs
+    usd_to_uzs  # kurs
 ```
 
 ### 3.4 knowledge — sotuv bilimlari
 
 ```python
 class KnowledgeRule:
-    kind           # room_style | light | color | construction | objection | general
-    condition      # JSON: {"room": "wedding", "style": "classic"}
-    recommendation # matn: AI shu matnni tavsiyaga asos qiladi
-    priority       # yuqori raqam — birinchi
+    kind  # room_style | light | color | construction | objection | general
+    condition  # JSON: {"room": "wedding", "style": "classic"}
+    recommendation  # matn: AI shu matnni tavsiyaga asos qiladi
+    priority  # yuqori raqam — birinchi
     is_active
 ```
 Bu qoidalar Go'ga sinxronlanadi va system prompt'ga qo'shiladi (yoki `knowledge_lookup` tool orqali olinadi).
@@ -219,24 +225,25 @@ Bu qoidalar Go'ga sinxronlanadi va system prompt'ga qo'shiladi (yoki `knowledge_
 
 ```python
 class Conversation:
-    user           # FK — kim olib borgan
+    user  # FK — kim olib borgan
     tenant
-    session_id     # Go agentdagi sessiya ID (unique)
-    title          # AI birinchi xabardan generatsiya qiladi
-    mode           # seller | customer  (mijoz rejimi)
-    status         # active | archived
-    stage          # need | recommend | measure | calc | variants | order
-    context        # JSON — yig'ilgan ma'lumot (xona, uslub, o'lcham, budjet)
-    order          # FK Order (nullable) — konversiya o'lchash uchun
+    session_id  # Go agentdagi sessiya ID (unique)
+    title  # AI birinchi xabardan generatsiya qiladi
+    mode  # seller | customer  (mijoz rejimi)
+    status  # active | archived
+    stage  # need | recommend | measure | calc | variants | order
+    context  # JSON — yig'ilgan ma'lumot (xona, uslub, o'lcham, budjet)
+    order  # FK Order (nullable) — konversiya o'lchash uchun
     started_at, last_message_at
+
 
 class Message:
     conversation
-    role           # user | assistant | tool | system
+    role  # user | assistant | tool | system
     content
-    tool_calls     # JSON
-    tool_result    # JSON
-    audio_url      # ovozli xabar bo'lsa
+    tool_calls  # JSON
+    tool_result  # JSON
+    audio_url  # ovozli xabar bo'lsa
     tokens_in, tokens_out
     created_at
 ```
@@ -248,54 +255,58 @@ class Message:
 
 ```python
 class Order:
-    number         # ALR-2026-000123
-    conversation   # FK (nullable)
-    user           # sotuvchi
+    number  # ALR-2026-000123
+    conversation  # FK (nullable)
+    user  # sotuvchi
     customer_name, customer_phone, address
-    status         # draft | confirmed | measuring | production | ready | installing |
-                   # completed | cancelled
+    status  # draft | confirmed | measuring | production | ready | installing |
+    # completed | cancelled
     subtotal
-    discount_percent, discount_amount     # manager/sotuvchi kiritadi yoki DiscountTier bo'yicha
-    discount_source                       # tier | manual
-    delivery_amount                       # manager kiritadi yoki OrderDefaults
+    discount_percent, discount_amount  # manager/sotuvchi kiritadi yoki DiscountTier bo'yicha
+    discount_source  # tier | manual
+    delivery_amount  # manager kiritadi yoki OrderDefaults
     total
     prepayment_percent, prepayment, balance
-    payment_status # unpaid | prepaid | paid
+    payment_status  # unpaid | prepaid | paid
     deadline_date
     note
     confirmed_by, confirmed_at
 
-class OrderMeasurement:      # bitta buyurtmada bir nechta deraza bo'lishi mumkin
+
+class OrderMeasurement:  # bitta buyurtmada bir nechta deraza bo'lishi mumkin
     order
-    room_name      # "Mehmonxona"
+    room_name  # "Mehmonxona"
     cornice_length_m, height_m
-    layers         # JSON: ["tul", "portyera", "lambrekan"]
+    layers  # JSON: ["tul", "portyera", "lambrekan"]
     coefficient
     note
 
-class OrderCurtainPart:      # ★ bitta pardadagi bitta mato bo'lagi (1 tadan 10 tagacha)
-    measurement    # FK OrderMeasurement
-    variant        # FK ProductVariant
-    role           # portyera | tul | lambrekan | kant | dekor | astar
-    width_m        # shu bo'lak egallaydigan karniz kengligi
-    height_m       # shu bo'lakning balandligi
-    coefficient    # burma koeffitsienti
-    area_sqm       # hisoblangan yuza (m²)
+
+class OrderCurtainPart:  # ★ bitta pardadagi bitta mato bo'lagi (1 tadan 10 tagacha)
+    measurement  # FK OrderMeasurement
+    variant  # FK ProductVariant
+    role  # portyera | tul | lambrekan | kant | dekor | astar
+    width_m  # shu bo'lak egallaydigan karniz kengligi
+    height_m  # shu bo'lakning balandligi
+    coefficient  # burma koeffitsienti
+    area_sqm  # hisoblangan yuza (m²)
     price_per_sqm  # SNAPSHOT
     total
     sort_order
 
-class OrderAccessory:        # ★ pardaga qo'shiladigan bezak va furnitura
-    measurement    # FK OrderMeasurement (yoki butun buyurtmaga — nullable)
-    variant        # FK ProductVariant (gul, broshka, podxvat, kisti, bahroma, halqa)
-    qty            # dona yoki metr
-    unit           # piece | meter
-    unit_price     # SNAPSHOT
+
+class OrderAccessory:  # ★ pardaga qo'shiladigan bezak va furnitura
+    measurement  # FK OrderMeasurement (yoki butun buyurtmaga — nullable)
+    variant  # FK ProductVariant (gul, broshka, podxvat, kisti, bahroma, halqa)
+    qty  # dona yoki metr
+    unit  # piece | meter
+    unit_price  # SNAPSHOT
     total
 
-class OrderItem:             # xizmat qatorlari (tikuv, montaj, yetkazish)
+
+class OrderItem:  # xizmat qatorlari (tikuv, montaj, yetkazish)
     order, measurement
-    service_key    # sewing / install / delivery / tape / hook — xizmat bo'lsa
+    service_key  # sewing / install / delivery / tape / hook — xizmat bo'lsa
     name_snapshot  # narx va nom SNAPSHOT — keyin baza o'zgarsa buyurtma o'zgarmaydi
     qty, unit, unit_price, total
 ```
@@ -309,19 +320,21 @@ class UsageRecord:
     provider, model
     prompt_tokens, completion_tokens, cached_tokens, reasoning_tokens
     stt_seconds, tts_chars
-    tool_calls     # JSON: ["product_search", "curtain_calculate"]
+    tool_calls  # JSON: ["product_search", "curtain_calculate"]
     latency_ms
     cost_usd, cost_uzs
-    created_at     # indexed
+    created_at  # indexed
+
 
 class UsageLimit:
-    user           # FK — HAR BIR XODIMGA ALOHIDA (asosiy holat)
-    role           # yoki butun rol uchun umumiy qoida (user bo'sh bo'lsa)
-    period         # daily | monthly
-    is_unlimited   # ★ True bo'lsa cheklov umuman qo'llanmaydi (manager xohlagan xodimga qo'yadi)
-    max_tokens, max_cost_uzs, max_messages   # is_unlimited=False bo'lsa ishlaydi
-    on_exceed      # warn | block
+    user  # FK — HAR BIR XODIMGA ALOHIDA (asosiy holat)
+    role  # yoki butun rol uchun umumiy qoida (user bo'sh bo'lsa)
+    period  # daily | monthly
+    is_unlimited  # ★ True bo'lsa cheklov umuman qo'llanmaydi (manager xohlagan xodimga qo'yadi)
+    max_tokens, max_cost_uzs, max_messages  # is_unlimited=False bo'lsa ishlaydi
+    on_exceed  # warn | block
     is_active
+
 
 # Ustuvorlik: xodimning shaxsiy limiti > rol limiti > limit yo'q (cheksiz).
 # Manager panelida har xodim satrida "Cheksiz" toggle'i bor.

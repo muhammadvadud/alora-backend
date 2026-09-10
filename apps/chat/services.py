@@ -33,21 +33,21 @@ def check_usage_limit(user: Any) -> None:
 def check_rate_limit(user: Any) -> None:
     """Chat uchun rate limitni Redis orqali tekshirish."""
     role = getattr(user, "role", "employee")
-    
+
     try:
         from apps.pricing.models import CalcRule
+
         rule = CalcRule.objects.get(key=f"chat_rate_limit_{role}")
         limit = int(rule.value)
     except Exception:  # noqa: BLE001
         limits = {"employee": 10, "manager": 30, "admin": 100}
         limit = limits.get(role, 10)
-        
+
     key = f"chat_rate_limit:{user.id}"
-    
+
     # Atomik poyga holatini oldini olish
     cache.add(key, 0, timeout=60)
     count = cache.incr(key)
-    
+
     if count > limit:
         raise Throttled(detail="Siz juda ko'p xabar yubordingiz. Iltimos biroz kuting.")
-

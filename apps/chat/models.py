@@ -23,12 +23,8 @@ class Conversation(TenantScopedModel):
         related_name="conversations",
         verbose_name=_("Foydalanuvchi"),
     )
-    session_id = models.CharField(
-        max_length=255, unique=True, verbose_name=_("Sessiya ID")
-    )
-    title = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Suhbat sarlavhasi")
-    )
+    session_id = models.CharField(max_length=255, unique=True, verbose_name=_("Sessiya ID"))
+    title = models.CharField(max_length=255, blank=True, verbose_name=_("Suhbat sarlavhasi"))
     mode = models.CharField(
         max_length=20,
         choices=ConversationMode.choices,
@@ -47,9 +43,7 @@ class Conversation(TenantScopedModel):
         default=ConversationStage.NEED,
         verbose_name=_("Bosqich"),
     )
-    context = models.JSONField(
-        default=dict, blank=True, verbose_name=_("Kontekst")
-    )
+    context = models.JSONField(default=dict, blank=True, verbose_name=_("Kontekst"))
     order = models.ForeignKey(
         "orders.Order",
         on_delete=models.SET_NULL,
@@ -58,12 +52,8 @@ class Conversation(TenantScopedModel):
         related_name="conversations",
         verbose_name=_("Buyurtma"),
     )
-    started_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("Boshlangan vaqti")
-    )
-    last_message_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("Oxirgi xabar vaqti")
-    )
+    started_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Boshlangan vaqti"))
+    last_message_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Oxirgi xabar vaqti"))
 
     class Meta:
         verbose_name = _("Suhbat")
@@ -86,19 +76,11 @@ class Message(BaseModel):
         related_name="messages",
         verbose_name=_("Suhbat"),
     )
-    role = models.CharField(
-        max_length=20, choices=MessageRole.choices, verbose_name=_("Rol")
-    )
+    role = models.CharField(max_length=20, choices=MessageRole.choices, verbose_name=_("Rol"))
     content = models.TextField(blank=True, verbose_name=_("Matn"))
-    tool_calls = models.JSONField(
-        default=list, blank=True, verbose_name=_("Asbob chaqiruvlari")
-    )
-    tool_result = models.JSONField(
-        default=dict, blank=True, verbose_name=_("Asbob natijasi")
-    )
-    audio_url = models.URLField(
-        max_length=500, blank=True, verbose_name=_("Ovozli fayl havolasi")
-    )
+    tool_calls = models.JSONField(default=list, blank=True, verbose_name=_("Asbob chaqiruvlari"))
+    tool_result = models.JSONField(default=dict, blank=True, verbose_name=_("Asbob natijasi"))
+    audio_url = models.URLField(max_length=500, blank=True, verbose_name=_("Ovozli fayl havolasi"))
     tokens_in = models.IntegerField(default=0, verbose_name=_("Kiruvchi tokenlar"))
     tokens_out = models.IntegerField(default=0, verbose_name=_("Chiquvchi tokenlar"))
 

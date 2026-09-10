@@ -84,11 +84,7 @@ def test_calc_rule_signals(mock_redis_from_url):
     mock_redis_from_url.return_value = mock_redis
     mock_redis.incr.return_value = 1
 
-    CalcRule.objects.create(
-        key="test_rule",
-        value=1.5,
-        unit="test"
-    )
+    CalcRule.objects.create(key="test_rule", value=1.5, unit="test")
 
     args, _kwargs = mock_redis.publish.call_args
     message = json.loads(args[1])
@@ -103,10 +99,7 @@ def test_knowledge_rule_signals(mock_redis_from_url):
     mock_redis_from_url.return_value = mock_redis
     mock_redis.incr.return_value = 1
 
-    KnowledgeRule.objects.create(
-        kind="general",
-        recommendation="test rec"
-    )
+    KnowledgeRule.objects.create(kind="general", recommendation="test rec")
 
     args, _kwargs = mock_redis.publish.call_args
     message = json.loads(args[1])
@@ -127,4 +120,3 @@ def test_version_increment(mock_redis_from_url):
     assert get_catalog_version() == 5
     assert increment_catalog_version() == 6
     mock_redis.incr.assert_called_with("alora:catalog:version")
-

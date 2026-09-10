@@ -18,14 +18,56 @@ def _seed_minimal_pricing() -> None:
     """Kalkulyatsiya uchun minimal qoidalarni yaratadi."""
 
     calc_rules = [
-        {"key": "coef_default", "value": "2.500", "unit": "coef", "description": "", "applies_to": {}},
-        {"key": "seam_allowance", "value": "0.050", "unit": "m", "description": "", "applies_to": {}},
-        {"key": "hem_allowance", "value": "0.150", "unit": "m", "description": "", "applies_to": {}},
+        {
+            "key": "coef_default",
+            "value": "2.500",
+            "unit": "coef",
+            "description": "",
+            "applies_to": {},
+        },
+        {
+            "key": "seam_allowance",
+            "value": "0.050",
+            "unit": "m",
+            "description": "",
+            "applies_to": {},
+        },
+        {
+            "key": "hem_allowance",
+            "value": "0.150",
+            "unit": "m",
+            "description": "",
+            "applies_to": {},
+        },
         {"key": "hook_step", "value": "0.100", "unit": "m", "description": "", "applies_to": {}},
-        {"key": "round_area_to", "value": "0.100", "unit": "m", "description": "", "applies_to": {}},
-        {"key": "round_total_to", "value": "1000.000", "unit": "so'm", "description": "", "applies_to": {}},
-        {"key": "min_order_amount", "value": "0.000", "unit": "so'm", "description": "", "applies_to": {}},
-        {"key": "waste_warn_percent", "value": "15.000", "unit": "%", "description": "", "applies_to": {}},
+        {
+            "key": "round_area_to",
+            "value": "0.100",
+            "unit": "m",
+            "description": "",
+            "applies_to": {},
+        },
+        {
+            "key": "round_total_to",
+            "value": "1000.000",
+            "unit": "so'm",
+            "description": "",
+            "applies_to": {},
+        },
+        {
+            "key": "min_order_amount",
+            "value": "0.000",
+            "unit": "so'm",
+            "description": "",
+            "applies_to": {},
+        },
+        {
+            "key": "waste_warn_percent",
+            "value": "15.000",
+            "unit": "%",
+            "description": "",
+            "applies_to": {},
+        },
     ]
     for rule in calc_rules:
         CalcRule.objects.update_or_create(
@@ -57,7 +99,9 @@ def _seed_minimal_pricing() -> None:
         stack_with_tier=True,
     )
     OrderDefaults.objects.all().delete()
-    OrderDefaults.objects.create(prepayment_percent="50.00", delivery_amount="50000.00", deadline_days=3)
+    OrderDefaults.objects.create(
+        prepayment_percent="50.00", delivery_amount="50000.00", deadline_days=3
+    )
 
 
 @pytest.fixture()
@@ -66,8 +110,12 @@ def minimal_catalog(db: Any) -> dict[str, Any]:
 
     _seed_minimal_pricing()
     tenant = TenantFactory.create()
-    category = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar", sort_order=1)
-    product = Product.objects.create(tenant=tenant, category=category, name="Reference", code="REF-01")
+    category = Category.objects.create(
+        tenant=tenant, name="Pardalar", slug="pardalar", sort_order=1
+    )
+    product = Product.objects.create(
+        tenant=tenant, category=category, name="Reference", code="REF-01"
+    )
     variant = ProductVariant.objects.create(
         id=UUID("11111111-1111-1111-1111-111111111111"),
         tenant=tenant,
@@ -162,4 +210,3 @@ def test_negative_price_is_rejected(db: Any) -> None:
     assert serializer.is_valid() is False
     assert "price" in serializer.errors
     assert "0 dan kichik" in str(serializer.errors["price"][0])
-

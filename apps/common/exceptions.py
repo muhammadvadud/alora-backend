@@ -98,7 +98,9 @@ def _flatten_validation_errors(detail: Any, prefix: str = "") -> dict[str, str]:
             return flattened
 
         if all(not isinstance(item, (dict, list)) for item in detail):
-            flattened[prefix or "non_field_errors"] = "; ".join(_stringify_error(item) for item in detail)
+            flattened[prefix or "non_field_errors"] = "; ".join(
+                _stringify_error(item) for item in detail
+            )
             return flattened
 
         for index, item in enumerate(detail):

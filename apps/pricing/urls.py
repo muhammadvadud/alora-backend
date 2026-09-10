@@ -21,7 +21,9 @@ calc_rule_list = CalcRuleViewSet.as_view({"get": "list", "patch": "partial_updat
 calc_rule_detail = CalcRuleViewSet.as_view({"get": "retrieve"})
 service_price_list = ServicePriceViewSet.as_view({"get": "list", "patch": "partial_update"})
 service_price_detail = ServicePriceViewSet.as_view({"get": "retrieve"})
-discount_policy_detail = DiscountPolicyViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
+discount_policy_detail = DiscountPolicyViewSet.as_view(
+    {"get": "retrieve", "patch": "partial_update"}
+)
 order_defaults_detail = OrderDefaultsViewSet.as_view({"get": "retrieve", "patch": "partial_update"})
 
 urlpatterns = [

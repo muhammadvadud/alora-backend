@@ -10,6 +10,7 @@ class TenantAdmin(admin.ModelAdmin):
     search_fields = ("name", "phone")
     readonly_fields = ("created_at", "updated_at")
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ("phone", "tenant", "role", "full_name", "is_active")

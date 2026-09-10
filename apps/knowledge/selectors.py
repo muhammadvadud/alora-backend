@@ -26,7 +26,9 @@ def _matches_condition(context: Mapping[str, Any], condition: Mapping[str, Any])
     return True
 
 
-def select_matching_rules(context: Mapping[str, Any], *, kind: str | None = None) -> list[KnowledgeRule]:
+def select_matching_rules(
+    context: Mapping[str, Any], *, kind: str | None = None
+) -> list[KnowledgeRule]:
     """Kontekstga mos qoidalarni priority bo'yicha qaytaradi."""
 
     queryset: QuerySet[KnowledgeRule] = KnowledgeRule.objects.filter(is_active=True)

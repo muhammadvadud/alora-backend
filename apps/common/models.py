@@ -68,4 +68,3 @@ class TenantScopedQuerySetMixin:
         except FieldDoesNotExist:
             return False
         return True
-

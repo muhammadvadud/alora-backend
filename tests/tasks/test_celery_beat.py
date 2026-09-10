@@ -43,7 +43,9 @@ def test_compress_image_task_route_matches_name(celery_app):
     from apps.catalog.tasks import compress_image_task
 
     assert compress_image_task.name == "apps.catalog.tasks.compress_image_task"
-    assert celery_app.conf.task_routes["apps.catalog.tasks.compress_image_task"] == {"queue": "heavy"}
+    assert celery_app.conf.task_routes["apps.catalog.tasks.compress_image_task"] == {
+        "queue": "heavy"
+    }
 
 
 def test_task_routes_queues(celery_app):

@@ -10,4 +10,3 @@ def test_standard_cursor_pagination_defaults() -> None:
     assert paginator.max_page_size == 100
     assert paginator.ordering == "-created_at"
     assert paginator.page_size_query_param == "page_size"
-

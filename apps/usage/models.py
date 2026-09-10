@@ -128,7 +128,9 @@ class UsageLimit(BaseModel):
         verbose_name=_("Davr"),
     )
     is_unlimited = models.BooleanField(default=False, verbose_name=_("Cheksiz"))
-    max_tokens = models.PositiveBigIntegerField(null=True, blank=True, verbose_name=_("Maksimal tokenlar"))
+    max_tokens = models.PositiveBigIntegerField(
+        null=True, blank=True, verbose_name=_("Maksimal tokenlar")
+    )
     max_cost_uzs = models.DecimalField(
         max_digits=MONEY_MAX_DIGITS,
         decimal_places=MONEY_DECIMAL_PLACES,
@@ -136,7 +138,9 @@ class UsageLimit(BaseModel):
         blank=True,
         verbose_name=_("Maksimal xarajat (UZS)"),
     )
-    max_messages = models.PositiveIntegerField(null=True, blank=True, verbose_name=_("Maksimal xabarlar"))
+    max_messages = models.PositiveIntegerField(
+        null=True, blank=True, verbose_name=_("Maksimal xabarlar")
+    )
     on_exceed = models.CharField(
         max_length=20,
         choices=OnExceed.choices,

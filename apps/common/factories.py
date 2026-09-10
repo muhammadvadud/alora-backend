@@ -60,9 +60,8 @@ def _model_has_fields(model: type[Any] | None, field_names: tuple[str, ...]) -> 
     return set(field_names).issubset(existing_fields)
 
 
-if (
-    DjangoModelFactory is not None
-    and _model_has_fields(TenantModel, ("name", "address", "phone", "currency", "timezone"))
+if DjangoModelFactory is not None and _model_has_fields(
+    TenantModel, ("name", "address", "phone", "currency", "timezone")
 ):
 
     class BaseTenantFactory(DjangoModelFactory):

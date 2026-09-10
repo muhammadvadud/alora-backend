@@ -50,4 +50,3 @@ def test_is_owner_or_manager_allows_owner_and_manager() -> None:
     assert permission.has_object_permission(_request(other_employee), None, obj) is False
     assert permission.has_object_permission(_request(manager), None, obj) is True
     assert permission.has_object_permission(_request(admin), None, obj) is True
-

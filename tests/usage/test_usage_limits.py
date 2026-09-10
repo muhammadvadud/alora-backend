@@ -90,7 +90,9 @@ class TestCheckUsageLimit:
         UsageLimit.objects.create(
             user=employee, period=UsagePeriod.DAILY, max_messages=1, on_exceed=OnExceed.WARN
         )
-        UsageRecord.objects.create(tenant=employee.tenant, user=employee, provider="test", model="test-model")
+        UsageRecord.objects.create(
+            tenant=employee.tenant, user=employee, provider="test", model="test-model"
+        )
         result = check_usage_limit(employee)
         assert result.blocked is False
 
@@ -108,7 +110,9 @@ class TestCheckUsageLimit:
 
     def test_cost_threshold_blocks(self, employee):
 
-        set_user_usage_limit(employee, {"max_cost_uzs": Decimal("500.00"), "on_exceed": OnExceed.BLOCK})
+        set_user_usage_limit(
+            employee, {"max_cost_uzs": Decimal("500.00"), "on_exceed": OnExceed.BLOCK}
+        )
         UsageRecord.objects.create(
             tenant=employee.tenant,
             user=employee,
@@ -125,14 +129,18 @@ class TestCheckUsageLimit:
 class TestEnforceUsageLimit:
     def test_raises_when_blocked(self, employee):
         set_user_usage_limit(employee, {"max_messages": 1, "on_exceed": OnExceed.BLOCK})
-        UsageRecord.objects.create(tenant=employee.tenant, user=employee, provider="test", model="test-model")
+        UsageRecord.objects.create(
+            tenant=employee.tenant, user=employee, provider="test", model="test-model"
+        )
         with pytest.raises(UsageLimitExceeded) as exc_info:
             enforce_usage_limit(employee)
         assert exc_info.value.status_code == 429
 
     def test_no_raise_when_unlimited(self, employee):
         set_user_usage_limit(employee, {"is_unlimited": True})
-        UsageRecord.objects.create(tenant=employee.tenant, user=employee, provider="test", model="test-model")
+        UsageRecord.objects.create(
+            tenant=employee.tenant, user=employee, provider="test", model="test-model"
+        )
         enforce_usage_limit(employee)
 
 

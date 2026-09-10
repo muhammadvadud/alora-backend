@@ -1,2 +1,1 @@
 """Pricing testlari."""
-

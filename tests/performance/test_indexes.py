@@ -64,9 +64,9 @@ class TestDatabaseIndexes:
         """`Order.number` — buyurtmani raqami bo'yicha topish."""
 
         self._assert_uses_index(Order.objects.filter(number="ALR-2026-000123"), "Order.number")
-        assert any(
-            "number" in definition for definition in table_indexes("orders_order")
-        ), "orders_order jadvalida number ustuni uchun indeks yo'q"
+        assert any("number" in definition for definition in table_indexes("orders_order")), (
+            "orders_order jadvalida number ustuni uchun indeks yo'q"
+        )
 
     def test_message_conversation_created_at_index(self):
         """`Message(conversation, created_at)` — suhbat xabarlarini tartib bilan o'qish."""
@@ -84,9 +84,7 @@ class TestDatabaseIndexes:
     def test_product_variant_sku_index(self):
         """`ProductVariant.sku` — SKU bo'yicha variant topish."""
 
-        self._assert_uses_index(
-            ProductVariant.objects.filter(sku="SKU-123"), "ProductVariant.sku"
-        )
+        self._assert_uses_index(ProductVariant.objects.filter(sku="SKU-123"), "ProductVariant.sku")
 
     def test_usage_daily_user_date_index(self):
         """`UsageDaily(user, date)` — kunlik yig'mani o'qish."""

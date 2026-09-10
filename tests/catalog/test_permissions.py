@@ -11,30 +11,29 @@ from apps.common.factories import EmployeeFactory, ManagerFactory, TenantFactory
 def tenant():
     return TenantFactory()
 
+
 @pytest.fixture
 def employee_client(client, tenant):
     user = EmployeeFactory(tenant=tenant)
     token = RefreshToken.for_user(user)
-    client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token.access_token}")
     return client
+
 
 @pytest.fixture
 def manager_client(client, tenant):
     user = ManagerFactory(tenant=tenant)
     token = RefreshToken.for_user(user)
-    client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token.access_token}")
     return client
+
 
 @pytest.mark.django_db
 class TestPermissions:
     def test_employee_cannot_create_product(self, employee_client, tenant):
         cat = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")
         url = reverse("product-list")
-        data = {
-            "name": "New Product",
-            "code": "NEW-01",
-            "category": cat.id
-        }
+        data = {"name": "New Product", "code": "NEW-01", "category": cat.id}
         resp = employee_client.post(url, data)
         assert resp.status_code == status.HTTP_403_FORBIDDEN
 
@@ -49,11 +48,7 @@ class TestPermissions:
     def test_manager_can_create_product(self, manager_client, tenant):
         cat = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")
         url = reverse("product-list")
-        data = {
-            "name": "New Product",
-            "code": "NEW-01",
-            "category": cat.id
-        }
+        data = {"name": "New Product", "code": "NEW-01", "category": cat.id}
         resp = manager_client.post(url, data)
         assert resp.status_code == status.HTTP_201_CREATED
 

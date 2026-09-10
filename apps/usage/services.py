@@ -58,7 +58,6 @@ def resolve_usage_limit(user: Any) -> Any | None:
     Shaxsiy limit mavjud bo'lsa — rol limiti e'tiborga olinmaydi.
     """
 
-
     UsageLimit = _usage_limit_model()
     if UsageLimit is None:
         return None
@@ -103,7 +102,10 @@ def get_user_period_usage(user: Any, period: str) -> PeriodUsage:
         user__pk=user.pk,
         created_at__gte=start,
     ).aggregate(
-        total_tokens=Sum("prompt_tokens") + Sum("completion_tokens") + Sum("cached_tokens") + Sum("reasoning_tokens"),
+        total_tokens=Sum("prompt_tokens")
+        + Sum("completion_tokens")
+        + Sum("cached_tokens")
+        + Sum("reasoning_tokens"),
         total_cost=Sum("cost_uzs"),
     )
     messages = UsageRecord.objects.filter(user__pk=user.pk, created_at__gte=start).count()
@@ -179,7 +181,15 @@ def set_user_usage_limit(user: Any, fields: dict[str, Any]) -> Any:
     )
 
     for field, value in fields.items():
-        if field in {"is_unlimited", "period", "max_tokens", "max_cost_uzs", "max_messages", "on_exceed", "is_active"}:
+        if field in {
+            "is_unlimited",
+            "period",
+            "max_tokens",
+            "max_cost_uzs",
+            "max_messages",
+            "on_exceed",
+            "is_active",
+        }:
             setattr(limit, field, value)
     limit.save()
     return limit
@@ -281,4 +291,8 @@ def _model_pricing(provider: str, model: str) -> Any | None:
         ModelPricing = apps.get_model("pricing", "ModelPricing")
     except LookupError:
         return None
-    return ModelPricing.objects.filter(provider=provider, model=model, is_active=True).order_by("-created_at").first()
+    return (
+        ModelPricing.objects.filter(provider=provider, model=model, is_active=True)
+        .order_by("-created_at")
+        .first()
+    )

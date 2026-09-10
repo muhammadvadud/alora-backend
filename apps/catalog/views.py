@@ -28,6 +28,7 @@ from apps.common.permissions import IsManager
 class BaseCatalogViewSet(viewsets.ModelViewSet):
     permission_classes = [IsManagerOrReadOnly]
 
+
 class CategoryViewSet(BaseCatalogViewSet):
     serializer_class = CategorySerializer
 
@@ -35,6 +36,7 @@ class CategoryViewSet(BaseCatalogViewSet):
         if getattr(self, "swagger_fake_view", False):
             return Category.objects.none()
         return get_categories(tenant_id=self.request.user.tenant_id)
+
 
 class ProductViewSet(BaseCatalogViewSet):
     filter_backends = (DjangoFilterBackend,)
@@ -49,23 +51,28 @@ class ProductViewSet(BaseCatalogViewSet):
         if self.action in ["list", "retrieve"]:
             return ProductReadSerializer
         return ProductWriteSerializer
-        
+
     def perform_create(self, serializer):
         serializer.save(tenant=self.request.user.tenant)
 
-    @action(detail=True, methods=["post"], parser_classes=[MultiPartParser, FormParser], permission_classes=[IsManager])
+    @action(
+        detail=True,
+        methods=["post"],
+        parser_classes=[MultiPartParser, FormParser],
+        permission_classes=[IsManager],
+    )
     def images(self, request, pk=None):
         product = self.get_object()
         serializer = ImageUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         image = upload_product_image(
             tenant=request.user.tenant,
             product=product,
             image_file=serializer.validated_data["image"],
             variant_id=serializer.validated_data.get("variant_id"),
             alt=serializer.validated_data.get("alt", ""),
-            is_primary=serializer.validated_data.get("is_primary", False)
+            is_primary=serializer.validated_data.get("is_primary", False),
         )
         return Response(ProductImageSerializer(image).data, status=status.HTTP_201_CREATED)
 
@@ -88,12 +95,12 @@ class ProductVariantViewSet(BaseCatalogViewSet):
     def bulk_price(self, request):
         serializer = BulkPriceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+
         updated_count = bulk_update_variant_prices(
             tenant_id=request.user.tenant_id,
             variant_ids=serializer.validated_data["variant_ids"],
             value=serializer.validated_data["value"],
-            type=serializer.validated_data["type"]
+            type=serializer.validated_data["type"],
         )
         return Response({"updated": updated_count})
 
@@ -122,6 +129,7 @@ class FasonViewSet(BaseCatalogViewSet):
     def perform_create(self, serializer):
         serializer.save(tenant=self.request.user.tenant)
 
+
 class CatalogImportView(viewsets.ViewSet):
     permission_classes = [IsManager]
     serializer_class = None
@@ -143,15 +151,11 @@ class CatalogImportView(viewsets.ViewSet):
         file = request.FILES.get("file")
         if not file:
             raise ValidationError({"file": "Fayl taqdim etilmadi"})
-            
+
         if file.size > 10 * 1024 * 1024:
             raise ValidationError({"file": "Fayl hajmi 10 MB dan oshmasligi kerak"})
 
         dry_run = request.query_params.get("dry_run", "false").lower() == "true"
-        
-        result = import_catalog_csv(
-            tenant=request.user.tenant, 
-            file=file, 
-            dry_run=dry_run
-        )
+
+        result = import_catalog_csv(tenant=request.user.tenant, file=file, dry_run=dry_run)
         return Response(dataclasses.asdict(result))
