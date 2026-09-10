@@ -122,24 +122,30 @@ def check_usage_limit(user: Any) -> LimitCheckResult:
     holatda `on_exceed=block` bo'lsa `blocked=True` qaytadi.
     """
 
-    limit = resolve_usage_limit(user)
-    period = limit.period if limit is not None else UsagePeriod.DAILY
-    usage = get_user_period_usage(user, period)
+    from django.db import transaction
 
-    if limit is None or limit.is_unlimited:
-        return LimitCheckResult(blocked=False, period=period, limit=limit, usage=usage)
+    with transaction.atomic():
+        # Poyga holati (race condition) ni oldini olish uchun bazada qulflaymiz
+        user.__class__.objects.select_for_update().get(pk=user.pk)
 
-    exceeded = _is_exceeded(limit, usage)
-    if not exceeded or limit.on_exceed != OnExceed.BLOCK:
-        return LimitCheckResult(blocked=False, period=period, limit=limit, usage=usage)
+        limit = resolve_usage_limit(user)
+        period = limit.period if limit is not None else UsagePeriod.DAILY
+        usage = get_user_period_usage(user, period)
 
-    return LimitCheckResult(
-        blocked=True,
-        period=period,
-        limit=limit,
-        usage=usage,
-        reason=_resolve_exceed_reason(limit, usage),
-    )
+        if limit is None or limit.is_unlimited:
+            return LimitCheckResult(blocked=False, period=period, limit=limit, usage=usage)
+
+        exceeded = _is_exceeded(limit, usage)
+        if not exceeded or limit.on_exceed != OnExceed.BLOCK:
+            return LimitCheckResult(blocked=False, period=period, limit=limit, usage=usage)
+
+        return LimitCheckResult(
+            blocked=True,
+            period=period,
+            limit=limit,
+            usage=usage,
+            reason=_resolve_exceed_reason(limit, usage),
+        )
 
 
 def enforce_usage_limit(user: Any) -> None:

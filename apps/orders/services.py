@@ -126,27 +126,37 @@ def change_order_status(
     note: str = "",
     action_date: date | None = None,
 ) -> Order:
-    """Buyurtma statusini ruxsat etilgan o'tish bo'yicha o'zgartiradi."""
+    """Buyurtma statusini ruxsat etilgan o'tish bo'yicha o'zgartiradi.
+    
+    Qulf (select_for_update) sababi: Ikki parallel so'rov bir vaqtda
+    statusni o'zgartirishga urinsa, poyga holati (race condition) orqali
+    noto'g'ri (masalan, bekor qilingan buyurtma ishlab chiqarishga o'tishi)
+    holatlarning oldini olish uchun qulflanadi.
+    """
 
-    validate_transition(order.status, target)
-    old_status = order.status
-    change_fields = ["status"]
-    order.status = target
+    with transaction.atomic():
+        locked = Order.objects.select_for_update().get(pk=order.pk)
+        validate_transition(locked.status, target)
+        old_status = locked.status
+        change_fields = ["status"]
+        locked.status = target
 
-    if target == OrderStatus.CONFIRMED:
-        order.confirmed_by = user
-        order.confirmed_at = timezone.now()
-        change_fields += ["confirmed_by", "confirmed_at"]
+        if target == OrderStatus.CONFIRMED:
+            locked.confirmed_by = user
+            locked.confirmed_at = timezone.now()
+            change_fields += ["confirmed_by", "confirmed_at"]
 
-    if action_date is not None:
-        order.deadline_date = action_date
-        change_fields.append("deadline_date")
+        if action_date is not None:
+            locked.deadline_date = action_date
+            change_fields.append("deadline_date")
 
-    if note:
-        order.note = note.strip()
-        change_fields.append("note")
+        if note:
+            locked.note = note.strip()
+            change_fields.append("note")
 
-    order.save(update_fields=change_fields)
+        locked.save(update_fields=change_fields)
+
+    order.refresh_from_db()
     logger.info(
         "order_status_changed",
         order_id=str(order.pk),
@@ -578,25 +588,33 @@ def update_order_from_draft(
 
 
 def recalculate_order(*, order: Order, user_role: str | None = None) -> dict[str, Any]:
-    """Buyurtma summasini apps/pricing/services/calculator.py orqali qayta hisoblaydi."""
+    """Buyurtma summasini apps/pricing/services/calculator.py orqali qayta hisoblaydi.
+    
+    Qulf (select_for_update) sababi: Bir vaqtda bir nechta o'zgarish 
+    buyurtmani qayta hisoblaganda poyga holatini (race condition) oldini olish.
+    """
 
-    payload = _order_to_calc_payload(order)
-    result = calculate_preview(payload, user_role=user_role)
+    with transaction.atomic():
+        locked = Order.objects.select_for_update().get(pk=order.pk)
+        payload = _order_to_calc_payload(locked)
+        result = calculate_preview(payload, user_role=user_role)
 
-    _apply_calc_result(order, result, prepayment_percent=None)
-    order.save(
-        update_fields=[
-            "subtotal",
-            "discount_percent",
-            "discount_amount",
-            "delivery_amount",
-            "total",
-            "prepayment",
-            "balance",
-            "payment_status",
-            "updated_at",
-        ]
-    )
+        _apply_calc_result(locked, result, prepayment_percent=None)
+        locked.save(
+            update_fields=[
+                "subtotal",
+                "discount_percent",
+                "discount_amount",
+                "delivery_amount",
+                "total",
+                "prepayment",
+                "balance",
+                "payment_status",
+                "updated_at",
+            ]
+        )
+
+    order.refresh_from_db()
     logger.info(
         "order_recalculated",
         order_id=str(order.pk),
