@@ -35,6 +35,12 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.13"
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt', 'pyproject.toml') }}
         
     - name: Install dependencies
       run: |
@@ -44,10 +50,35 @@ jobs:
     - name: Run Ruff Linting
       run: |
         ruff check .
+
+    - name: Run Ruff Formatting Check
+      run: |
+        ruff format --check .
         
     - name: Run Mypy
       run: |
         mypy .
+
+    - name: Migratsiyalar to'liqligini tekshirish
+      run: python manage.py makemigrations --check --dry-run
+
+    - name: Deploy sozlamalarini tekshirish
+      env:
+        DJANGO_SETTINGS_MODULE: config.settings.prod
+        SECRET_KEY: ci-only-key
+        ALLOWED_HOSTS: example.com
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        REDIS_URL: redis://localhost:6379/0
+      run: python manage.py check --deploy --fail-level WARNING
+
+    - name: requirements.txt sinxronligini tekshirish
+      run: |
+        python scripts/gen_requirements.py
+        git diff --exit-code requirements.txt requirements-dev.txt
+
+    - name: Stub qoldiqlarini tekshirish
+      run: |
+        ! grep -rn "returning 200 for now\|TODO: implement\|FIXME" apps/ config/
         
     - name: Run Tests with Coverage
       env:
@@ -61,10 +92,12 @@ jobs:
       uses: codecov/codecov-action@v4
 
     - name: Run pip-audit
+      if: always()
       run: |
         pip-audit
 
     - name: Run detect-secrets
+      if: always()
       run: |
         python -m pip install detect-secrets
         detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
