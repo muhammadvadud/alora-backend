@@ -1,4 +1,10 @@
-"""14.6 - Yuk testi: 50 parallel chat sessiyasi."""
+"""14.6 - Yuk testi: 50 parallel chat sessiyasi.
+
+Bu test konkurentlikni o'lchaydi, throttle'ni emas. Shuning uchun DRF
+throttle chegaralari test davomida o'chiriladi — aks holda `chat: 30/minute`
+chegarasi 50 ta parallel so'rovning bir qismini 429 bilan rad etadi va test
+o'lchamoqchi bo'lgan narsani umuman tekshirmaydi.
+"""
 
 import time
 import uuid
@@ -16,7 +22,8 @@ from apps.chat.models import Conversation
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
-def test_50_concurrent_chat_sessions(employee_user):
+@patch("rest_framework.throttling.SimpleRateThrottle.allow_request", return_value=True)
+def test_50_concurrent_chat_sessions(_no_throttle, employee_user):
     """50 parallel chat sessiyasini simulyatsiya qilish."""
     
     if not employee_user.tenant.pk or not type(employee_user.tenant).objects.filter(pk=employee_user.tenant.pk).exists():

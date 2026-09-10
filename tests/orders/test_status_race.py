@@ -2,42 +2,52 @@
 
 from __future__ import annotations
 
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import pytest
 from django.core.exceptions import ValidationError
+from django.db import connection
 
 from apps.common.choices import OrderStatus
 from apps.orders.services import change_order_status
 
 
-@pytest.mark.django_db(transaction=True, serialized_rollback=True)
-def test_concurrent_status_change_only_one_wins(manager: Any, create_order: Any) -> None:
-    """Ikki parallel so'rov bir vaqtda statusni o'zgartirsa, bittasi g'olib bo'lishi kerak."""
+@pytest.mark.django_db(transaction=True)
+def test_concurrent_cancel_only_one_wins(
+    pricing_defaults: Any, manager: Any, create_order: Any
+) -> None:
+    """Ikki oqim bir vaqtda bekor qilsa, faqat bittasi o'tadi.
 
-    from concurrent.futures import ThreadPoolExecutor
+    `cancelled` terminal holat: undan chiquvchi o'tish yo'q. Shuning uchun
+    ikkinchi urinish `cancelled -> cancelled` sifatida rad etilishi kerak.
 
-    from django.db import connection
+    Qulf (`select_for_update`) bo'lmasa ikkala oqim ham `confirmed` ni o'qiydi,
+    ikkalasi ham validatsiyadan o'tadi va ikkalasi ham "ok" qaytaradi — test
+    aynan shu regressiyani ushlaydi. `barrier` ikkala oqimni bir vaqtda
+    boshlashga majbur qiladi, ya'ni tartib sun'iy ravishda belgilanmaydi.
+    """
 
-    # Buyurtma yaratish va uni CONFIRMED holatiga o'tkazish
     order = create_order(user=manager)
     order = change_order_status(order=order, target=OrderStatus.CONFIRMED, user=manager)
 
-    def attempt(target: str) -> str:
-        import time
-        if target == OrderStatus.MEASURING:
-            time.sleep(0.1)  # Ensure cancelled gets the lock first
+    barrier = threading.Barrier(2)
+
+    def attempt(_: int) -> str:
         try:
-            change_order_status(order=order, target=target, user=manager)
+            barrier.wait(timeout=5)
+            change_order_status(order=order, target=OrderStatus.CANCELLED, user=manager)
             return "ok"
         except ValidationError:
             return "rejected"
         finally:
             connection.close()
 
-    # Bir vaqtda measuring va cancelled holatlariga o'tkazishga urinish
     with ThreadPoolExecutor(max_workers=2) as pool:
-        results = list(pool.map(attempt, [OrderStatus.MEASURING, OrderStatus.CANCELLED]))
+        results = list(pool.map(attempt, [1, 2]))
 
-    # Faqat bittasi muvaffaqiyatli bo'lishi kerak, ikkinchisi xato (ValidationError) berishi kerak
     assert sorted(results) == ["ok", "rejected"]
+
+    order.refresh_from_db()
+    assert order.status == OrderStatus.CANCELLED

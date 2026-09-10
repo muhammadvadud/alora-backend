@@ -72,3 +72,24 @@ def admin_user(tenant: Any) -> Any:
 
     return AdminFactory.build(tenant=tenant)
 
+
+
+@pytest.fixture
+def pricing_defaults(db):
+    """Narx sozlamalari seed'ini kafolatlaydi.
+
+    `CalcRule`, `ServicePrice`, `DiscountPolicy` va `OrderDefaults` migratsiya
+    seed'idan (`pricing.0002_seed_defaults`) keladi. `transaction=True` bilan
+    ishlaydigan testlar bazani to'liq tozalagani uchun bu satrlar yo'qoladi va
+    keyingi transaksiyali test "Sozlama topilmadi" xatosiga uchraydi.
+
+    Seed ma'lumoti bu yerda takrorlanmaydi — migratsiyaning o'z funksiyasi
+    chaqiriladi, ya'ni seed o'zgarsa fixture avtomatik mos qoladi.
+    """
+
+    from importlib import import_module
+
+    from django.apps import apps as django_apps
+
+    migration = import_module("apps.pricing.migrations.0002_seed_defaults")
+    migration.forwards(django_apps, None)
