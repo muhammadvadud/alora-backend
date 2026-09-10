@@ -4,37 +4,36 @@ from django.db import connection
 from django.http import JsonResponse
 
 
-def health_check(request):
-    """
-    Tizim holatini tekshirish.
-    Ma'lumotlar bazasi va Redis ulanishini tekshiradi.
-    (gRPC tekshiruvi keyin qo'shiladi)
-    """
-    status = {
-        "status": "ok",
-        "database": "ok",
-        "redis": "ok"
-    }
-    
-    # DB tekshiruvi
+def _check_database() -> dict:
     try:
         connection.ensure_connection()
-    # Health check hech qachon yiqilmasligi kerak: har qanday nosozlik
-    # javobda holat sifatida qaytadi (TZ 0.14).
+        return {"status": "ok"}
     except Exception as e:  # noqa: BLE001
-        status["database"] = "error"
-        status["status"] = "error"
-        status["database_error"] = str(e)
-        
-    # Redis tekshiruvi
+        return {"status": "error", "detail": str(e)}
+
+def _check_redis() -> dict:
     try:
         r = redis.from_url(settings.REDIS_URL)
         r.ping()
-    # Yuqoridagi sabab: nosozlik javobda qaytadi, so'rov yiqilmaydi.
+        return {"status": "ok"}
     except Exception as e:  # noqa: BLE001
-        status["redis"] = "error"
-        status["status"] = "error"
-        status["redis_error"] = str(e)
-        
-    status_code = 200 if status["status"] == "ok" else 503
-    return JsonResponse(status, status=status_code)
+        return {"status": "error", "detail": str(e)}
+
+def health_check(request):
+    """DB, Redis va Go agent holatini qaytaradi."""
+    from apps.chat.health import grpc_health
+
+    checks = {
+        "database": _check_database(),
+        "redis": _check_redis(),
+        "grpc": grpc_health(),
+    }
+    
+    # gRPC ixtiyoriy bog'liqlik: u yiqilsa tizim "degraded", "error" emas.
+    hard_failed = any(c["status"] != "ok" for k, c in checks.items() if k != "grpc")
+    soft_failed = checks["grpc"]["status"] != "ok"
+    
+    overall = "error" if hard_failed else ("degraded" if soft_failed else "ok")
+    status_code = 503 if hard_failed else 200
+    
+    return JsonResponse({"status": overall, **checks}, status=status_code)
