@@ -19,6 +19,8 @@ def _role_rank(user: Any) -> int:
     """Foydalanuvchi rolini iyerarxik ballga aylantiradi."""
 
     role = getattr(user, "role", None)
+    if not isinstance(role, str):
+        return 0
     return ROLE_RANK.get(role, 0)
 
 

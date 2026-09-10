@@ -46,7 +46,7 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
     """DRF xatolarini yagona, yassi formatga keltiradi."""
 
     response = drf_exception_handler(exc, context)
-    status_code = HTTP_500_INTERNAL_SERVER_ERROR
+    status_code: int = HTTP_500_INTERNAL_SERVER_ERROR
     detail = DEFAULT_DETAIL
     code = "error"
     errors: dict[str, str] = {}

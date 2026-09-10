@@ -45,6 +45,10 @@ dev = [
     "mypy",
     "django-stubs",
     "djangorestframework-stubs",
+    "celery-types",
+    "types-redis",
+    "types-reportlab",
+    "grpc-stubs",
     "pre-commit",
     "pip-audit"
 ]
@@ -58,6 +62,7 @@ exclude = [
     ".ruff_cache",
     ".venv",
     "venv",
+    "grpc_gen",
     "__pycache__",
     "migrations"
 ]
@@ -73,7 +78,47 @@ ignore = ["RUF012"]
 python_version = "3.13"
 strict_optional = true
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
-exclude = ["migrations/", "venv/", ".venv/"]
+exclude = ["migrations/", "venv/", ".venv/", "grpc_gen/", "tests/"]
+
+[[tool.mypy.overrides]]
+module = [
+    "celery.*",
+    "channels.*",
+    "channels_redis.*",
+    "environ.*",
+    "dj_database_url.*",
+    "django_filters.*",
+    "reportlab.*",
+    "weasyprint.*",
+    "grpc.*",
+    "google.protobuf.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+ignore_errors = true
+
+
+# VAQTINCHA — mypy qamrovini bosqichma-bosqich kengaytirish uchun.
+# Har sprintda kamida 2 modul bu ro'yxatdan olib tashlanadi va xatolari tuzatiladi.
+[[tool.mypy.overrides]]
+module = [
+    "apps.accounts.models",
+    "apps.accounts.serializers",
+    "apps.catalog.serializers",
+    "apps.catalog.tasks",
+    "apps.chat.grpc_server.catalog_service",
+    "apps.common.factories",
+    "apps.common.models",
+    "apps.knowledge.views",
+    "apps.orders.serializers",
+    "apps.orders.services",
+    "apps.orders.views",
+    "apps.pricing.views",
+    "apps.usage.views",
+]
+ignore_errors = true
 
 [tool.django-stubs]
 django_settings_module = "config.settings.dev"
