@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:16
@@ -36,7 +34,22 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    command: celery -A config worker -l INFO
+    command: celery -A config worker -l INFO -Q default,usage --concurrency=4
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgres://alora:alora_password@db:5432/alora
+      - REDIS_URL=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.dev
+    depends_on:
+      - redis
+      - db
+
+  celery_worker_heavy:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: celery -A config worker -l INFO -Q heavy --concurrency=2
     volumes:
       - .:/app
     environment:

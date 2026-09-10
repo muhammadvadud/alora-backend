@@ -10,6 +10,17 @@ app = Celery('alora')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
+# Ishlab chiqarish muhiti uchun ishonchli task bajarilishi sozlamalari.
+app.conf.update(
+    task_acks_late=True,
+    worker_prefetch_multiplier=1,
+    task_reject_on_worker_lost=True,
+    broker_connection_retry_on_startup=True,
+    task_time_limit=300,
+    task_soft_time_limit=270,
+    result_expires=86_400,
+)
+
 # Navbatlar sozlamalari
 app.conf.task_routes = {
     'apps.usage.tasks.*': {'queue': 'usage'},
