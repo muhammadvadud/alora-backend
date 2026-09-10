@@ -6,7 +6,7 @@ from django.db import transaction
 from django.http import HttpRequest
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_scope
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -219,6 +219,7 @@ class ModelPricingViewSet(viewsets.ModelViewSet):
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@throttle_scope("calc")
 def calc_preview_view(request: HttpRequest) -> Response:
     """Kalkulyatsiya preview'i."""
 

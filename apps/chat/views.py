@@ -73,6 +73,7 @@ class ConversationMessagesView(APIView):
 
     permission_classes = (IsConversationOwnerOrManager,)
     serializer_class = MessageSerializer
+    throttle_scope = "chat"
 
     @extend_schema(
         summary="Suhbat xabarlarini olish",
@@ -181,4 +182,3 @@ class ConversationMessagesView(APIView):
                 raise
 
         return StreamingHttpResponse(event_generator(), content_type="text/event-stream")
-
