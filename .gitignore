@@ -61,6 +61,5 @@ celerybeat.pid
 
 # Forge
 .forge/
-venv/
-.venv/
+ruff_errors.json
 staticfiles/
