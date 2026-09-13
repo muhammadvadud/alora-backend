@@ -272,3 +272,9 @@
 - Bosqich 3, 5, 6 parallel ketishi mumkin.
 - Bosqich 4 (`calculator.py`) — 8-bosqich uchun blokirovkachi.
 - Bosqich 14 doimiy: har bosqich yakunida qisman tekshiriladi.
+
+---
+
+## Dev vositalar
+
+- [x] `seed_dev_catalog` — dev katalog seed buyrug'i (idempotent, DEBUG/`--force` bilan). Test: `tests/catalog/test_seed_dev_catalog.py`
