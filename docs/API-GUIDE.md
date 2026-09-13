@@ -58,6 +58,12 @@ Asosiy prefiks: `/api/v1/`
 - `GET, PATCH, DELETE /api/v1/catalog/fasons/{id}/` - Fason boshqaruvi
 - `POST /api/v1/catalog/import/` - Katalogni import qilish
 
+Import `multipart/form-data` orqali `.csv` yoki `.xlsx` fayl qabul qiladi. Ustunlar:
+`product_code`, `product_name`, `category_slug`, `style`, `pattern`, `segment`,
+`recommended_rooms`, `variant_sku`, `color_name`, `price`, `price_unit`, `width_m`,
+`is_active`. `dry_run=true` yozuvlarni saqlamasdan tekshiradi; fayl 5 MB va 5000 qatordan
+oshmasligi kerak.
+
 ### Buyurtmalar (`/api/v1/orders/`)
 - `GET, POST /api/v1/orders/` - Buyurtmalar ro'yxati va yaratish
 - `GET, PATCH, DELETE /api/v1/orders/{id}/` - Buyurtma boshqaruvi

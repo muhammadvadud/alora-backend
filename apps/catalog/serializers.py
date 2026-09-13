@@ -207,3 +207,15 @@ class ImageUploadSerializer(serializers.Serializer):
     variant_id = serializers.UUIDField(required=False, allow_null=True)
     alt = serializers.CharField(required=False, allow_blank=True)
     is_primary = serializers.BooleanField(default=False)
+
+
+class CatalogImportSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    dry_run = serializers.BooleanField(required=False, default=False)
+
+
+class CatalogImportReportSerializer(serializers.Serializer):
+    created = serializers.IntegerField()
+    updated = serializers.IntegerField()
+    skipped = serializers.IntegerField()
+    errors = serializers.ListField(child=serializers.DictField())

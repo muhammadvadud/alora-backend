@@ -15,6 +15,7 @@ djangorestframework-stubs==3.18.1
 celery-types
 types-redis
 types-reportlab
+types-openpyxl==3.1.5.20260827
 grpc-stubs
 pre-commit==4.6.2
 pip-audit==2.10.1

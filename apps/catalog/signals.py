@@ -9,12 +9,15 @@ from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
 from apps.catalog.models import Fason, FasonAccessory, FasonPart, Product, ProductVariant
+from apps.catalog.services.import_service import IMPORT_IN_PROGRESS
 from apps.chat.grpc_server import catalog_payload as payloads
 from apps.chat.grpc_server.catalog_service import publish_catalog_delta
 
 
 @receiver(post_save, sender=Product)
 def product_post_save(sender, instance, created, **kwargs):
+    if IMPORT_IN_PROGRESS.get():
+        return
     publish_catalog_delta(
         tenant_id=str(instance.tenant_id),
         entity="product",
@@ -26,6 +29,8 @@ def product_post_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Product)
 def product_post_delete(sender, instance, **kwargs):
+    if IMPORT_IN_PROGRESS.get():
+        return
     publish_catalog_delta(
         tenant_id=str(instance.tenant_id),
         entity="product",
@@ -36,6 +41,8 @@ def product_post_delete(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ProductVariant)
 def product_variant_post_save(sender, instance, created, **kwargs):
+    if IMPORT_IN_PROGRESS.get():
+        return
     publish_catalog_delta(
         tenant_id=str(instance.tenant_id),
         entity="variant",
@@ -47,6 +54,8 @@ def product_variant_post_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=ProductVariant)
 def product_variant_post_delete(sender, instance, **kwargs):
+    if IMPORT_IN_PROGRESS.get():
+        return
     publish_catalog_delta(
         tenant_id=str(instance.tenant_id),
         entity="variant",

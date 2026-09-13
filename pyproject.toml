@@ -29,6 +29,7 @@ dependencies = [
     "grpcio-tools",
     "drf-spectacular",
     "Pillow",
+    "openpyxl",
     "reportlab",
     "argon2-cffi",
     "uvicorn",
@@ -48,6 +49,7 @@ dev = [
     "celery-types",
     "types-redis",
     "types-reportlab",
+    "types-openpyxl",
     "grpc-stubs",
     "pre-commit",
     "pip-audit"

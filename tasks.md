@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 197 / 201 bajarildi (2 jarayonda) · 335 test o'tgan · coverage 87% · ruff toza (2026-09-13)
+**Umumiy holat:** 198 / 201 bajarildi (1 jarayonda) · import testlari qo'shildi · ruff tekshirilmoqda (2026-09-13)
 
 ---
 
@@ -74,7 +74,7 @@
 - [x] 3.18 `POST /catalog/products/{id}/images/` — multipart yuklash
 - [x] 3.19 `DELETE /catalog/images/{id}/`
 - [x] 3.20 Rasm siqish Celery task (thumbnail 300px, to'liq 1200px)
-- [ ] 3.21 `POST /catalog/import/` — Excel/CSV import
+- [x] 3.21 `POST /catalog/import/` — Excel/CSV import
 - [x] 3.22 `GET/POST/PATCH/DELETE /catalog/fasons/`
 - [x] 3.23 Seed skript: kategoriyalar, namuna mahsulot va aksessuarlar
 - [x] 3.24 N+1 nazorati (`assertNumQueries`) va 300 ms javob testi

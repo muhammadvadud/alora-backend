@@ -2,6 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 
@@ -11,6 +12,8 @@ from apps.catalog.permissions import IsManagerOrReadOnly
 from apps.catalog.selectors import get_categories, get_fasons, get_products, get_variants
 from apps.catalog.serializers import (
     BulkPriceSerializer,
+    CatalogImportReportSerializer,
+    CatalogImportSerializer,
     CategorySerializer,
     FasonReadSerializer,
     FasonWriteSerializer,
@@ -22,6 +25,7 @@ from apps.catalog.serializers import (
     ProductWriteSerializer,
 )
 from apps.catalog.services import bulk_update_variant_prices, upload_product_image
+from apps.catalog.services.import_service import import_products
 from apps.common.permissions import IsManager
 
 
@@ -133,6 +137,7 @@ class FasonViewSet(BaseCatalogViewSet):
 class CatalogImportView(viewsets.ViewSet):
     permission_classes = [IsManager]
     serializer_class = None
+    parser_classes = [MultiPartParser, FormParser]
 
     @extend_schema(
         operation_id="catalog_import_csv",
@@ -140,22 +145,26 @@ class CatalogImportView(viewsets.ViewSet):
         description="CSV fayldan katalog ma'lumotlarini import qilish.",
         responses={200: dict},
     )
-    @action(detail=False, methods=["post"], parser_classes=[MultiPartParser])
-    def import_csv(self, request):
+    def _import(self, request):
         import dataclasses
-
-        from rest_framework.exceptions import ValidationError
-
-        from apps.catalog.services import import_catalog_csv
 
         file = request.FILES.get("file")
         if not file:
             raise ValidationError({"file": "Fayl taqdim etilmadi"})
 
-        if file.size > 10 * 1024 * 1024:
-            raise ValidationError({"file": "Fayl hajmi 10 MB dan oshmasligi kerak"})
-
         dry_run = request.query_params.get("dry_run", "false").lower() == "true"
-
-        result = import_catalog_csv(tenant=request.user.tenant, file=file, dry_run=dry_run)
+        if "dry_run" in request.data:
+            dry_run = str(request.data["dry_run"]).lower() == "true"
+        try:
+            result = import_products(file=file, tenant=request.user.tenant, dry_run=dry_run)
+        except ValueError as exc:
+            raise ValidationError({"file": str(exc)}) from exc
         return Response(dataclasses.asdict(result))
+
+    @extend_schema(request=CatalogImportSerializer, responses=CatalogImportReportSerializer)
+    def create(self, request, *args, **kwargs):
+        return self._import(request)
+
+    @action(detail=False, methods=["post"], parser_classes=[MultiPartParser])
+    def import_csv(self, request):
+        return self._import(request)

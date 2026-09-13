@@ -19,6 +19,7 @@ grpcio==1.83.1
 grpcio-tools==1.83.1
 drf-spectacular==0.30.0
 Pillow==12.3.0
+openpyxl==3.1.5
 reportlab==5.0.1
 argon2-cffi==25.1.0
 uvicorn==0.52.4
