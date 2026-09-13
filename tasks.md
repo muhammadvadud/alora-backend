@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 196 / 200 bajarildi (2 jarayonda) · 333 test o'tgan · coverage 86% · ruff toza
+**Umumiy holat:** 197 / 201 bajarildi (2 jarayonda) · 335 test o'tgan · coverage 87% · ruff toza (2026-09-13)
 
 ---
 
@@ -156,6 +156,7 @@
 - [x] 7.15 Chat rate limit (Redis, rol bo'yicha)
 - [x] 7.16 Async view ichida bloklovchi ORM chaqiruvi yo'qligini tekshirish
 - [x] 7.17 Testlar: SSE oqimi (gRPC mock), uzilish, limit 429, permission
+- [x] 7.18 VoiceChat: metadata uzatish, transcript/done qayta ishlash (kontrakt 1.4)
 
 ## Bosqich 8 — `apps/orders` (buyurtmalar)
 

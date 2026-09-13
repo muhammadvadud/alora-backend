@@ -1,6 +1,6 @@
 # Alora Backend — Go bilan Kelishuv (GO-CONTRACT)
 
-**Kontrakt versiyasi:** 1.3 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
+**Kontrakt versiyasi:** 1.4 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
 **Yagona manba:** `protos/alora.proto`. Ushbu hujjat proto'da ifodalab bo'lmaydigan
 semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 
@@ -45,6 +45,7 @@ start → (tool_call → tool_args → tool_result → products?)* → content* 
 | `thinking` | `content` | Go **yubormaydi** (mijoz rejimida sizib chiqmasin) |
 | `products` | `products[]` (`ProductRef`) | SSE'ga 1:1 — mobil kartochka chizadi |
 | `stage` | `content` = `need\|recommend\|measure\|calc\|variants\|order`, `result` = qisqa holat JSON | SSE'ga 1:1 **va** Celery `update_conversation_stage` → `Conversation.stage`, `Conversation.context["agent_state"]`. Noma'lum bosqich e'tiborsiz |
+| `transcript` | `content` = STT matni | Faqat VoiceChat ichida; Django WS'ga 1:1 |
 | `done` | `usage` | `save_message_and_usage` |
 
 **`Usage.cost_usd` / `cost_uzs`:** Go **`0` yuboradi**. Narxni Django `ModelPricing`
@@ -156,6 +157,17 @@ Go faqat `UNAVAILABLE` holatida bir marta retry qiladi va RPC timeout'i 3 soniya
 Kutilmagan server xatosida ichki tafsilotlar yuborilmaydi. Django gRPC serveri
 `run_grpc` command orqali `[::]:9091` da ishlaydi va `x-service-token` interceptorini qo'llaydi.
 
+### 1.5 VoiceChat metadata
+
+Django `voice_chat_stream` har bir VoiceChat stream'ida mavjud `x-service-token` va
+`x-request-id` ustiga quyidagi metadata'ni yuboradi: `x-session-id`, `x-user-id`,
+`x-tenant-id`, `x-role`, `x-locale`, `x-customer-mode` (`"0"|"1"`) va
+`x-conversation-id`. Bu kalitlardan biri yo'q bo'lsa, Go `InvalidArgument` qaytaradi.
+
+Kirish audio formati `pcm_s16le` (16 kHz, mono) yoki `opus`; chiqish formati provider'ga
+bog'liq va har bir event'dagi `audio_format` bilan ko'rsatiladi. `VoiceEvent.kind` qiymatlari:
+`transcript|text|audio|error|done`; `chat_event` ichida umumiy `ChatEvent` bo'lishi mumkin.
+
 ---
 
 ## 2. Etalon test kelishuvi
@@ -184,3 +196,4 @@ Go jamoasiga xabar qilinadi. 20 ta holat, hammasi ±0 farq bilan o'tishi shart.
 | 1.1 | 2026-09-13 | `CatalogSnapshot` 8–13: `service_prices`, `discount_tiers`, `discount_policy`, `order_defaults`, `fasons`, `prompt`; yangi `Catalog*` xabarlari; delta payload'lari barcha entity'lar uchun; `ChatEvent.kind` ga `products`, `stage`; `context` kalitlari (`role`, `customer_mode`, `conversation_id`); `cost_*` faqat Django; `FULL_RESYNC` protokoli; `items_json` sxemasi; `go_package` tuzatildi; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada |
 | 1.2 | 2026-09-13 | `Pricing.CalcPreview`; Django gRPC server bootstrap (`run_grpc`, 9091); server tomonida `x-service-token` interceptor |
 | 1.3 | 2026-09-13 | `SaveOrderDraft` haqiqiy order yaratadi va Conversation bilan bog'lanadi; Django klient Agent RPC'lariga `x-service-token` va `x-request-id` metadata yuboradi; 5 daqiqalik idempotentlik |
+| 1.4 | 2026-09-13 | VoiceChat metadata, `transcript` kind va transcript/audio/done WS oqimi |

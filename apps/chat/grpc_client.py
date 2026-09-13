@@ -269,6 +269,14 @@ def health_check(deadline_seconds: float = 5.0) -> dict[str, Any]:
 
 def voice_chat_stream(
     chunks: Iterator[Any],
+    *,
+    session_id: str = "",
+    user_id: str = "",
+    tenant_id: str = "",
+    role: str = "",
+    locale: str = "uz",
+    customer_mode: str = "0",
+    conversation_id: str = "",
     deadline_seconds: float = 120.0,
 ) -> Iterator[Any]:
     """Agent.VoiceChat bidi-stream ochadi.
@@ -284,9 +292,18 @@ def voice_chat_stream(
 
     channel = get_agent_channel()
     stub = alora_pb2_grpc.AgentStub(channel)
+    metadata = _call_metadata() + (
+        ("x-session-id", session_id),
+        ("x-user-id", user_id),
+        ("x-tenant-id", tenant_id),
+        ("x-role", role),
+        ("x-locale", locale),
+        ("x-customer-mode", customer_mode),
+        ("x-conversation-id", conversation_id),
+    )
 
     def _do_voice_stream() -> Iterator[Any]:
-        return stub.VoiceChat(chunks, timeout=deadline_seconds, metadata=_call_metadata())
+        return stub.VoiceChat(chunks, timeout=deadline_seconds, metadata=metadata)
 
     try:
         yield from _retry_with_backoff(lambda: list(_do_voice_stream()))

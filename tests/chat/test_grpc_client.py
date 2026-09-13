@@ -221,6 +221,40 @@ class TestDeadline:
         call_kwargs = stub.VoiceChat.call_args.kwargs
         assert call_kwargs["timeout"] == 120.0
 
+    def test_voice_chat_includes_session_metadata(self, settings) -> None:
+        """VoiceChat metadata'sida sessiya va foydalanuvchi konteksti yuboriladi."""
+        from apps.chat import grpc_client
+
+        settings.AGENT_SERVICE_TOKEN = "secret"
+        stub = _agent_stub()
+        stub.VoiceChat.return_value = [mock.Mock()]
+
+        list(
+            grpc_client.voice_chat_stream(
+                chunks=iter([]),
+                session_id="session-1",
+                user_id="user-1",
+                tenant_id="tenant-1",
+                role="manager",
+                locale="ru",
+                customer_mode="1",
+                conversation_id="conversation-1",
+            )
+        )
+
+        metadata = dict(stub.VoiceChat.call_args.kwargs["metadata"])
+        assert metadata == {
+            "x-service-token": "secret",
+            "x-request-id": metadata["x-request-id"],
+            "x-session-id": "session-1",
+            "x-user-id": "user-1",
+            "x-tenant-id": "tenant-1",
+            "x-role": "manager",
+            "x-locale": "ru",
+            "x-customer-mode": "1",
+            "x-conversation-id": "conversation-1",
+        }
+
     def test_agent_call_includes_service_metadata(self, settings, monkeypatch) -> None:
         """Agent chaqiruvida token va request ID metadata yuboriladi."""
         from apps.chat import grpc_client

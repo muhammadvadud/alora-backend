@@ -16,6 +16,7 @@ import asyncio
 import json
 from collections.abc import Iterator
 from typing import Any
+from urllib.parse import parse_qs
 
 import structlog
 from asgiref.sync import sync_to_async
@@ -24,6 +25,7 @@ from django.contrib.auth import get_user_model
 
 from apps.chat.grpc_client import voice_chat_stream
 from apps.chat.models import Conversation
+from apps.chat.tasks import save_message_and_usage
 
 logger = structlog.get_logger(__name__)
 
@@ -52,6 +54,12 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
         if conversation is None:
             await self.close(code=1008)
             return
+
+        self._conversation = conversation
+        self._user = user
+        query_string = self.scope.get("query_string", b"").decode("utf-8")
+        self._locale = parse_qs(query_string).get("locale", ["uz"])[0] or "uz"
+        self._transcript = ""
 
         self._queue = asyncio.Queue(maxsize=QUEUE_MAXSIZE)
         await self.accept()
@@ -117,7 +125,18 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
         loop = asyncio.get_running_loop()
 
         def _consume() -> list[Any]:
-            return list(voice_chat_stream(self._chunk_iterator(loop)))
+            return list(
+                voice_chat_stream(
+                    self._chunk_iterator(loop),
+                    session_id=self._conversation.session_id,
+                    user_id=str(self._user.id),
+                    tenant_id=str(self._conversation.tenant_id),
+                    role=str(self._user.role),
+                    locale=self._locale,
+                    customer_mode="1" if self._conversation.mode == "customer" else "0",
+                    conversation_id=self.conversation_id,
+                )
+            )
 
         try:
             events = await asyncio.to_thread(_consume)
@@ -135,14 +154,57 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
             return
 
         for event in events:
-            audio = getattr(event, "audio", None)
+            kind = getattr(event, "kind", "")
+            chat_event = getattr(event, "chat_event", None)
+            if kind == "transcript":
+                transcript = getattr(event, "content", "")
+                if transcript:
+                    self._transcript = f"{self._transcript} {transcript}".strip()
+                    await self.send(
+                        text_data=json.dumps(
+                            {"kind": "transcript", "content": transcript},
+                            ensure_ascii=False,
+                        )
+                    )
+
+            audio = getattr(event, "audio_data", None) or getattr(event, "audio", None)
             if audio:
                 await self.send(bytes_data=audio)
-            text = getattr(event, "text", None)
-            if text:
+            text = getattr(event, "content", None) or getattr(event, "text", None)
+            if not isinstance(text, str):
+                text = None
+            if text and kind != "transcript":
                 await self.send(
                     text_data=json.dumps(
-                        {"kind": getattr(event, "kind", "content"), "content": text},
+                        {"kind": kind or "content", "content": text},
                         ensure_ascii=False,
                     )
                 )
+
+            if kind == "done":
+                usage = getattr(chat_event, "usage", None) or getattr(event, "usage", None)
+                save_message_and_usage.delay(
+                    conversation_id=self.conversation_id,
+                    user_message_content=self._transcript,
+                    ai_event_data={"content": "", "usage": self._proto_to_dict(usage)},
+                    tenant_id=str(self._conversation.tenant_id),
+                )
+
+    @staticmethod
+    def _proto_to_dict(value: Any) -> dict[str, Any]:
+        """Proto usage obyektini task uchun oddiy lug'atga aylantiradi."""
+        if value is None:
+            return {}
+        fields = (
+            "provider",
+            "model",
+            "prompt_tokens",
+            "completion_tokens",
+            "cached_tokens",
+            "reasoning_tokens",
+            "stt_seconds",
+            "tts_chars",
+            "tool_calls_json",
+            "latency_ms",
+        )
+        return {field: getattr(value, field) for field in fields if hasattr(value, field)}
