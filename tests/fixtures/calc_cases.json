@@ -221,7 +221,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "508000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "254000.00",
+        "balance_amount": "254000.00"
       }
     },
     {
@@ -286,7 +289,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "96000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "48000.00",
+        "balance_amount": "48000.00"
       }
     },
     {
@@ -351,7 +357,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "850000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "425000.00",
+        "balance_amount": "425000.00"
       }
     },
     {
@@ -417,7 +426,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "405000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "202500.00",
+        "balance_amount": "202500.00"
       }
     },
     {
@@ -483,7 +495,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "508000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "254000.00",
+        "balance_amount": "254000.00"
       }
     },
     {
@@ -549,7 +564,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "608000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "304000.00",
+        "balance_amount": "304000.00"
       }
     },
     {
@@ -628,7 +646,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "538000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "269000.00",
+        "balance_amount": "269000.00"
       }
     },
     {
@@ -707,7 +728,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "535000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "267500.00",
+        "balance_amount": "267500.00"
       }
     },
     {
@@ -798,7 +822,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "749000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "374500.00",
+        "balance_amount": "374500.00"
       }
     },
     {
@@ -886,7 +913,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "1003000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "501500.00",
+        "balance_amount": "501500.00"
       }
     },
     {
@@ -999,7 +1029,10 @@
         "total": "1071000.00",
         "warnings": [
           "REF-KANT uchun chiqindi 40.00% dan oshdi"
-        ]
+        ],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "535500.00",
+        "balance_amount": "535500.00"
       }
     },
     {
@@ -1109,7 +1142,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "1189000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "594500.00",
+        "balance_amount": "594500.00"
       }
     },
     {
@@ -1379,7 +1415,10 @@
         "warnings": [
           "REF-KANT uchun chiqindi 44.44% dan oshdi",
           "REF-KANT uchun chiqindi 33.33% dan oshdi"
-        ]
+        ],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "723500.00",
+        "balance_amount": "723500.00"
       }
     },
     {
@@ -1466,7 +1505,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "776000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "388000.00",
+        "balance_amount": "388000.00"
       }
     },
     {
@@ -1606,7 +1648,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "30000.00",
         "total": "1951000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "975500.00",
+        "balance_amount": "975500.00"
       }
     },
     {
@@ -1672,7 +1717,10 @@
         "discount_amount": "158400.00",
         "delivery_amount": "0.00",
         "total": "5122000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "2561000.00",
+        "balance_amount": "2561000.00"
       }
     },
     {
@@ -1738,7 +1786,10 @@
         "discount_amount": "2040000.00",
         "delivery_amount": "0.00",
         "total": "18360000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "9180000.00",
+        "balance_amount": "9180000.00"
       }
     },
     {
@@ -1804,7 +1855,10 @@
         "discount_amount": "108750.00",
         "delivery_amount": "0.00",
         "total": "616000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "308000.00",
+        "balance_amount": "308000.00"
       }
     },
     {
@@ -1979,7 +2033,10 @@
         "discount_amount": "0.00",
         "delivery_amount": "0.00",
         "total": "2057000.00",
-        "warnings": []
+        "warnings": [],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "1028500.00",
+        "balance_amount": "1028500.00"
       }
     },
     {
@@ -2047,7 +2104,10 @@
         "total": "65000.00",
         "warnings": [
           "REF-PORTYERA uchun chiqindi 18.18% dan oshdi"
-        ]
+        ],
+        "prepayment_percent": "50.00",
+        "prepayment_amount": "32500.00",
+        "balance_amount": "32500.00"
       }
     }
   ]

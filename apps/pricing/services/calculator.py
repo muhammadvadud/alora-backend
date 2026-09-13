@@ -456,6 +456,14 @@ def calculate_preview(
         _round_to_step(total_before_rounding, _rule_value(snapshot, "round_total_to"))
     )
 
+    # Avans/qoldiq ham shu yerda: Go agent hech qanday summani hisoblamaydi (Go rules §0.2),
+    # payload'da prepayment_percent bo'lsa u ustun (sotuvchi kelishuvi), aks holda OrderDefaults.
+    prepayment_percent = _to_decimal(
+        payload.get("prepayment_percent", snapshot.order_defaults.prepayment_percent)
+    )
+    prepayment_amount = _quantize_money(total * prepayment_percent / Decimal(100))
+    balance_amount = _quantize_money(total - prepayment_amount)
+
     warnings: list[str] = []
     waste_warn_percent = _rule_value(snapshot, "waste_warn_percent")
     for measurement in measurement_previews:
@@ -477,5 +485,8 @@ def calculate_preview(
         "discount_amount": str(discount_amount),
         "delivery_amount": str(_quantize_money(delivery_amount)),
         "total": str(total),
+        "prepayment_percent": str(prepayment_percent),
+        "prepayment_amount": str(prepayment_amount),
+        "balance_amount": str(balance_amount),
         "warnings": warnings,
     }
