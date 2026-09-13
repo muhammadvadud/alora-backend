@@ -205,10 +205,15 @@
             "accessories": [],
             "raw_area_m2": "20.250000000",
             "area_m2": "20.300",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "507500.00",
+            "measurement_total": "507500.00"
           }
         ],
         "services": [],
+        "parts_total": "507500.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "507500.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -265,10 +270,15 @@
             "accessories": [],
             "raw_area_m2": "12.000000000",
             "area_m2": "12.000",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "96000.00",
+            "measurement_total": "96000.00"
           }
         ],
         "services": [],
+        "parts_total": "96000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "96000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -325,10 +335,15 @@
             "accessories": [],
             "raw_area_m2": "34.000000000",
             "area_m2": "34.000",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "850000.00",
+            "measurement_total": "850000.00"
           }
         ],
         "services": [],
+        "parts_total": "850000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "850000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -386,10 +401,15 @@
             "accessories": [],
             "raw_area_m2": "16.200000000",
             "area_m2": "16.200",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "405000.00",
+            "measurement_total": "405000.00"
           }
         ],
         "services": [],
+        "parts_total": "405000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "405000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -447,10 +467,15 @@
             "accessories": [],
             "raw_area_m2": "20.250000000",
             "area_m2": "20.300",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "507500.00",
+            "measurement_total": "507500.00"
           }
         ],
         "services": [],
+        "parts_total": "507500.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "507500.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -508,10 +533,15 @@
             "accessories": [],
             "raw_area_m2": "24.300000000",
             "area_m2": "24.300",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "607500.00",
+            "measurement_total": "607500.00"
           }
         ],
         "services": [],
+        "parts_total": "607500.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "607500.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -582,10 +612,15 @@
             ],
             "raw_area_m2": "20.250000000",
             "area_m2": "20.300",
-            "accessories_total": "30000.00"
+            "accessories_total": "30000.00",
+            "parts_total": "507500.00",
+            "measurement_total": "537500.00"
           }
         ],
         "services": [],
+        "parts_total": "507500.00",
+        "accessories_total": "30000.00",
+        "services_total": "0.00",
         "subtotal": "537500.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -656,10 +691,15 @@
             ],
             "raw_area_m2": "20.250000000",
             "area_m2": "20.300",
-            "accessories_total": "27000.00"
+            "accessories_total": "27000.00",
+            "parts_total": "507500.00",
+            "measurement_total": "534500.00"
           }
         ],
         "services": [],
+        "parts_total": "507500.00",
+        "accessories_total": "27000.00",
+        "services_total": "0.00",
         "subtotal": "534500.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -742,10 +782,15 @@
             ],
             "raw_area_m2": "26.250000000",
             "area_m2": "26.300",
-            "accessories_total": "91500.00"
+            "accessories_total": "91500.00",
+            "parts_total": "657500.00",
+            "measurement_total": "749000.00"
           }
         ],
         "services": [],
+        "parts_total": "657500.00",
+        "accessories_total": "91500.00",
+        "services_total": "0.00",
         "subtotal": "749000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -825,10 +870,15 @@
             "accessories": [],
             "raw_area_m2": "63.800000000",
             "area_m2": "63.800",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "1003400.00",
+            "measurement_total": "1003400.00"
           }
         ],
         "services": [],
+        "parts_total": "1003400.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "1003400.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -931,10 +981,15 @@
             "accessories": [],
             "raw_area_m2": "69.400000000",
             "area_m2": "69.400",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "1070600.00",
+            "measurement_total": "1070600.00"
           }
         ],
         "services": [],
+        "parts_total": "1070600.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "1070600.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1038,10 +1093,15 @@
             "accessories": [],
             "raw_area_m2": "85.250000000",
             "area_m2": "85.200",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "1188700.00",
+            "measurement_total": "1188700.00"
           }
         ],
         "services": [],
+        "parts_total": "1188700.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "1188700.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1300,10 +1360,15 @@
             "accessories": [],
             "raw_area_m2": "115.150000000",
             "area_m2": "115.300",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "1446600.00",
+            "measurement_total": "1446600.00"
           }
         ],
         "services": [],
+        "parts_total": "1446600.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "1446600.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1366,7 +1431,9 @@
             "accessories": [],
             "raw_area_m2": "20.250000000",
             "area_m2": "20.300",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "507500.00",
+            "measurement_total": "507500.00"
           }
         ],
         "services": [
@@ -1389,6 +1456,9 @@
             "is_delivery": false
           }
         ],
+        "parts_total": "507500.00",
+        "accessories_total": "0.00",
+        "services_total": "268750.00",
         "subtotal": "776250.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1474,7 +1544,9 @@
             "accessories": [],
             "raw_area_m2": "63.800000000",
             "area_m2": "63.800",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "1003400.00",
+            "measurement_total": "1003400.00"
           }
         ],
         "services": [
@@ -1524,6 +1596,9 @@
             "is_delivery": true
           }
         ],
+        "parts_total": "1003400.00",
+        "accessories_total": "0.00",
+        "services_total": "917500.00",
         "subtotal": "1920900.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1581,10 +1656,15 @@
             "accessories": [],
             "raw_area_m2": "211.200000000",
             "area_m2": "211.200",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "5280000.00",
+            "measurement_total": "5280000.00"
           }
         ],
         "services": [],
+        "parts_total": "5280000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "5280000.00",
         "tier_discount_percent": "3.00",
         "manual_discount_percent": "0",
@@ -1642,10 +1722,15 @@
             "accessories": [],
             "raw_area_m2": "816.000000000",
             "area_m2": "816.000",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "20400000.00",
+            "measurement_total": "20400000.00"
           }
         ],
         "services": [],
+        "parts_total": "20400000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "20400000.00",
         "tier_discount_percent": "10.00",
         "manual_discount_percent": "0",
@@ -1703,10 +1788,15 @@
             "accessories": [],
             "raw_area_m2": "29.000000000",
             "area_m2": "29.000",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "725000.00",
+            "measurement_total": "725000.00"
           }
         ],
         "services": [],
+        "parts_total": "725000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "725000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "15.00",
@@ -1798,7 +1888,9 @@
             "accessories": [],
             "raw_area_m2": "34.875000000",
             "area_m2": "34.900",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "872500.00",
+            "measurement_total": "872500.00"
           },
           {
             "length": "3.200",
@@ -1824,7 +1916,9 @@
             "accessories": [],
             "raw_area_m2": "26.880000000",
             "area_m2": "26.900",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "215200.00",
+            "measurement_total": "215200.00"
           },
           {
             "length": "2.000",
@@ -1859,7 +1953,9 @@
             ],
             "raw_area_m2": "6.800000000",
             "area_m2": "6.800",
-            "accessories_total": "30000.00"
+            "accessories_total": "30000.00",
+            "parts_total": "81600.00",
+            "measurement_total": "111600.00"
           }
         ],
         "services": [
@@ -1873,6 +1969,9 @@
             "is_delivery": false
           }
         ],
+        "parts_total": "1169300.00",
+        "accessories_total": "30000.00",
+        "services_total": "857500.00",
         "subtotal": "2056800.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",
@@ -1930,10 +2029,15 @@
             "accessories": [],
             "raw_area_m2": "2.600000000",
             "area_m2": "2.600",
-            "accessories_total": "0.00"
+            "accessories_total": "0.00",
+            "parts_total": "65000.00",
+            "measurement_total": "65000.00"
           }
         ],
         "services": [],
+        "parts_total": "65000.00",
+        "accessories_total": "0.00",
+        "services_total": "0.00",
         "subtotal": "65000.00",
         "tier_discount_percent": "0",
         "manual_discount_percent": "0",

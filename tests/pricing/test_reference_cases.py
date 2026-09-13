@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 from uuid import UUID
@@ -117,3 +118,47 @@ def test_reference_fixture_has_twenty_cases() -> None:
 
     assert data["schema_version"] == "alora.pricing.calc_cases.v1"
     assert len(data["cases"]) == 20
+
+
+@pytest.mark.parametrize("case_index", range(20), ids=lambda index: f"case-{index + 1:02d}")
+def test_aggregate_totals_invariant(
+    pricing_reference_data: dict[str, Any], case_index: int
+) -> None:
+    """Har bir case'da yig'indi maydonlari subtotal bilan mos keladi."""
+
+    case = pricing_reference_data["cases"][case_index]
+    result = calculate_preview(case["input"], user_role=UserRole.MANAGER)
+
+    parts_total = Decimal(result["parts_total"])
+    accessories_total = Decimal(result["accessories_total"])
+    services_total = Decimal(result["services_total"])
+    assert Decimal(result["subtotal"]) == parts_total + accessories_total + services_total
+
+    for measurement in result["measurements"]:
+        assert Decimal(measurement["measurement_total"]) == (
+            Decimal(measurement["parts_total"]) + Decimal(measurement["accessories_total"])
+        )
+
+
+def test_parts_total_matches_part_line_totals_on_multi_part_case(
+    pricing_reference_data: dict[str, Any],
+) -> None:
+    """Ko'p bo'lakli holatda parts_total har bir bo'lak line_total yig'indisiga teng."""
+
+    case = next(
+        c
+        for c in pricing_reference_data["cases"]
+        if sum(len(m["parts"]) for m in c["input"]["measurements"]) > 1
+    )
+    result = calculate_preview(case["input"], user_role=UserRole.MANAGER)
+
+    all_part_totals = sum(
+        (
+            Decimal(part["line_total"])
+            for measurement in result["measurements"]
+            for part in measurement["parts"]
+        ),
+        Decimal(0),
+    )
+    assert Decimal(result["parts_total"]) == all_part_totals
+    assert sum(Decimal(m["parts_total"]) for m in result["measurements"]) == all_part_totals

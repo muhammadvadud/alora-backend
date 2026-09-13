@@ -1,6 +1,6 @@
 # Alora Backend — Go bilan Kelishuv (GO-CONTRACT)
 
-**Kontrakt versiyasi:** 1.4 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
+**Kontrakt versiyasi:** 1.4.1 (2026-09-14) · proto paketi `alora.v1` (backward compatible)
 **Yagona manba:** `protos/alora.proto`. Ushbu hujjat proto'da ifodalab bo'lmaydigan
 semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 
@@ -157,6 +157,22 @@ Go faqat `UNAVAILABLE` holatida bir marta retry qiladi va RPC timeout'i 3 soniya
 Kutilmagan server xatosida ichki tafsilotlar yuborilmaydi. Django gRPC serveri
 `run_grpc` command orqali `[::]:9091` da ishlaydi va `x-service-token` interceptorini qo'llaydi.
 
+**`CalcPreview.result_json` yig'indi maydonlari (1.4.1):** AI yig'indi hisoblamasligi
+(qatorlarni o'zi qo'shib "jami ... so'm" demasligi) uchun tayyor summalar qaytariladi.
+
+| Maydon | Qayerda | Ma'no |
+|---|---|---|
+| `parts_total` | har `measurements[i]` da | Shu o'lchamdagi barcha `parts[].line_total` yig'indisi |
+| `measurement_total` | har `measurements[i]` da | `parts_total + accessories_total` (shu o'lcham uchun) |
+| `parts_total` | ildizda | Barcha o'lchamlar bo'ylab bo'laklar yig'indisi |
+| `accessories_total` | ildizda | Barcha o'lchamlar bo'ylab aksessuarlar yig'indisi |
+| `services_total` | ildizda | Xizmat qatorlari (`line_total`) yig'indisi — `delivery` bundan tashqari |
+
+`subtotal` va `total` foydalanuvchiga ko'rsatiladigan qat'iy qiymatlar bo'lib qoladi;
+AI ularni qayta hisoblamaydi va `subtotal` o'rniga `parts_total`/`services_total`
+kabi oraliq summalarni "jami" deb talqin qilmaydi (`delivery` subtotalga kirmaydi,
+`total` chegirma va yaxlitlashdan keyin hisoblanadi). Barcha qiymatlar decimal matn.
+
 ### 1.5 VoiceChat metadata
 
 Django `voice_chat_stream` har bir VoiceChat stream'ida mavjud `x-service-token` va
@@ -197,3 +213,4 @@ Go jamoasiga xabar qilinadi. 20 ta holat, hammasi ±0 farq bilan o'tishi shart.
 | 1.2 | 2026-09-13 | `Pricing.CalcPreview`; Django gRPC server bootstrap (`run_grpc`, 9091); server tomonida `x-service-token` interceptor |
 | 1.3 | 2026-09-13 | `SaveOrderDraft` haqiqiy order yaratadi va Conversation bilan bog'lanadi; Django klient Agent RPC'lariga `x-service-token` va `x-request-id` metadata yuboradi; 5 daqiqalik idempotentlik |
 | 1.4 | 2026-09-13 | VoiceChat metadata, `transcript` kind va transcript/audio/done WS oqimi |
+| 1.4.1 | 2026-09-14 | `CalcPreview.result_json` ga tayyor yig'indilar qo'shildi: har `measurements[i]` uchun `parts_total`, `measurement_total`; ildizda `parts_total`, `accessories_total`, `services_total`. AI hisoblamasligi uchun tayyor. `subtotal`/`total` o'zgarmadi |

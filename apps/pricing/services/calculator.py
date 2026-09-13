@@ -227,6 +227,7 @@ def _build_measurement_preview(
     parts_payload: list[dict[str, Any]] = []
     total_raw_area = ZERO
     total_area = ZERO
+    total_parts_line = ZERO
 
     for part in measurement.get("parts", []):
         variant = _variant_by_id(part["variant_id"])
@@ -263,6 +264,7 @@ def _build_measurement_preview(
         )
         total_raw_area += raw_area
         total_area += rounded_area
+        total_parts_line += line_total
 
     accessories_payload: list[dict[str, Any]] = []
     total_accessory = ZERO
@@ -282,6 +284,8 @@ def _build_measurement_preview(
         )
         total_accessory += line_total
 
+    parts_total = _quantize_money(total_parts_line)
+    accessories_total = _quantize_money(total_accessory)
     return {
         "length": str(_measurement_length(measurement)),
         "height": str(_measurement_height(measurement)),
@@ -289,7 +293,9 @@ def _build_measurement_preview(
         "accessories": accessories_payload,
         "raw_area_m2": str(total_raw_area),
         "area_m2": str(total_area),
-        "accessories_total": str(_quantize_money(total_accessory)),
+        "parts_total": str(parts_total),
+        "accessories_total": str(accessories_total),
+        "measurement_total": str(_quantize_money(parts_total + accessories_total)),
     }
 
 
@@ -428,6 +434,10 @@ def calculate_preview(
             parts_sum += _to_decimal(part["line_total"])
         accessories_sum += _to_decimal(measurement["accessories_total"])
 
+    parts_total = _quantize_money(parts_sum)
+    accessories_total = _quantize_money(accessories_sum)
+    services_total = _quantize_money(service_sum)
+
     subtotal = _quantize_money(parts_sum + accessories_sum + service_sum)
     tier_discount = _match_tier(snapshot, subtotal)
     manual_requested = _to_decimal(payload.get("discount_percent", ZERO))
@@ -457,6 +467,9 @@ def calculate_preview(
     return {
         "measurements": measurement_previews,
         "services": service_lines,
+        "parts_total": str(parts_total),
+        "accessories_total": str(accessories_total),
+        "services_total": str(services_total),
         "subtotal": str(subtotal),
         "tier_discount_percent": str(tier_discount),
         "manual_discount_percent": str(manual_applied),
