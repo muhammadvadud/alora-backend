@@ -9,11 +9,13 @@ from __future__ import annotations
 import random
 import threading
 import time
+import uuid
 from typing import TYPE_CHECKING, Any
 
 import grpc
 import structlog
 from django.conf import settings
+from structlog.contextvars import get_contextvars
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -25,6 +27,17 @@ _MAX_RETRIES = 3
 _RETRYABLE_CODES = {grpc.StatusCode.UNAVAILABLE, grpc.StatusCode.DEADLINE_EXCEEDED}
 _BACKOFF_BASE_MS = 500
 _BACKOFF_MAX_MS = 5000
+
+
+def _call_metadata() -> tuple[tuple[str, str], ...]:
+    """Agent chaqiruvi uchun xizmat tokeni va trace identifikatorini tayyorlaydi."""
+    metadata: list[tuple[str, str]] = []
+    token = getattr(settings, "AGENT_SERVICE_TOKEN", "")
+    if token:
+        metadata.append(("x-service-token", str(token)))
+    request_id = get_contextvars().get("request_id") or str(uuid.uuid4())
+    metadata.append(("x-request-id", str(request_id)))
+    return tuple(metadata)
 
 
 class GRPCClientPool:
@@ -175,7 +188,7 @@ def chat_stream(
     )
 
     def _do_stream() -> Any:
-        return stub.Chat(request, timeout=deadline_seconds)
+        return stub.Chat(request, timeout=deadline_seconds, metadata=_call_metadata())
 
     try:
         # Retry only for the initial connection/call creation
@@ -211,7 +224,7 @@ def reset_session(
     )
 
     def _do_reset() -> Any:
-        return stub.ResetSession(request, timeout=deadline_seconds)
+        return stub.ResetSession(request, timeout=deadline_seconds, metadata=_call_metadata())
 
     try:
         return _retry_with_backoff(_do_reset)
@@ -238,7 +251,7 @@ def health_check(deadline_seconds: float = 5.0) -> dict[str, Any]:
     request = alora_pb2.Empty()
 
     try:
-        response = stub.Health(request, timeout=deadline_seconds)
+        response = stub.Health(request, timeout=deadline_seconds, metadata=_call_metadata())
         return {
             "status": response.status,
             "version": response.version,
@@ -273,7 +286,7 @@ def voice_chat_stream(
     stub = alora_pb2_grpc.AgentStub(channel)
 
     def _do_voice_stream() -> Iterator[Any]:
-        return stub.VoiceChat(chunks, timeout=deadline_seconds)
+        return stub.VoiceChat(chunks, timeout=deadline_seconds, metadata=_call_metadata())
 
     try:
         yield from _retry_with_backoff(lambda: list(_do_voice_stream()))

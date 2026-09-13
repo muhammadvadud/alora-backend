@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 193 / 200 bajarildi (5 jarayonda) · 327 test o'tgan · coverage 86% · ruff toza
+**Umumiy holat:** 196 / 200 bajarildi (2 jarayonda) · 333 test o'tgan · coverage 86% · ruff toza
 
 ---
 
@@ -124,7 +124,7 @@
 - [x] 6.6 `Catalog.Snapshot` server tomoni (sahifalab)
 - [x] 6.7 `Catalog.Watch` stream — delta push
 - [x] 6.8 `Backend.ReportUsage` qabul qilish
-- [~] 6.9 `Backend.SaveOrderDraft` qabul qilish (handler bor, lekin stub — `Order` yaratmaydi; 6.17 ga qarang)
+- [x] 6.9 `Backend.SaveOrderDraft` qabul qilish (draft `Order` yaratadi, Conversation bilan bog'laydi)
 - [x] 6.10 `Backend.LogMessage` qabul qilish
 - [~] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
 - [x] 6.12 gRPC mock testlari
@@ -132,8 +132,8 @@
 - [x] 6.14 `Catalog.Snapshot` — pricing/fason/prompt bloklari; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada; `catalog_payload.py` (Snapshot va delta uchun yagona manba)
 - [x] 6.15 Gateway → Go `ChatRequest.context`: `role`, `customer_mode`, `conversation_id` (`build_agent_context`)
 - [x] 6.16 `ChatEvent.kind="stage"` → SSE'ga 1:1 + Celery `update_conversation_stage` (`Conversation.stage`, `context.agent_state`)
-- [ ] 6.17 `Backend.SaveOrderDraft` → `create_order_from_draft` ulash (`items_json` sxemasi GO-CONTRACT §1.3; user `user_id` bo'yicha; xato → `OrderDraftResponse.error`)
-- [~] 6.18 `grpc_client.py` — faqat klient tomoni: har chaqiruvda `x-service-token` (`AGENT_SERVICE_TOKEN` env) va `x-request-id` metadata qoldi (server tomoni bajarildi)
+- [x] 6.17 `Backend.SaveOrderDraft` → `create_order_from_draft` ulash (`items_json` sxemasi GO-CONTRACT §1.3; user `user_id` bo'yicha; xato → `OrderDraftResponse.error`)
+- [x] 6.18 `grpc_client.py` — har chaqiruvda `x-service-token` (`AGENT_SERVICE_TOKEN` env) va `x-request-id` metadata (server tomoni ham bajarilgan)
 - [x] 6.19 `Pricing.CalcPreview` RPC (hisob faqat Django'da — Go chaqiradi)
 - [x] 6.20 gRPC server bootstrap: `run_grpc` command, 9091, compose servisi, `x-service-token` interceptor (server tomoni)
 

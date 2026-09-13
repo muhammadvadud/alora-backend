@@ -1,6 +1,6 @@
 # Alora Backend — Go bilan Kelishuv (GO-CONTRACT)
 
-**Kontrakt versiyasi:** 1.1 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
+**Kontrakt versiyasi:** 1.3 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
 **Yagona manba:** `protos/alora.proto`. Ushbu hujjat proto'da ifodalab bo'lmaydigan
 semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 
@@ -28,8 +28,9 @@ semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 | `prompt_version` | *(ixtiyoriy)* | A/B: aniq prompt versiyasini ishlatish |
 
 Metadata: Django gRPC serveri `Health` dan tashqari barcha RPC'larda `x-service-token`
-(`AGENT_SERVICE_TOKEN`) ni tekshiradi. Django klient tomoni (`grpc_client.py`) har chaqiruvda
-token va `x-request-id` yuborishi — `tasks.md` 6.18 ning qolgan qismi.
+(`AGENT_SERVICE_TOKEN`) ni tekshiradi. Django klient tomoni (`grpc_client.py`) barcha Agent
+RPC'larida `x-service-token` (token bo'sh bo'lmasa) va `x-request-id` yuboradi; request ID
+structlog contextvars'dan olinadi, bo'lmasa UUID yaratiladi.
 
 **`ChatEvent.kind` qiymatlari va tartibi:**
 
@@ -118,7 +119,7 @@ Kontrakt 1.1 da qo'shilgan barcha pul/foiz/ulush maydonlari **decimal matn** (`"
 | RPC | Vazifa | Idempotentlik |
 |---|---|---|
 | `ReportUsage(UsageRequest) → Ack` | token/xarajat hisoboti (Celery `usage` navbati) | `message_id` + `session_id` |
-| `SaveOrderDraft(OrderDraftRequest) → OrderDraftResponse` | AI qoralamasi → `Order(status=draft)` | Go **retry qilmaydi** (dublikat xavfi) |
+| `SaveOrderDraft(OrderDraftRequest) → OrderDraftResponse` | AI qoralamasi → `Order(status=draft)`, `Conversation.order` bog'lanadi | Go **retry qilmaydi**; Django 5 daqiqa `session_id` + `items_json` hash bo'yicha idempotent |
 | `LogMessage(MessageLogRequest) → Ack` | suhbat tarixi | `session_id` + rol + matn + tokenlar (`save_message` get_or_create) |
 
 **`OrderDraftRequest.items_json` sxemasi** — `tests/fixtures/calc_cases.json` dagi `input`
@@ -138,7 +139,8 @@ bilan bir xil, ya'ni `apps.orders.services.create_order_from_draft` payload'i:
 ```
 Sonlar decimal matn. `customer_name`, `customer_phone`, `address`, `note` — alohida maydonlar
 (LLM kontekstiga tushmaydi, Go ularni faqat shu RPC'ga uzatadi).
-`SaveOrderDraft` ni `create_order_from_draft` ga ulash — backend `tasks.md` 13.10.
+`SaveOrderDraft` `create_order_from_draft` orqali order yaratadi; bir xil `session_id` va
+`items_json` 5 daqiqa ichida takrorlansa, mavjud order qaytariladi.
 
 ### 1.4 Pricing servisi (Go → Django, SINXRON)
 
@@ -181,3 +183,4 @@ Go jamoasiga xabar qilinadi. 20 ta holat, hammasi ±0 farq bilan o'tishi shart.
 | 1.0 | 2026-09-08 | Dastlabki shartnoma: Agent, Catalog, Backend servislari |
 | 1.1 | 2026-09-13 | `CatalogSnapshot` 8–13: `service_prices`, `discount_tiers`, `discount_policy`, `order_defaults`, `fasons`, `prompt`; yangi `Catalog*` xabarlari; delta payload'lari barcha entity'lar uchun; `ChatEvent.kind` ga `products`, `stage`; `context` kalitlari (`role`, `customer_mode`, `conversation_id`); `cost_*` faqat Django; `FULL_RESYNC` protokoli; `items_json` sxemasi; `go_package` tuzatildi; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada |
 | 1.2 | 2026-09-13 | `Pricing.CalcPreview`; Django gRPC server bootstrap (`run_grpc`, 9091); server tomonida `x-service-token` interceptor |
+| 1.3 | 2026-09-13 | `SaveOrderDraft` haqiqiy order yaratadi va Conversation bilan bog'lanadi; Django klient Agent RPC'lariga `x-service-token` va `x-request-id` metadata yuboradi; 5 daqiqalik idempotentlik |

@@ -7,11 +7,14 @@ LogMessage: Suhbat xabarini saqlash.
 
 from __future__ import annotations
 
-import uuid
+import hashlib
+import json
 from typing import Any
 
 import grpc
 import structlog
+from django.core.cache import cache
+from django.core.exceptions import ValidationError
 
 from grpc_gen import alora_pb2_grpc
 
@@ -69,10 +72,7 @@ def report_usage(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def save_order_draft(data: dict[str, Any]) -> dict[str, Any]:
-    """Buyurtma qoralamasini saqlash (AI tomonidan yaratilgan).
-
-    Hozircha stub — orders app to'liq yozilgandan keyin
-    haqiqiy logic qo'shiladi.
+    """AI qoralamasidan snapshot narxli draft buyurtma yaratadi.
 
     Args:
         data: OrderDraftRequest xabaridan olingan ma'lumotlar.
@@ -81,35 +81,88 @@ def save_order_draft(data: dict[str, Any]) -> dict[str, Any]:
         {"success": True, "order_id": "...", "order_number": "..."}.
     """
     try:
-        # Hozircha faqat log yozamiz
-        logger.info(
-            "Buyurtma qoralamasi qabul qilindi (stub)",
-            session_id=data.get("session_id"),
-            customer_name=data.get("customer_name"),
-            customer_phone=data.get("customer_phone"),
+        from apps.accounts.models import User
+        from apps.chat.models import Conversation
+        from apps.orders.models import Order
+        from apps.orders.services import create_order_from_draft
+
+        items_json = data.get("items_json", "")
+        cache_key = (
+            "alora:order_draft:"
+            + hashlib.sha256(f"{data.get('session_id', '')}:{items_json}".encode()).hexdigest()
         )
+        cached_order_id = cache.get(cache_key)
+        if cached_order_id:
+            cached_order = Order.objects.filter(id=cached_order_id).first()
+            if cached_order:
+                return {
+                    "success": True,
+                    "order_id": str(cached_order.id),
+                    "order_number": cached_order.number,
+                    "error": "",
+                }
 
-        # Kelajakda orders app orqali:
-        # from apps.orders.services import create_order_from_draft
-        # order = create_order_from_draft(data)
-        # return {"success": True, "order_id": str(order.id), "order_number": order.number}
+        try:
+            items = json.loads(items_json)
+        except (TypeError, json.JSONDecodeError) as exc:
+            raise ValidationError({"items_json": "Buyurtma ma'lumotlari noto'g'ri JSON"}) from exc
+        if not isinstance(items, dict):
+            raise ValidationError(
+                {"items_json": "Buyurtma ma'lumotlari obyektdan iborat bo'lishi kerak"}
+            )
 
-        draft_id = str(uuid.uuid4())
+        user = User.objects.filter(id=str(data.get("user_id", "")), is_active=True).first()
+        if user is None:
+            return {
+                "success": False,
+                "order_id": "",
+                "order_number": "",
+                "error": "foydalanuvchi topilmadi",
+            }
 
+        conversation = Conversation.objects.filter(id=str(data.get("conversation_id", ""))).first()
+        payload = {
+            **items,
+            "customer_name": data.get("customer_name", ""),
+            "customer_phone": data.get("customer_phone", ""),
+            "address": data.get("address", ""),
+            "note": data.get("note", ""),
+        }
+        for measurement in payload.get("measurements", []):
+            measurement.setdefault("cornice_length_m", measurement.get("length"))
+            measurement.setdefault("height_m", measurement.get("height"))
+            if "coefficient" not in measurement and measurement.get("parts"):
+                measurement["coefficient"] = measurement["parts"][0].get(
+                    "coefficient", measurement["parts"][0].get("coef")
+                )
+
+        order, _ = create_order_from_draft(
+            payload=payload, user=user, conversation_id=conversation.id if conversation else None
+        )
+        if conversation:
+            conversation.order = order
+            conversation.save(update_fields=["order", "updated_at"])
+        cache.set(cache_key, str(order.id), timeout=300)
         return {
             "success": True,
-            "order_id": draft_id,
-            "order_number": f"ALR-DRAFT-{draft_id[:8].upper()}",
+            "order_id": str(order.id),
+            "order_number": order.number,
             "error": "",
         }
-
-    except Exception as e:  # noqa: BLE001
-        logger.error("Buyurtma qoralamasini saqlashda xato", error=str(e))
+    except ValidationError as exc:
+        messages = exc.message_dict if hasattr(exc, "message_dict") else {"detail": exc.messages}
+        error = "; ".join(
+            f"{key}: {', '.join(map(str, value if isinstance(value, list) else [value]))}"
+            for key, value in messages.items()
+        )
+        return {"success": False, "order_id": "", "order_number": "", "error": error}
+    except Exception as exc:  # noqa: BLE001
+        logger.error("Buyurtmani saqlashda xato", error=str(exc))
         return {
             "success": False,
             "order_id": "",
             "order_number": "",
-            "error": str(e),
+            "error": "buyurtmani saqlashda xato",
         }
 
 

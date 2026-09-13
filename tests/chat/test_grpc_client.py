@@ -221,6 +221,39 @@ class TestDeadline:
         call_kwargs = stub.VoiceChat.call_args.kwargs
         assert call_kwargs["timeout"] == 120.0
 
+    def test_agent_call_includes_service_metadata(self, settings, monkeypatch) -> None:
+        """Agent chaqiruvida token va request ID metadata yuboriladi."""
+        from apps.chat import grpc_client
+
+        settings.AGENT_SERVICE_TOKEN = "secret"
+        stub = _agent_stub()
+        stub.Chat.return_value = [mock.Mock()]
+        monkeypatch.setattr(
+            grpc_client,
+            "_call_metadata",
+            lambda: (("x-service-token", "secret"), ("x-request-id", "req-1")),
+        )
+
+        list(grpc_client.chat_stream("s1", "u1", "t1", "Salom"))
+
+        assert dict(stub.Chat.call_args.kwargs["metadata"]) == {
+            "x-service-token": "secret",
+            "x-request-id": "req-1",
+        }
+
+    def test_agent_call_omits_empty_service_token(self, settings, monkeypatch) -> None:
+        """Token bo'sh bo'lsa faqat request ID metadata yuboriladi."""
+        from apps.chat import grpc_client
+
+        settings.AGENT_SERVICE_TOKEN = ""
+        stub = _agent_stub()
+        stub.Chat.return_value = [mock.Mock()]
+        monkeypatch.setattr(grpc_client, "_call_metadata", lambda: (("x-request-id", "req-1"),))
+
+        list(grpc_client.chat_stream("s1", "u1", "t1", "Salom"))
+
+        assert dict(stub.Chat.call_args.kwargs["metadata"]) == {"x-request-id": "req-1"}
+
 
 class TestHealthCheck:
     def test_health_ok(self) -> None:
