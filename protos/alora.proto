@@ -1,14 +1,14 @@
 // Alora — Umumiy gRPC shartnomasi (Django ↔ Go)
 // Yagona manba: shu fayl ikkala repoda (Django va Go) ishlatiladi.
 // O'zgarishlar faqat bu faylga kiritiladi, keyin ikkala taraf qayta generatsiya qiladi.
-// Versiya: v1
+// Versiya: v1 (kontrakt 1.1 — 2026-09-13: pricing/fason/prompt sinxroni, stage event)
 
 syntax = "proto3";
 
 package alora.v1;
 
 option java_package = "alora.grpc";
-option go_package   = "alora/gen/alora.v1";
+option go_package   = "github.com/muhammadvadud/alora-agent/gen/alorav1;alorav1";
 
 // ──────────────────────────────────────────────
 // Bo'sh xabarlar
@@ -45,12 +45,21 @@ message ChatRequest {
   string message = 4;
   // Interfeys tili: uz yoki ru.
   string locale = 5;
-  // Qo'shimcha kontekst: stage, mijoz rejimi va h.k.
+  // Qo'shimcha kontekst. Django kafolatlaydigan kalitlar:
+  //   role            — employee | manager | admin (chegirma chegarasi uchun)
+  //   customer_mode   — "0" | "1" (qurilma mijoz qo'lida: tannarx/ichki izoh aytilmaydi)
+  //   conversation_id — Django Conversation UUID si (UsageRequest/LogMessage uchun)
+  //   message_id      — Django'da yaratilgan foydalanuvchi xabari UUID si (idempotent usage)
+  //   prompt_version  — ixtiyoriy, A/B uchun aniq system prompt versiyasi
   map<string, string> context = 6;
 }
 
 message ChatEvent {
-  // Voqea turi: start | thinking | content | tool_call | tool_args | tool_result | done | error.
+  // Voqea turi: start | thinking | content | tool_call | tool_args | tool_result |
+  //             products | stage | done | error.
+  //   products — `products` maydoni to'ldiriladi (ilova kartochka chizadi).
+  //   stage    — `content` = suhbat bosqichi (need|recommend|measure|calc|variants|order),
+  //              `result` = qisqa holat JSON; Django `Conversation.stage` ni yangilaydi.
   string kind = 1;
   // Matn kontenti (content event'ida to'ldiriladi).
   string content = 2;
@@ -89,9 +98,10 @@ message Usage {
   string tool_calls_json = 9;
   // Javob kechikishi (millisekundlarda).
   int32 latency_ms = 10;
-  // Xarajat: AQSh dollari.
+  // Xarajat: AQSh dollari. Go 0 yuboradi — Django `ModelPricing` bo'yicha hisoblaydi
+  // (narx jadvali bitta joyda). 0 bo'lmasa Django o'z hisobini ustun qo'yadi.
   double cost_usd = 11;
-  // Xarajat: O'zbek so'mi.
+  // Xarajat: O'zbek so'mi (yuqoridagi qoida bilan bir xil).
   double cost_uzs = 12;
 }
 
@@ -188,18 +198,118 @@ message SnapshotRequest {
 message CatalogSnapshot {
   // Katalog versiya raqami (monoton o'sadi).
   int64 version = 1;
-  // Mahsulotlar ro'yxati.
+  // Mahsulotlar ro'yxati (sahifalanadi).
   repeated CatalogProduct products = 2;
-  // Kategoriyalar.
+  // Kategoriyalar (faqat birinchi sahifada, page_token bo'sh bo'lganda).
   repeated CatalogCategory categories = 3;
-  // Hisoblash qoidalari.
+  // Hisoblash qoidalari (faqat birinchi sahifada).
   repeated CatalogCalcRule calc_rules = 4;
-  // Bilimlar bazasi qoidalari.
+  // Bilimlar bazasi qoidalari (faqat birinchi sahifada).
   repeated CatalogKnowledgeRule knowledge_rules = 5;
   // Keyingi sahifa belgisi (bo'sh = oxirgi sahifa).
   string next_page_token = 6;
   // Jami yozuvlar soni (progress ko'rsatish uchun).
   int32 total_count = 7;
+
+  // ── Kontrakt 1.1 qo'shimchalari. Mahsulotdan boshqa hamma ro'yxat (3–5 va 8–13)
+  //    faqat BIRINCHI sahifada to'ldiriladi — Go ularni birinchi sahifadan oladi. ──
+
+  // Xizmat narxlari (tikuv, tasma, ilgich, montaj, yetkazish, karniz...).
+  repeated CatalogServicePrice service_prices = 8;
+  // Summaga qarab o'sadigan chegirma bosqichlari.
+  repeated CatalogDiscountTier discount_tiers = 9;
+  // Qo'lda chegirma siyosati (rol chegaralari).
+  CatalogDiscountPolicy discount_policy = 10;
+  // Buyurtma standart qiymatlari (avans, yetkazish, muddat).
+  CatalogOrderDefaults order_defaults = 11;
+  // Fason shablonlari (bo'laklar ulushi va koeffitsienti bilan).
+  repeated CatalogFason fasons = 12;
+  // Joriy system prompt versiyasi.
+  CatalogPrompt prompt = 13;
+}
+
+message CatalogServicePrice {
+  // Kalit: sewing | tape | hook | install | delivery | cornice ...
+  string key = 1;
+  string name = 2;
+  // Narx (UZS), decimal matn ko'rinishida: "12500.00" — aniqlik yo'qolmasin.
+  string price = 3;
+  // per_sqm | per_meter | per_piece.
+  string unit = 4;
+  bool is_active = 5;
+}
+
+message CatalogDiscountTier {
+  string id = 1;
+  // Minimal summa (UZS), decimal matn: "5000000.00".
+  string min_amount = 2;
+  // Foiz, decimal matn: "3.00".
+  string percent = 3;
+  bool is_active = 4;
+}
+
+message CatalogDiscountPolicy {
+  // Xodim uchun qo'lda chegirma chegarasi, decimal matn: "5.00".
+  string manual_max_percent_employee = 1;
+  // Menejer/admin uchun, decimal matn: "15.00".
+  string manual_max_percent_manager = 2;
+  // true — qo'lda chegirma bosqichli chegirma ustiga qo'shiladi; false — kattasi olinadi.
+  bool stack_with_tier = 3;
+}
+
+message CatalogOrderDefaults {
+  // Avans foizi, decimal matn: "50.00".
+  string prepayment_percent = 1;
+  // Yetkazish narxi (UZS), decimal matn: "30000.00".
+  string delivery_amount = 2;
+  // Bajarish muddati (kun).
+  int32 deadline_days = 3;
+}
+
+message CatalogFasonPart {
+  string id = 1;
+  // portyera | tul | lambrekan | kant | dekor | astar.
+  string role = 2;
+  string name = 3;
+  // Karniz uzunligidan ulush (0..1), decimal matn: "1.000".
+  string width_share = 4;
+  // Umumiy balandlikdan ulush (0..1), decimal matn: "0.150".
+  string height_share = 5;
+  // Standart burma koeffitsienti, decimal matn: "2.500".
+  string default_coef = 6;
+  int32 sort_order = 7;
+}
+
+message CatalogFasonAccessory {
+  string id = 1;
+  // Aksessuar kategoriyasi (slug): podxvat | gul | kisti | bahroma ...
+  string category = 2;
+  // Standart miqdor, decimal matn: "2.000".
+  string default_qty = 3;
+  // Miqdor formulasi: "" | per_side | per_meter (bo'sh — default_qty).
+  string qty_formula = 4;
+}
+
+message CatalogFason {
+  string id = 1;
+  string name = 2;
+  // Uslub kodi (classic, modern, ...), bo'sh — hammasiga mos.
+  string style = 3;
+  // Xona kodlari ro'yxati (living, bedroom, ...), bo'sh — hammasiga mos.
+  repeated string rooms = 4;
+  string image_url = 5;
+  int32 part_count = 6;
+  repeated CatalogFasonPart parts = 7;
+  repeated CatalogFasonAccessory accessories = 8;
+}
+
+message CatalogPrompt {
+  // Versiya raqami (Django PromptVersion.version).
+  int32 version = 1;
+  // System prompt matni.
+  string content = 2;
+  // Yangilangan vaqt, RFC3339.
+  string updated_at = 3;
 }
 
 message CatalogProduct {
@@ -277,15 +387,23 @@ message WatchRequest {
 message CatalogDelta {
   // Yangi versiya raqami.
   int64 version = 1;
-  // O'zgarayotgan subyekt turi: product | variant | category | calc_rule | knowledge_rule.
+  // O'zgarayotgan subyekt turi:
+  //   product | variant | category | calc_rule | knowledge_rule |
+  //   service_price | discount_tier | discount_policy | order_defaults | fason | prompt |
+  //   catalog (faqat FULL_RESYNC bilan).
+  // `fason` — FasonPart/FasonAccessory o'zgarganda ham butun fason yuboriladi.
+  // `variant` — payload'da `product_id` bor; Go shu mahsulot ichida almashtiradi.
   string entity = 2;
-  // O'zgarayotgan yozuv UUID si.
+  // O'zgarayotgan yozuv UUID si (discount_policy/order_defaults/prompt uchun ham bor).
   string entity_id = 3;
-  // Amal turi: create | update | delete.
+  // Amal turi: create | update | delete | FULL_RESYNC.
+  // FULL_RESYNC — Go `from_version` juda eski: Watch yopiladi, Go Snapshot'ni
+  // qayta oladi va yangi versiya bilan Watch'ni qayta ochadi.
   string action = 4;
-  // Qaysi tenant tegishli.
+  // Qaysi tenant tegishli (global obyektlar uchun bo'sh).
   string tenant_id = 5;
-  // Yangilangan ma'lumot (create/update uchun, JSON).
+  // Yangilangan ma'lumot (create/update uchun) — snapshot'dagi mos Catalog* xabarining
+  // JSON ko'rinishi (proto JSON, maydon nomlari snake_case). delete'da bo'sh.
   string payload_json = 6;
 }
 
@@ -334,7 +452,14 @@ message OrderDraftRequest {
   string customer_phone = 6;
   // Manzil.
   string address = 7;
-  // Buyurtma tarkibi JSON sifatida (o'lchamlar, bo'laklar, aksessuarlar).
+  // Buyurtma tarkibi JSON sifatida. Sxema `tests/fixtures/calc_cases.json` dagi `input`
+  // bilan bir xil (Django `create_order_from_draft` payload'i):
+  //   {"measurements":[{"length":"3.000","height":"2.500",
+  //                     "parts":[{"variant_id":"...","role":"portyera","width_m":"3.000",
+  //                               "height_m":"2.500","coef":"2.500"}],
+  //                     "accessories":[{"variant_id":"...","qty":"2"}]}],
+  //    "services":["sewing","tape","hook"], "delivery":true, "discount_percent":"0"}
+  // Sonlar decimal matn.
   string items_json = 8;
   // Eslatma.
   string note = 9;

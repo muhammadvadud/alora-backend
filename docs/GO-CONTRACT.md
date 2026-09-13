@@ -1,53 +1,169 @@
 # Alora Backend — Go bilan Kelishuv (GO-CONTRACT)
 
-Ushbu hujjat Django backend va Go mikroservisi o'rtasidagi kelishuv (shartnoma) va o'zaro hamkorlik protokollarini belgilaydi. Yagona manba `protos/alora.proto` hisoblanadi.
+**Kontrakt versiyasi:** 1.1 (2026-09-13) · proto paketi `alora.v1` (backward compatible)
+**Yagona manba:** `protos/alora.proto`. Ushbu hujjat proto'da ifodalab bo'lmaydigan
+semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 
-## 1. Servislar va RPC'lar ro'yxati (gRPC)
+---
 
-Barcha gRPC muloqoti `alora.v1` paketi orqali amalga oshadi.
+## 1. Servislar va RPC'lar (gRPC)
 
-### Agent Servisi (Django → Go)
-Ovoz va matn chatini ta'minlash uchun.
-- `rpc Chat(ChatRequest) returns (stream ChatEvent)`: Matnli suhbat uchun. Server-streaming orqali Go har bir voqeani (event) alohida yuboradi.
-- `rpc VoiceChat(stream VoiceChunk) returns (stream VoiceEvent)`: Ovozli suhbat. Ikki tomonlama streaming (birectional) qilinadi.
-- `rpc ResetSession(ResetRequest) returns (ResetResponse)`: Sessiya kontekstini xotiradan o'chirish va tozalash uchun.
-- `rpc Health(Empty) returns (HealthResponse)`: Go agentning yashayotganligini va sog'lig'ini tekshirish uchun ishlatiladi.
+### 1.1 Agent servisi (Django → Go)
 
-### Catalog Servisi (Django → Go)
-Katalogni sinxronizatsiya qilish uchun.
-- `rpc Snapshot(SnapshotRequest) returns (CatalogSnapshot)`: Katalogning to'liq nusxasini (sahifalab) olish. Go agenti ishga tushganda yoki Redis bilan aloqa uzilib qolib, versiyalar nomuvofiqligi sezilsa chaqiradi.
-- `rpc Watch(WatchRequest) returns (stream CatalogDelta)`: Real-vaqtda o'zgarishlar oqimini (delta stream) olish. Go backend buni uzluksiz ochib qo'yadi, Django uni Redis kanalidagi ma'lumotlar bilan ta'minlab turadi.
+| RPC | Turi | Vazifa |
+|---|---|---|
+| `Chat(ChatRequest) → stream ChatEvent` | server-streaming | Matnli suhbat |
+| `VoiceChat(stream VoiceChunk) → stream VoiceEvent` | bidirectional | Ovozli suhbat |
+| `ResetSession(ResetRequest) → ResetResponse` | unary | Sessiya kontekstini tozalash |
+| `Health(Empty) → HealthResponse` | unary | Go agent sog'lig'i |
 
-### Backend Servisi (Go → Django)
-Go tomonidan Django'ga asinxron ravishda saqlash yoki jurnalga yozish so'rovlari.
-- `rpc ReportUsage(UsageRequest) returns (Ack)`: AI tokenlari sarflangandan keyin va xarajatlar to'g'risida hisobot.
-- `rpc SaveOrderDraft(OrderDraftRequest) returns (OrderDraftResponse)`: AI suhbat doirasida yaratgan buyurtma qoralamasini saqlash.
-- `rpc LogMessage(MessageLogRequest) returns (Ack)`: Suhbat tarixini saqlab borish uchun xabar jurnalini yozib qo'yish.
+**`ChatRequest.context` — Django kafolatlaydigan kalitlar** (`apps/chat/services.build_agent_context`):
 
-## 2. Katalog Sinxronizatsiyasi: Redis kanallari va versiya kaliti
+| Kalit | Qiymat | Go nima qiladi |
+|---|---|---|
+| `role` | `employee` \| `manager` \| `admin` | `price_quote` da qo'lda chegirma chegarasi (`DiscountPolicy.manual_max_percent_*`) |
+| `customer_mode` | `"0"` \| `"1"` | `"1"` — qurilma mijoz qo'lida: prompt'ga "tannarx, ichki izoh, chegirma chegarasini aytma" bloki |
+| `conversation_id` | Conversation UUID | `UsageRequest.conversation_id`, `MessageLogRequest.conversation_id` |
+| `message_id` | *(rejalashtirilgan)* | idempotent usage uchun; hozircha bo'sh bo'lishi mumkin |
+| `prompt_version` | *(ixtiyoriy)* | A/B: aniq prompt versiyasini ishlatish |
 
-Katalog manbasi (source of truth) - faqat Django. Go agent doimo o'zida nusxani ushlab turadi (cache).
-- Barcha `post_save` va `post_delete` signallarida Django Redis pub/sub kanaliga delta (`{tenant_id, entity, entity_id, action, version, payload_json}`) yuboradi.
-- **Pub/Sub kanal nomi**: `alora:catalog:deltas`
-- **Versiya kaliti**: `alora:catalog:version` (ushbu kalit INCR orqali monoton o'sib boradi)
+Metadata (**rejalashtirilgan, backend `tasks.md` 6.18**): Django har chaqiruvda
+`x-service-token` (`AGENT_SERVICE_TOKEN`) va `x-request-id` yuboradi; Go `Health` dan boshqa
+hamma RPC'da tokenni tekshiradi. Hozir `grpc_client.py` metadata yubormaydi — 6.18
+bajarilgunga qadar Go auth interceptor'ini `grpc.auth_required=false` bilan ishga tushirish mumkin.
 
-**Watch jarayoni:**
-Go agent ma'lum bir `from_version` (oxirgi olgan versiyasi) orqali `Watch` metodini chaqiradi. Agar `from_version` hozirgi Django versiyasidan kichik bo'lsa va deltalarni bittalab berib bo'lmasa, Django `FULL_RESYNC` amali orqali Go agentdan `Snapshot` qilishni so'raydi. Aks holda u oqimda yangi deltalarni yuborishda davom etadi.
+**`ChatEvent.kind` qiymatlari va tartibi:**
 
-## 3. Etalon Test Kelishuvi
+```
+start → (tool_call → tool_args → tool_result → products?)* → content* → stage → done
+                                                                             ↘ error
+```
 
-Hisob-kitob (calc) qoidalari ikkala tomonda xatosiz, bir xil bo'lishini ta'minlash uchun **etalon testlar fayli** tuzilgan.
+| kind | Maydonlar | Django |
+|---|---|---|
+| `start`, `content`, `tool_call`, `tool_args`, `tool_result`, `error` | shablon bo'yicha | SSE'ga 1:1 |
+| `thinking` | `content` | Go **yubormaydi** (mijoz rejimida sizib chiqmasin) |
+| `products` | `products[]` (`ProductRef`) | SSE'ga 1:1 — mobil kartochka chizadi |
+| `stage` | `content` = `need\|recommend\|measure\|calc\|variants\|order`, `result` = qisqa holat JSON | SSE'ga 1:1 **va** Celery `update_conversation_stage` → `Conversation.stage`, `Conversation.context["agent_state"]`. Noma'lum bosqich e'tiborsiz |
+| `done` | `usage` | `save_message_and_usage` |
 
-**Fayl yo'li**: `tests/fixtures/calc_cases.json`
-Ushbu fayl Django repozitoriyasida ham, Go repozitoriyasida ham **mutlaqo bir xil (umumiy)** hisoblanadi. Ikkala tomon o'z testlarini shu JSON fayl asosida ishga tushiradi (Django'da `tests/pricing/test_reference_cases.py`). 
-Agar formulada o'zgarish bo'lsa, etalon fayl birgalikda o'zgartiriladi. Hozirda loyihada etalon holatlar (20 ta misol) mavjud. Barcha holatlar muvaffaqiyatli o'tishi majburiydir.
+**`Usage.cost_usd` / `cost_uzs`:** Go **`0` yuboradi**. Narxni Django `ModelPricing`
+bo'yicha `apps.usage.services.calculate_cost` hisoblaydi — narx jadvali bitta joyda.
+Go faqat token sonlari, `stt_seconds`, `tts_chars`, `latency_ms`, `tool_calls_json` ni to'ldiradi.
 
-## 4. Proto Faylini Boshqarish va Generatsiya
+### 1.2 Catalog servisi (Django → Go; server Django'da, Go klient)
 
-`protos/alora.proto` fayli ushbu Django repozitoriyasida yagona manba (source of truth) hisoblanadi. Agar proto fayliga o'zgartirish kiritish kerak bo'lsa, quyidagi tartibga rioya qilinishi majburiy:
+| RPC | Vazifa |
+|---|---|
+| `Snapshot(SnapshotRequest) → CatalogSnapshot` | To'liq nusxa, sahifalab (`page_size` ≤ 1000) |
+| `Watch(WatchRequest) → stream CatalogDelta` | Real vaqt delta oqimi |
 
-1. **O'zgartirish kiritish**: Barcha o'zgarishlar faqatgina ushbu repozitoriyadagi `protos/alora.proto` fayliga kiritiladi.
-2. **Python kodini generatsiya qilish**: Proto fayl o'zgartirilgandan so'ng, darhol Python gRPC stub'larini yangilash uchun `scripts/gen_proto.sh` skripti ishga tushirilishi kerak. Bu `grpc_gen/` papkasini yangilaydi.
-3. **Go repozitoriyasiga uzatish**: Go (backend) repozitoriyasiga o'zgartirilgan proto faylni nusxalash uchun `scripts/export_proto.sh <go_repo_yoli>` yordamchi skripti ishlatiladi. Bu skript nusxa ustidan yozishdan oldin ikki fayl o'rtasidagi farqni ko'rsatib beradi.
-4. **Go tarafida qayta generatsiya qilish**: Nusxa olingach, Go repozitoriyasi ichida protoc (yoki buf) orqali Go kodlari (`.pb.go` va `_grpc.pb.go`) qayta generatsiya qilinishi kerak (odatda Go loyihasining Makefile'ida belgilangan `make proto` yoki shunga o'xshash buyruq orqali).
-5. **Versiyalash qoidasi**: Proto o'zgarishlari oldinga qarab mos keluvchi (backward compatible) bo'lishi qat'iyan talab qilinadi. Mavjud maydonlarning tiplari o'zgartirilmasligi yoki nomlari/indekslari o'chirilmasligi, faqatgina yangi maydonlar qo'shilishi kerak.
+**Snapshot tarkibi (kontrakt 1.1):**
+
+| Maydon | Sahifa | Manba |
+|---|---|---|
+| `products[]` (+ `variants[]`, `image_urls[]`) | har sahifa | `Product`, `ProductVariant`, `ProductImage` (faqat `is_active`) |
+| `categories[]` | **faqat birinchi** (`page_token=""`) | `Category` |
+| `calc_rules[]` | faqat birinchi | `CalcRule` |
+| `knowledge_rules[]` | faqat birinchi | `KnowledgeRule` |
+| `service_prices[]` | faqat birinchi | `ServicePrice` (`is_active`) |
+| `discount_tiers[]` | faqat birinchi | `DiscountTier` (`is_active`) |
+| `discount_policy` | faqat birinchi | `DiscountPolicy` (singleton; yo'q bo'lsa maydon bo'sh) |
+| `order_defaults` | faqat birinchi | `OrderDefaults` (singleton) |
+| `fasons[]` (+ `parts[]`, `accessories[]`) | faqat birinchi | `Fason`, `FasonPart`, `FasonAccessory` |
+| `prompt` | faqat birinchi | `PromptVersion` (`is_current=True`; yo'q bo'lsa bo'sh → Go fallback prompt) |
+
+Go: birinchi sahifadan hamma narsani, keyingi sahifalardan faqat `products` ni oladi;
+`next_page_token=""` bo'lguncha davom etadi; `version` birinchi sahifadagi qiymat.
+
+**Sonlar:** eski maydonlar (`CatalogVariant.price`, `width_m`, `CatalogCalcRule.value`)
+shartnoma qoidasi bo'yicha `double` bo'lib qoladi — Go ularni `decimal.NewFromFloat` emas,
+`strconv.FormatFloat(v, 'f', -1, 64)` → `decimal.NewFromString` bilan oladi.
+Kontrakt 1.1 da qo'shilgan barcha pul/foiz/ulush maydonlari **decimal matn** (`"12500.00"`).
+
+**`cost_price` (tannarx) hech qachon snapshot/delta'ga tushmaydi** (rules §4.11).
+
+**Delta (`CatalogDelta`):**
+
+| `entity` | `tenant_id` | `payload_json` (create/update) | Go amali |
+|---|---|---|---|
+| `product` | tenant | `CatalogProduct` JSON (variantlar va rasmlar bilan) | butun mahsulotni almashtirish |
+| `variant` | tenant | `CatalogVariant` JSON; delete'da `{"product_id"}` | mahsulot ichida variantni almashtirish/olib tashlash |
+| `category` | tenant | `CatalogCategory` JSON | |
+| `calc_rule` | `""` | `CatalogCalcRule` JSON (`entity_id` = UUID, kalit payload'da) | `key` bo'yicha almashtirish |
+| `knowledge_rule` | `""` | `CatalogKnowledgeRule` JSON | |
+| `service_price` | `""` | `CatalogServicePrice` JSON | `key` bo'yicha |
+| `discount_tier` | `""` | `CatalogDiscountTier` JSON | `id` bo'yicha |
+| `discount_policy` | `""` | `CatalogDiscountPolicy` JSON | butun obyektni almashtirish |
+| `order_defaults` | `""` | `CatalogOrderDefaults` JSON | butun obyektni almashtirish |
+| `fason` | tenant | `CatalogFason` JSON — **bo'lak/aksessuar o'zgarsa ham butun fason** | butun fasonni almashtirish |
+| `prompt` | `""` | `CatalogPrompt` JSON | joriy promptni almashtirish |
+| `catalog` | so'ralgan | bo'sh, `action="FULL_RESYNC"` | quyida |
+
+`payload_json` — proto JSON (snake_case), Snapshot'dagi mos xabar bilan **bir xil**
+(`apps/chat/grpc_server/catalog_payload.py` — ikkalasi uchun yagona manba).
+`tenant_id=""` bo'lgan (global) delta'lar har qanday `WatchRequest.tenant_id` filtridan o'tadi.
+
+**Redis:** kanal `alora:catalog:deltas`, versiya kaliti `alora:catalog:version` (`INCR`, monoton).
+
+**Watch protokoli:**
+1. Go `Watch(from_version=V)` ochadi (V — oxirgi qo'llangan versiya).
+2. Django: `V < current` bo'lsa **bitta** `CatalogDelta{action:"FULL_RESYNC", entity:"catalog", version:current}`
+   yuboradi va stream'ni **yopadi** (oraliq delta'lar Redis'da saqlanmaydi).
+3. Go: `FULL_RESYNC` → `Snapshot` ni qayta oladi → yangi `version` bilan `Watch` ni qayta ochadi.
+4. `V == current` bo'lsa stream ochiq turadi, yangi delta'lar `version > V` bo'lib keladi.
+5. Go delta `version` ketma-ketligi uzilganini ko'rsa (kutilgan `V+1` emas) — 3-banddagi kabi resync.
+
+### 1.3 Backend servisi (Go → Django, asinxron)
+
+| RPC | Vazifa | Idempotentlik |
+|---|---|---|
+| `ReportUsage(UsageRequest) → Ack` | token/xarajat hisoboti (Celery `usage` navbati) | `message_id` + `session_id` |
+| `SaveOrderDraft(OrderDraftRequest) → OrderDraftResponse` | AI qoralamasi → `Order(status=draft)` | Go **retry qilmaydi** (dublikat xavfi) |
+| `LogMessage(MessageLogRequest) → Ack` | suhbat tarixi | `session_id` + rol + matn + tokenlar (`save_message` get_or_create) |
+
+**`OrderDraftRequest.items_json` sxemasi** — `tests/fixtures/calc_cases.json` dagi `input`
+bilan bir xil, ya'ni `apps.orders.services.create_order_from_draft` payload'i:
+
+```json
+{
+  "measurements": [
+    {"length": "3.000", "height": "2.500",
+     "parts": [{"variant_id": "…", "role": "portyera", "width_m": "3.000", "height_m": "2.500", "coef": "2.500"}],
+     "accessories": [{"variant_id": "…", "qty": "2"}]}
+  ],
+  "services": ["sewing", "tape", "hook"],
+  "delivery": true,
+  "discount_percent": "0"
+}
+```
+Sonlar decimal matn. `customer_name`, `customer_phone`, `address`, `note` — alohida maydonlar
+(LLM kontekstiga tushmaydi, Go ularni faqat shu RPC'ga uzatadi).
+`SaveOrderDraft` ni `create_order_from_draft` ga ulash — backend `tasks.md` 13.10.
+
+---
+
+## 2. Etalon test kelishuvi
+
+`tests/fixtures/calc_cases.json` — Django va Go uchun **bir xil** fayl (sha256 CI'da
+solishtiriladi). Django: `tests/pricing/test_reference_cases.py`; Go: `internal/curtains/calc_test.go`.
+Formula (`apps/pricing/services/calculator.py`) o'zgarsa etalon fayl birga o'zgaradi va
+Go jamoasiga xabar qilinadi. 20 ta holat, hammasi ±0 farq bilan o'tishi shart.
+
+---
+
+## 3. Proto'ni boshqarish
+
+1. Faqat `protos/alora.proto` tahrirlanadi (shu repo).
+2. `bash scripts/gen_proto.sh` → `grpc_gen/` yangilanadi.
+3. `bash scripts/export_proto.sh <go_repo>` → Go repoda `proto/alora.proto` (diff ko'rsatadi).
+4. Go: `buf generate` (`go_package = github.com/muhammadvadud/alora-agent/gen/alorav1;alorav1` —
+   Go moduli shu nom bilan; o'zgarsa proto'dagi option birga o'zgaradi).
+5. Backward compatibility: maydon raqami/tipi o'zgarmaydi, eski maydon o'chirilmaydi, faqat qo'shiladi.
+
+## 4. Kontrakt o'zgarishlar jurnali
+
+| Versiya | Sana | O'zgarish |
+|---|---|---|
+| 1.0 | 2026-09-08 | Dastlabki shartnoma: Agent, Catalog, Backend servislari |
+| 1.1 | 2026-09-13 | `CatalogSnapshot` 8–13: `service_prices`, `discount_tiers`, `discount_policy`, `order_defaults`, `fasons`, `prompt`; yangi `Catalog*` xabarlari; delta payload'lari barcha entity'lar uchun; `ChatEvent.kind` ga `products`, `stage`; `context` kalitlari (`role`, `customer_mode`, `conversation_id`); `cost_*` faqat Django; `FULL_RESYNC` protokoli; `items_json` sxemasi; `go_package` tuzatildi; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada |

@@ -105,6 +105,40 @@ def save_message(
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
+def update_conversation_stage(
+    self,
+    conversation_id: str,
+    stage: str,
+    state_json: str = "",
+) -> bool:
+    """Go'dan kelgan `stage` event'ini `Conversation.stage`/`context` ga yozadi.
+
+    Idempotent: bir xil bosqich qayta kelsa natija o'zgarmaydi. Noma'lum bosqich
+    e'tiborsiz qoldiriladi — Go yangi bosqich qo'shsa Django yiqilmasin.
+    `state_json` — Go'ning qisqa holat JSON'i (`context["agent_state"]`), manager ko'radi.
+    """
+    from apps.common.choices import ConversationStage
+
+    stage = (stage or "").strip()
+    if stage not in ConversationStage.values:
+        logger.warning("unknown_conversation_stage", conversation_id=conversation_id, stage=stage)
+        return False
+
+    conversation = Conversation.objects.filter(pk=conversation_id).first()
+    if conversation is None:
+        logger.warning("stage_conversation_not_found", conversation_id=conversation_id)
+        return False
+
+    context = dict(conversation.context or {})
+    state = _parse_json(state_json, None)
+    if isinstance(state, dict):
+        context["agent_state"] = state
+
+    Conversation.objects.filter(pk=conversation.pk).update(stage=stage, context=context)
+    return True
+
+
+@shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
 def generate_conversation_title(self, conversation_id: str, message_text: str = "") -> str | None:
     """Birinchi javobdan keyin suhbatga qisqa sarlavha qo'yadi. · 13.3
 

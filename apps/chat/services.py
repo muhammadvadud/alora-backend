@@ -51,3 +51,19 @@ def check_rate_limit(user: Any) -> None:
 
     if count > limit:
         raise Throttled(detail="Siz juda ko'p xabar yubordingiz. Iltimos biroz kuting.")
+
+
+def build_agent_context(conversation: Conversation, user: Any) -> dict[str, str]:
+    """Go agentga yuboriladigan `ChatRequest.context` (GO-CONTRACT §1.1).
+
+    Kalitlar shartnomada qat'iy: `role`, `customer_mode`, `conversation_id`.
+    Mijoz rejimi suhbatning `mode` maydonidan olinadi — mobil uni PATCH bilan
+    almashtiradi, har xabarda qayta yubormaydi.
+    """
+    from apps.common.choices import ConversationMode
+
+    return {
+        "role": str(getattr(user, "role", "") or ""),
+        "customer_mode": "1" if conversation.mode == ConversationMode.CUSTOMER else "0",
+        "conversation_id": str(conversation.id),
+    }

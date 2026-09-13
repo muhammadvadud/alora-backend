@@ -90,7 +90,11 @@ go test ./...
 
 - `CatalogSnapshot.version` — monoton o'sadigan raqam (Redis `INCR`).
 - Go `Watch` stream'dan qachon uzilsa, qayta ulanganda `from_version` beriladi.
-- Agar versiya orasida 100+ delta o'tgan bo'lsa, to'liq `Snapshot` oladi.
+- `from_version` joriy versiyadan kichik bo'lsa Django `FULL_RESYNC` delta'sini yuborib
+  stream'ni yopadi — Go to'liq `Snapshot` oladi va Watch'ni qayta ochadi
+  (protokol: `GO-CONTRACT.md` §1.2). Oraliq delta'lar Redis'da saqlanmaydi.
+- Kontrakt semantikasi (context kalitlari, kind'lar, payload tarkibi) versiyalanadi:
+  `GO-CONTRACT.md` §4 jurnali (hozir 1.1).
 
 ---
 

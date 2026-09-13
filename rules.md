@@ -223,10 +223,17 @@ Ketma-ketlik qat'iy (TZ 5.2):
 
 ## 9. Katalog sinxronizatsiyasi
 
-- `post_save` / `post_delete` signal → Redis pub/sub kanaliga delta `{tenant_id, entity, id, action, version}`.
+- `post_save` / `post_delete` signal → Redis pub/sub kanaliga delta
+  `{tenant_id, entity, entity_id, action, version, payload_json}`.
+- `payload_json` — o'zgargan obyektning proto-JSON ko'rinishi, Snapshot bilan **bir manbadan**
+  (`apps/chat/grpc_server/catalog_payload.py`). Snapshot uchun ham, delta uchun ham
+  ikkinchi serializer yozilmaydi. Delta payload tarkibi va entity ro'yxati — `docs/GO-CONTRACT.md` §1.2.
 - `version` monoton o'sadi (Redis `INCR`). Go uzilish sezsa `Catalog.Snapshot` ni qayta chaqiradi.
-- Snapshot sahifalab beriladi (10k+ mahsulot uchun).
-- Signal ichida og'ir ish qilinmaydi — faqat delta e'lon qilinadi.
+- Snapshot sahifalab beriladi (10k+ mahsulot uchun); mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada.
+- Signal ichida og'ir ish qilinmaydi — faqat delta (payload bilan) e'lon qilinadi. Payload
+  yig'ish uchun ruxsat etilgan chegara: bola yozuvlarni o'qish (variantlar, rasmlar, fason
+  bo'laklari) — 17.4-band. Tashqi API, fayl, hisob-kitob — taqiqlanadi.
+- `cost_price` (tannarx) payload'ga ham, Snapshot'ga ham tushmaydi (§4.11).
 
 ---
 
@@ -416,3 +423,31 @@ qolgani uchun olib tashlandi (`apps/accounts/serializers.py`,
 
 **Qaror:** qoida loyiha darajasida o'chirildi. Foydalanuvchi tomonidan
 tasdiqlangan.
+
+### 17.4 Katalog delta signalida payload yig'iladi (2026-09-13)
+
+**Chetlanish:** §9 "signal ichida faqat delta e'lon qilinadi" — endi signal delta bilan birga
+`payload_json` (obyektning proto-JSON nusxasi) yuboradi. `product` uchun bu variantlar va
+rasmlarni (2 ta qo'shimcha SELECT), `fason` uchun bo'laklar va aksessuarlarni (2 ta SELECT)
+o'qishni bildiradi. Qolgan entity'lar (variant, calc_rule, service_price, discount_*,
+order_defaults, knowledge_rule, prompt) uchun qo'shimcha so'rov yo'q.
+
+**Sabab:** Go agent katalogni lokal cache'da ushlaydi (TZ §2.2-3). Payload'siz delta'da
+Go faqat "nimadir o'zgardi" ni biladi — uni qo'llash uchun butun `Snapshot` ni (10k mahsulot)
+qayta olishga majbur bo'lardi: har bir narx tahriri → to'liq resync. Bu TZ'dagi "tool'lar
+millisekundlarda, katalog delta bilan yangilanadi" talabini yo'qqa chiqaradi. Alohida
+`Catalog.Get(entity_id)` RPC qo'shish — Go→Django sinxron so'rov, TZ §2.2-3 aynan shundan
+qochadi.
+
+**Ta'sir doirasi:** `apps/chat/grpc_server/catalog_payload.py` (yangi, Snapshot bilan
+umumiy), `apps/{catalog,pricing,knowledge,prompts}/signals.py`. Product/fason saqlash
+2 ta yengil SELECT bilan og'irlashadi (manager tahriri — sekundiga emas, kuniga bir necha
+marta). Chat oqimiga ta'sir yo'q.
+
+**Muqobil variantlar:** (a) payload'siz delta + har delta'da to'liq snapshot — rad etildi
+(yuqorida); (b) `Catalog.Get` RPC — Go→Django sinxron bog'liqlik, rad etildi;
+(c) payload'ni Celery'da yig'ish — delta tartibi (version) buziladi va Go eski holatni
+olishi mumkin, rad etildi.
+
+**Qaror:** payload signal ichida yig'iladi, chegara §9 da belgilandi. Foydalanuvchi
+tomonidan tasdiqlangan (2026-09-13).

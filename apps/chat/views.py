@@ -20,11 +20,12 @@ from apps.chat.selectors import get_messages_for_conversation, get_transcript
 from apps.chat.serializers import ConversationSerializer, MessageSerializer
 from apps.chat.services import (
     archive_conversation,
+    build_agent_context,
     check_rate_limit,
     check_usage_limit,
     reset_conversation_context,
 )
-from apps.chat.tasks import save_message_and_usage
+from apps.chat.tasks import save_message_and_usage, update_conversation_stage
 from apps.common.models import TenantScopedQuerySetMixin
 from apps.common.pagination import StandardCursorPagination
 
@@ -126,6 +127,8 @@ class ConversationMessagesView(APIView):
         check_usage_limit(user)
         check_rate_limit(user)
 
+        agent_context = build_agent_context(conversation, user)
+
         import asyncio
 
         async def event_generator():
@@ -141,6 +144,7 @@ class ConversationMessagesView(APIView):
                         user_id=str(user.id),
                         tenant_id=tenant_id,
                         message=message_text,
+                        context=agent_context,
                         deadline_seconds=60.0,
                     )
                     call_ref[0] = call
@@ -171,6 +175,15 @@ class ConversationMessagesView(APIView):
                         break
 
                     event_dict = MessageToDict(event, preserving_proto_field_name=True)
+
+                    if event_dict.get("kind") == "stage":
+                        # Bosqich Django'da saqlanadi (manager ko'radi); event mobilga 1:1 o'tadi.
+                        update_conversation_stage.delay(
+                            conversation_id=str(conversation.id),
+                            stage=event_dict.get("content", ""),
+                            state_json=event_dict.get("result", ""),
+                        )
+
                     yield f"data: {json.dumps(event_dict)}\n\n"
 
                     if event_dict.get("kind") == "done":

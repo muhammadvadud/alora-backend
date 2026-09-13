@@ -13,6 +13,9 @@ import grpc
 import redis
 import structlog
 from django.conf import settings
+from google.protobuf.json_format import ParseDict
+
+from apps.chat.grpc_server import catalog_payload as payloads
 
 logger = structlog.get_logger(__name__)
 
@@ -83,6 +86,10 @@ class CatalogServicer:
     Asl bazaviy klass generatsiya kodida mavjud (alora_pb2_grpc.CatalogServicer).
     Bu klass unga parallel — shartnoma Go jamoasi bilan kelishilgandan keyin
     generatsiya qilingan bazaviy klassdan meros olish uchun qo'shiladi.
+
+    Kontrakt 1.1: pricing (service_prices, discount_tiers, discount_policy,
+    order_defaults), fasons va prompt faqat BIRINCHI sahifada (page_token bo'sh)
+    to'ldiriladi — ular kichik va sahifalanmaydi; Go ularni birinchi sahifadan oladi.
     """
 
     PAGE_SIZE_DEFAULT = 100
@@ -119,6 +126,8 @@ class CatalogServicer:
             # Klient stream'ni yopdi — normal holat
             return
 
+    # ── Snapshot ───────────────────────────────────────────────────────────
+
     def _build_snapshot(
         self,
         page_token: str,
@@ -128,25 +137,29 @@ class CatalogServicer:
         """Katalogning bitta sahifasini quradi."""
         version = get_catalog_version()
         offset = int(page_token) if page_token.isdigit() else 0
+        is_first_page = offset == 0
 
-        products_pb = self._products_page(offset, page_size, pb2)
         total_count = self._products_count()
-        categories_pb = self._categories(pb2)
-        calc_rules_pb = self._calc_rules(pb2)
-        knowledge_rules_pb = self._knowledge_rules(pb2)
-
         has_next = offset + page_size < total_count
         next_page_token = str(offset + page_size) if has_next else ""
 
-        return pb2.CatalogSnapshot(
-            version=version,
-            products=products_pb,
-            categories=categories_pb,
-            calc_rules=calc_rules_pb,
-            knowledge_rules=knowledge_rules_pb,
-            next_page_token=next_page_token,
-            total_count=total_count,
-        )
+        snapshot: dict[str, Any] = {
+            "version": version,
+            "products": self._products_page(offset, page_size),
+            "categories": self._categories() if is_first_page else [],
+            "calc_rules": self._calc_rules() if is_first_page else [],
+            "knowledge_rules": self._knowledge_rules() if is_first_page else [],
+            "next_page_token": next_page_token,
+            "total_count": total_count,
+        }
+        if is_first_page:
+            snapshot.update(self._pricing_block())
+            snapshot["fasons"] = self._fasons()
+            prompt = self._prompt()
+            if prompt is not None:
+                snapshot["prompt"] = prompt
+
+        return ParseDict(snapshot, pb2.CatalogSnapshot(), ignore_unknown_fields=True)
 
     def _products_count(self) -> int:
         """Faol mahsulotlar soni."""
@@ -154,131 +167,84 @@ class CatalogServicer:
 
         return Product.objects.filter(is_active=True).count()
 
-    def _products_page(
-        self,
-        offset: int,
-        page_size: int,
-        pb2: Any,
-    ) -> list[Any]:
-        """Mahsulotlar sahifasini quradi (variantlar va rasmlar bilan)."""
+    def _products_page(self, offset: int, page_size: int) -> list[dict[str, Any]]:
+        """Mahsulotlar sahifasi (variantlar va rasmlar bilan)."""
         from apps.catalog.models import Product
 
         products_qs = (
             Product.objects.filter(is_active=True)
             .select_related("category")
-            .prefetch_related("variants")
+            .prefetch_related("variants", "images")
             .order_by("sort_order", "name")
         )
+        return [payloads.product_payload(p) for p in products_qs[offset : offset + page_size]]
 
-        products_page = products_qs[offset : offset + page_size]
-        result: list[Any] = []
-
-        for product in products_page:
-            variants_pb = [
-                pb2.CatalogVariant(
-                    id=str(v.id),
-                    product_id=str(product.id),
-                    sku=v.sku,
-                    color_name=v.color_name,
-                    color_hex=v.color_hex,
-                    width_m=float(v.width_m),
-                    price=float(v.price),
-                    price_unit=v.price_unit,
-                    old_price=float(v.old_price) if v.old_price else 0.0,
-                    is_active=v.is_active,
-                )
-                for v in product.variants.all()
-                if v.is_active
-            ]
-
-            try:
-                density: float = float(product.density) if product.density else 0.0
-            except ValueError:
-                density = 0.0
-
-            images = [str(i.image) for i in product.images.all()[:5]]
-
-            result.append(
-                pb2.CatalogProduct(
-                    id=str(product.id),
-                    category_id=str(product.category_id),
-                    name=product.name,
-                    code=product.code,
-                    description=product.description or "",
-                    fabric_type=product.fabric_type or "",
-                    pattern=product.pattern or "",
-                    style=product.style or "",
-                    transparency=product.transparency or "",
-                    density=density,
-                    composition=product.composition or "",
-                    care=product.care or "",
-                    recommended_rooms=list(product.recommended_rooms or []),
-                    recommended_coef=float(product.recommended_coef)
-                    if product.recommended_coef
-                    else 0.0,
-                    default_width_m=float(product.default_width_m)
-                    if product.default_width_m
-                    else 0.0,
-                    is_sewing_required=product.is_sewing_required,
-                    segment=product.segment or "",
-                    tags_json=json.dumps(product.tags or {}, ensure_ascii=False),
-                    variants=variants_pb,
-                    image_urls=images,
-                )
-            )
-
-        return result
-
-    def _categories(self, pb2: Any) -> list[Any]:
-        """Kategoriyalar ro'yxati."""
+    def _categories(self) -> list[dict[str, Any]]:
         from apps.catalog.models import Category
 
-        categories = Category.objects.filter(is_active=True).order_by("sort_order")
-        return [
-            pb2.CatalogCategory(
-                id=str(c.id),
-                name=c.name,
-                slug=c.slug,
-                parent_id=str(c.parent_id) if c.parent_id else "",
-                sort_order=c.sort_order,
-            )
-            for c in categories
-        ]
+        qs = Category.objects.filter(is_active=True).order_by("sort_order")
+        return [payloads.category_payload(c) for c in qs]
 
-    def _calc_rules(self, pb2: Any) -> list[Any]:
-        """Hisoblash qoidalari."""
+    def _calc_rules(self) -> list[dict[str, Any]]:
         from apps.pricing.models import CalcRule
 
-        rules = CalcRule.objects.filter(is_active=True)
-        return [
-            pb2.CatalogCalcRule(
-                key=rule.key,
-                value=float(rule.value),
-                unit=rule.unit,
-                description=rule.description or "",
-                applies_to_json=json.dumps(rule.applies_to or {}, ensure_ascii=False),
-            )
-            for rule in rules
-        ]
+        return [payloads.calc_rule_payload(r) for r in CalcRule.objects.filter(is_active=True)]
 
-    def _knowledge_rules(self, pb2: Any) -> list[Any]:
-        """Bilimlar bazasi qoidalari."""
+    def _knowledge_rules(self) -> list[dict[str, Any]]:
         from apps.knowledge.models import KnowledgeRule
 
-        rules = KnowledgeRule.objects.filter(is_active=True).order_by("-priority")
-        return [
-            pb2.CatalogKnowledgeRule(
-                id=str(rule.id),
-                kind=rule.kind,
-                condition_json=json.dumps(rule.condition or {}, ensure_ascii=False),
-                recommendation=rule.recommendation,
-                priority=rule.priority,
-            )
-            for rule in rules
-        ]
+        qs = KnowledgeRule.objects.filter(is_active=True).order_by("-priority")
+        return [payloads.knowledge_rule_payload(r) for r in qs]
+
+    def _pricing_block(self) -> dict[str, Any]:
+        """Xizmat narxlari, chegirma bosqichlari, siyosat va buyurtma defaultlari."""
+        from apps.pricing.models import DiscountPolicy, DiscountTier, OrderDefaults, ServicePrice
+
+        block: dict[str, Any] = {
+            "service_prices": [
+                payloads.service_price_payload(s)
+                for s in ServicePrice.objects.filter(is_active=True).order_by("key")
+            ],
+            "discount_tiers": [
+                payloads.discount_tier_payload(t)
+                for t in DiscountTier.objects.filter(is_active=True).order_by(
+                    "min_amount", "percent"
+                )
+            ],
+        }
+        policy = DiscountPolicy.objects.order_by("created_at").first()
+        if policy is not None:
+            block["discount_policy"] = payloads.discount_policy_payload(policy)
+        defaults = OrderDefaults.objects.order_by("created_at").first()
+        if defaults is not None:
+            block["order_defaults"] = payloads.order_defaults_payload(defaults)
+        return block
+
+    def _fasons(self) -> list[dict[str, Any]]:
+        from apps.catalog.models import Fason
+
+        qs = (
+            Fason.objects.filter(is_active=True)
+            .prefetch_related("parts", "accessories")
+            .order_by("name")
+        )
+        return [payloads.fason_payload(f) for f in qs]
+
+    def _prompt(self) -> dict[str, Any] | None:
+        from apps.prompts.models import PromptVersion
+
+        current = PromptVersion.objects.filter(is_current=True).first()
+        return payloads.prompt_payload(current) if current is not None else None
+
+    # ── Watch ──────────────────────────────────────────────────────────────
 
     def _iter_deltas(self, from_version: int, tenant_id: str, pb2: Any) -> Any:
-        """Redis pub/sub dan delta'larni o'qib uzatadi."""
+        """Redis pub/sub dan delta'larni o'qib uzatadi.
+
+        `from_version` joriy versiyadan orqada bo'lsa oraliq delta'lar Redis'da
+        saqlanmagani uchun FULL_RESYNC yuboriladi va stream yopiladi — Go Snapshot
+        olib, yangi versiya bilan Watch'ni qayta ochadi.
+        """
         current_version = get_catalog_version()
         if from_version < current_version:
             yield pb2.CatalogDelta(
@@ -305,7 +271,9 @@ class CatalogServicer:
                 if data["version"] <= from_version:
                     continue
 
-                if tenant_id and data["tenant_id"] != tenant_id:
+                # Global obyektlar (pricing, prompt, knowledge) tenant'siz keladi —
+                # ular har qanday tenant filtrida o'tadi.
+                if tenant_id and data["tenant_id"] and data["tenant_id"] != tenant_id:
                     continue
 
                 logger.info(

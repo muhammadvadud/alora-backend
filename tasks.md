@@ -4,7 +4,7 @@
 > Belgilar: `[ ]` boshlanmagan · `[~]` jarayonda · `[x]` tugallangan (test o'tgan)
 > Har bir ish tugagach shu fayl **o'sha ishning commit'i ichida** yangilanadi.
 
-**Umumiy holat:** 185 / 189 bajarildi (3 jarayonda) · 264 test o'tgan · ruff toza
+**Umumiy holat:** 191 / 198 bajarildi (4 jarayonda) · 302 test o'tgan · ruff toza
 
 ---
 
@@ -124,10 +124,16 @@
 - [x] 6.6 `Catalog.Snapshot` server tomoni (sahifalab)
 - [x] 6.7 `Catalog.Watch` stream — delta push
 - [x] 6.8 `Backend.ReportUsage` qabul qilish
-- [x] 6.9 `Backend.SaveOrderDraft` qabul qilish
+- [~] 6.9 `Backend.SaveOrderDraft` qabul qilish (handler bor, lekin stub — `Order` yaratmaydi; 6.17 ga qarang)
 - [x] 6.10 `Backend.LogMessage` qabul qilish
 - [~] 6.11 `Agent.Health` tekshiruvi `/health/` ichida
 - [x] 6.12 gRPC mock testlari
+- [x] 6.13 Kontrakt 1.1 — `alora.proto` kengaytmasi: `CatalogSnapshot` 8–13 (`service_prices`, `discount_tiers`, `discount_policy`, `order_defaults`, `fasons`, `prompt`), yangi `Catalog*` xabarlari, `go_package` tuzatildi, `context`/`kind`/`items_json`/`FULL_RESYNC` hujjat izohlari (`docs/GO-CONTRACT.md` 1.1)
+- [x] 6.14 `Catalog.Snapshot` — pricing/fason/prompt bloklari; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada; `catalog_payload.py` (Snapshot va delta uchun yagona manba)
+- [x] 6.15 Gateway → Go `ChatRequest.context`: `role`, `customer_mode`, `conversation_id` (`build_agent_context`)
+- [x] 6.16 `ChatEvent.kind="stage"` → SSE'ga 1:1 + Celery `update_conversation_stage` (`Conversation.stage`, `context.agent_state`)
+- [ ] 6.17 `Backend.SaveOrderDraft` → `create_order_from_draft` ulash (`items_json` sxemasi GO-CONTRACT §1.3; user `user_id` bo'yicha; xato → `OrderDraftResponse.error`)
+- [ ] 6.18 `grpc_client.py` — har chaqiruvda `x-service-token` (`AGENT_SERVICE_TOKEN` env) va `x-request-id` metadata; gRPC server tomonida (Catalog/Backend) tokenni tekshirish
 
 ## Bosqich 7 — `apps/chat` (gateway)
 
@@ -211,6 +217,8 @@
 - [x] 12.5 Versiya uzilishida qayta snapshot mantiqi
 - [x] 12.6 Signal ichida og'ir ish yo'qligini tekshirish
 - [x] 12.7 Testlar: delta e'loni, versiya o'sishi
+- [x] 12.8 Delta `payload_json` barcha entity'lar uchun (Snapshot bilan bir xil proto-JSON) — Go delta'ni Snapshot'siz qo'llaydi
+- [x] 12.9 Yangi signallar: `ServicePrice`, `DiscountTier`, `DiscountPolicy`, `OrderDefaults`, `Fason` (+`FasonPart`/`FasonAccessory` → butun fason), `PromptVersion` (faqat joriy; Redis yotsa endpoint yiqilmaydi)
 
 ## Bosqich 13 — Fon vazifalari (Celery)
 
@@ -223,6 +231,7 @@
 - [x] 13.7 `catalog_reindex`
 - [x] 13.8 `stock_low_alert`
 - [x] 13.9 Idempotentlik va retry testlari
+- [x] 13.10 `update_conversation_stage` — Go `stage` event'idan bosqich va holat (idempotent, noma'lum bosqich e'tiborsiz)
 
 ## Bosqich 14 — Sifat, xavfsizlik, ishlash
 
