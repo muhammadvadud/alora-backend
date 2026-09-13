@@ -16,6 +16,7 @@ from django.conf import settings
 from google.protobuf.json_format import ParseDict
 
 from apps.chat.grpc_server import catalog_payload as payloads
+from grpc_gen import alora_pb2_grpc
 
 logger = structlog.get_logger(__name__)
 
@@ -80,12 +81,8 @@ def publish_catalog_delta(
     return version
 
 
-class CatalogServicer:
+class CatalogServicer(alora_pb2_grpc.CatalogServicer):
     """Catalog gRPC servisining amalga oshirilishi.
-
-    Asl bazaviy klass generatsiya kodida mavjud (alora_pb2_grpc.CatalogServicer).
-    Bu klass unga parallel — shartnoma Go jamoasi bilan kelishilgandan keyin
-    generatsiya qilingan bazaviy klassdan meros olish uchun qo'shiladi.
 
     Kontrakt 1.1: pricing (service_prices, discount_tiers, discount_policy,
     order_defaults), fasons va prompt faqat BIRINCHI sahifada (page_token bo'sh)

@@ -199,6 +199,9 @@ SIMPLE_JWT = {
 
 # Celery va Redis
 REDIS_URL = env("REDIS_URL", default="redis://localhost:6379/0")
+GRPC_PORT = env.int("GRPC_PORT", default=9091)
+GRPC_MAX_WORKERS = env.int("GRPC_MAX_WORKERS", default=16)
+AGENT_SERVICE_TOKEN = env("AGENT_SERVICE_TOKEN", default="")
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_ACCEPT_CONTENT = ["json"]

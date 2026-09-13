@@ -13,6 +13,8 @@ from typing import Any
 import grpc
 import structlog
 
+from grpc_gen import alora_pb2_grpc
+
 logger = structlog.get_logger(__name__)
 
 
@@ -149,12 +151,10 @@ def log_message(data: dict[str, Any]) -> dict[str, Any]:
         return {"success": False, "error": str(e)}
 
 
-class BackendServicer:
+class BackendServicer(alora_pb2_grpc.BackendServicer):
     """Backend gRPC servisining amalga oshirilishi.
 
-    Asl bazaviy klass generatsiya kodida mavjud (alora_pb2_grpc.BackendServicer).
-    Generatsiya qilingan bazaviy klassdan meros olish uchun shu klass etarli —
-    `add_BackendServicer_to_server()` barcha kerakli metodlarni chaqiradi.
+    Generatsiya qilingan bazaviy klassdan meros oladi.
     """
 
     def ReportUsage(self, request: Any, context: grpc.ServicerContext) -> Any:  # type: ignore[no-untyped-def]

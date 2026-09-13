@@ -514,3 +514,25 @@ class Ack(_message.Message):
     success: bool
     message: str
     def __init__(self, success: _Optional[bool] = ..., message: _Optional[str] = ...) -> None: ...
+
+class CalcPreviewRequest(_message.Message):
+    __slots__ = ("payload_json", "user_role", "tenant_id", "session_id")
+    PAYLOAD_JSON_FIELD_NUMBER: _ClassVar[int]
+    USER_ROLE_FIELD_NUMBER: _ClassVar[int]
+    TENANT_ID_FIELD_NUMBER: _ClassVar[int]
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
+    payload_json: str
+    user_role: str
+    tenant_id: str
+    session_id: str
+    def __init__(self, payload_json: _Optional[str] = ..., user_role: _Optional[str] = ..., tenant_id: _Optional[str] = ..., session_id: _Optional[str] = ...) -> None: ...
+
+class CalcPreviewResponse(_message.Message):
+    __slots__ = ("result_json", "error", "error_fields_json")
+    RESULT_JSON_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELDS_JSON_FIELD_NUMBER: _ClassVar[int]
+    result_json: str
+    error: str
+    error_fields_json: str
+    def __init__(self, result_json: _Optional[str] = ..., error: _Optional[str] = ..., error_fields_json: _Optional[str] = ...) -> None: ...

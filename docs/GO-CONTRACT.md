@@ -27,10 +27,9 @@ semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 | `message_id` | *(rejalashtirilgan)* | idempotent usage uchun; hozircha bo'sh bo'lishi mumkin |
 | `prompt_version` | *(ixtiyoriy)* | A/B: aniq prompt versiyasini ishlatish |
 
-Metadata (**rejalashtirilgan, backend `tasks.md` 6.18**): Django har chaqiruvda
-`x-service-token` (`AGENT_SERVICE_TOKEN`) va `x-request-id` yuboradi; Go `Health` dan boshqa
-hamma RPC'da tokenni tekshiradi. Hozir `grpc_client.py` metadata yubormaydi — 6.18
-bajarilgunga qadar Go auth interceptor'ini `grpc.auth_required=false` bilan ishga tushirish mumkin.
+Metadata: Django gRPC serveri `Health` dan tashqari barcha RPC'larda `x-service-token`
+(`AGENT_SERVICE_TOKEN`) ni tekshiradi. Django klient tomoni (`grpc_client.py`) har chaqiruvda
+token va `x-request-id` yuborishi — `tasks.md` 6.18 ning qolgan qismi.
 
 **`ChatEvent.kind` qiymatlari va tartibi:**
 
@@ -141,6 +140,20 @@ Sonlar decimal matn. `customer_name`, `customer_phone`, `address`, `note` — al
 (LLM kontekstiga tushmaydi, Go ularni faqat shu RPC'ga uzatadi).
 `SaveOrderDraft` ni `create_order_from_draft` ga ulash — backend `tasks.md` 13.10.
 
+### 1.4 Pricing servisi (Go → Django, SINXRON)
+
+`Pricing.CalcPreview` narx hisobini faqat Django'dagi yagona
+`apps.pricing.services.calculator.calculate_preview` funksiyasiga uzatadi. Go
+`payload_json` ichida `tests/fixtures/calc_cases.json` dagi `input` sxemasini yuboradi:
+`measurements`, `services`, `delivery`, `discount_percent`. Muvaffaqiyatli javobdagi
+`result_json` aynan shu fayldagi `expected` sxemasidir; barcha sonlar decimal matn.
+
+Go faqat `UNAVAILABLE` holatida bir marta retry qiladi va RPC timeout'i 3 soniya.
+`ValidationError` `error="Ma'lumotlar noto'g'ri"` hamda maydonlar bo'yicha
+`error_fields_json`ga map qilinadi; noto'g'ri JSON umumiy `error` bilan qaytadi.
+Kutilmagan server xatosida ichki tafsilotlar yuborilmaydi. Django gRPC serveri
+`run_grpc` command orqali `[::]:9091` da ishlaydi va `x-service-token` interceptorini qo'llaydi.
+
 ---
 
 ## 2. Etalon test kelishuvi
@@ -167,3 +180,4 @@ Go jamoasiga xabar qilinadi. 20 ta holat, hammasi ±0 farq bilan o'tishi shart.
 |---|---|---|
 | 1.0 | 2026-09-08 | Dastlabki shartnoma: Agent, Catalog, Backend servislari |
 | 1.1 | 2026-09-13 | `CatalogSnapshot` 8–13: `service_prices`, `discount_tiers`, `discount_policy`, `order_defaults`, `fasons`, `prompt`; yangi `Catalog*` xabarlari; delta payload'lari barcha entity'lar uchun; `ChatEvent.kind` ga `products`, `stage`; `context` kalitlari (`role`, `customer_mode`, `conversation_id`); `cost_*` faqat Django; `FULL_RESYNC` protokoli; `items_json` sxemasi; `go_package` tuzatildi; mahsulotdan boshqa ro'yxatlar faqat birinchi sahifada |
+| 1.2 | 2026-09-13 | `Pricing.CalcPreview`; Django gRPC server bootstrap (`run_grpc`, 9091); server tomonida `x-service-token` interceptor |
