@@ -35,7 +35,11 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     command: uvicorn config.asgi:application --host 0.0.0.0 --port 8000
-    environment: *django-env
+    environment:
+      <<: *django-env
+      # Go agent (alora-ai repo compose'i shu tarmoqqa "agent" nomi bilan ulanadi)
+      GRPC_AGENT_ADDR: ${GRPC_AGENT_ADDR:-agent:9090}
+      AGENT_SERVICE_TOKEN: ${AGENT_SERVICE_TOKEN:?AGENT_SERVICE_TOKEN is required}
     depends_on:
       db:
         condition: service_healthy
