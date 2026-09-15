@@ -16,6 +16,13 @@ from apps.usage.tasks import check_limits_and_notify, daily_usage_rollup, save_u
 pytestmark = pytest.mark.django_db
 
 
+def _rec(pk):
+    """Task endi pk qaytaradi (Celery JSON natija); testlar obyektni bazadan oladi."""
+    from apps.usage.models import UsageRecord
+
+    return UsageRecord.objects.get(pk=pk) if pk else None
+
+
 class TestSaveUsageRecord:
     """13.1 — `save_usage_record` taski."""
 
@@ -38,6 +45,7 @@ class TestSaveUsageRecord:
 
     def test_creates_record_with_parsed_fields(self, employee):
         record = save_usage_record(**self._payload(employee))
+        record = _rec(record)
         assert record is not None
         assert record.user_id == employee.id
         assert record.provider == "openai"
@@ -50,7 +58,9 @@ class TestSaveUsageRecord:
         """Bir xil message_id ikki marta kelsa bitta yozuv qoladi (13.9)."""
         payload = self._payload(employee)
         first = save_usage_record(**payload)
+        first = _rec(first)
         second = save_usage_record(**payload)
+        second = _rec(second)
         assert first.id == second.id
         assert UsageRecord.objects.filter(message_id=first.message_id).count() == 1
 

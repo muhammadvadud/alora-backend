@@ -64,7 +64,7 @@ def save_message(
     audio_url: str = "",
     tokens_in: int = 0,
     tokens_out: int = 0,
-) -> Message | None:
+) -> str | None:
     """Xabarni suhbatga saqlaydi. · 13.2
 
     Idempotent: bir xil xabar (suhbat, rol, matn, tokenlar) ikki marta kelsa
@@ -101,7 +101,7 @@ def save_message(
                 break
 
     Conversation.objects.filter(pk=conversation.pk).update(last_message_at=timezone.now())
-    return message
+    return str(message.pk)  # Celery natijasi JSON — model obyekti serializatsiya bo'lmaydi
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
@@ -257,7 +257,7 @@ def save_message_and_usage(
             user_id=str(conversation.user_id),
             tenant_id=tenant_id or str(conversation.tenant_id),
             conversation_id=str(conversation.id),
-            message_id=str(ai_message.id),
+            message_id=str(ai_message) if ai_message else "",
             provider=provider,
             model=model,
             prompt_tokens=prompt_tokens,

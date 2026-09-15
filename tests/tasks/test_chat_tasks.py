@@ -21,6 +21,13 @@ from apps.usage.models import UsageRecord
 pytestmark = pytest.mark.django_db
 
 
+def _msg(pk):
+    """Task endi pk qaytaradi (Celery JSON natija); testlar obyektni bazadan oladi."""
+    from apps.chat.models import Message
+
+    return Message.objects.get(pk=pk) if pk else None
+
+
 class TestSaveMessage:
     """13.2 — `save_message` taski."""
 
@@ -32,6 +39,7 @@ class TestSaveMessage:
             tokens_in=10,
             tokens_out=20,
         )
+        message = _msg(message)
         assert message is not None
         assert message.role == MessageRole.USER
         assert message.content == "Salom"
@@ -45,11 +53,13 @@ class TestSaveMessage:
 
     def test_by_session_id_when_no_conversation_id(self, conversation):
         message = save_message(session_id=conversation.session_id, content="Salom")
+        message = _msg(message)
         assert message is not None
         assert message.conversation_id == conversation.id
 
     def test_default_role_is_assistant(self, conversation):
         message = save_message(conversation_id=str(conversation.id), content="Salom")
+        message = _msg(message)
         assert message.role == MessageRole.ASSISTANT
 
     def test_parses_tool_fields(self, conversation):
@@ -60,6 +70,7 @@ class TestSaveMessage:
             tool_calls_json='[{"name": "catalog_search"}]',
             tool_result_json='{"ok": true}',
         )
+        message = _msg(message)
         assert message.tool_calls == [{"name": "catalog_search"}]
         assert message.tool_result == {"ok": True}
 

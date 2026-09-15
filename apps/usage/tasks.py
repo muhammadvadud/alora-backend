@@ -100,7 +100,7 @@ def save_usage_record(
     latency_ms: int = 0,
     cost_usd: float | Decimal = 0,
     cost_uzs: float | Decimal = 0,
-) -> UsageRecord | None:
+) -> str | None:
     """AI javobidan keyin foydalanish qaydnomasini saqlaydi. · 13.1
 
     Idempotent: `message_id` berilganda u bo'yicha ilgari yozuv bo'lsa
@@ -147,9 +147,9 @@ def save_usage_record(
             for field, value in defaults.items():
                 setattr(record, field, value)
             record.save()
-        return record
+        return str(record.pk)  # Celery natijasi JSON — model obyekti serializatsiya bo'lmaydi
 
-    return UsageRecord.objects.create(user=user, tenant_id=tenant_id, **defaults)
+    return str(UsageRecord.objects.create(user=user, tenant_id=tenant_id, **defaults).pk)
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)

@@ -32,6 +32,15 @@ class Command(BaseCommand):
         server = grpc.server(
             futures.ThreadPoolExecutor(max_workers=getattr(settings, "GRPC_MAX_WORKERS", 16)),
             interceptors=[ServiceTokenInterceptor()],
+            # Go agent Watch oqimida har 30 s keepalive ping yuboradi (Go rules §8);
+            # grpc-python standarti 5 daqiqadan tez pingni "too_many_pings" bilan yopadi
+            # (2026-09-15 live: catalog_watch_disconnected). Shuning uchun ruxsat kengaytiriladi.
+            options=[
+                ("grpc.keepalive_permit_without_calls", 1),
+                ("grpc.http2.min_ping_interval_without_data_ms", 20_000),
+                ("grpc.http2.max_pings_without_data", 0),
+                ("grpc.keepalive_time_ms", 60_000),
+            ],
         )
         alora_pb2_grpc.add_CatalogServicer_to_server(CatalogServicer(), server)
         alora_pb2_grpc.add_BackendServicer_to_server(BackendServicer(), server)
