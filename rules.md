@@ -451,3 +451,29 @@ olishi mumkin, rad etildi.
 
 **Qaror:** payload signal ichida yig'iladi, chegara §9 da belgilandi. Foydalanuvchi
 tomonidan tasdiqlangan (2026-09-13).
+
+### 17.5 Django admin django-unfold bilan modernizatsiya qilindi (2026-09-18)
+
+**Chetlanish:** §7 "admin'ga yangi funksiya qo'shilmagan mavjud ochiladi" — faqat ko'rinish
+modernizatsiyasi: `django-unfold==0.107.0` bog'liqligi qo'shildi, `UNFOLD` sozlamasi
+(SITE_TITLE/SITE_HEADER "Alora", "curtains" piktogramma, brend ranglari, SIDEBAR
+navigatsiya bo'limlari ikonkalar bilan) va `DASHBOARD_CALLBACK` (`apps/common/
+admin_dashboard.py`) taxminiy KPI kartalari bilan. Buning uchun `config/templates/
+admin/index.html` custom template va `TEMPLATES["DIRS"]` (`config/templates`) qo'shildi,
+aks holda KPI konteksti render qilinmas edi.
+
+**Sabab:** Django default admin foydalanuvchi tashrifi tez-tez o'tadigan yagona UI —
+Go agent uchun ma'lumot paneli (KPI) ham ish jarayonini tezlashtiradi. Qimmat frontend
+(bu vazifaga oversized) yoki dubl tarmoq ishlatmasdan hozirgi admin'ni zamonaviy qilish
+kerak edi.
+
+**Ta'sir doirasi:** faqat admin qatlami (8 ta `apps/*/admin.py`, `config/settings/base.py`,
+`applications` emas). API, signal, gRPC va chat oqimlariga ta'sir yo'q. `cost_price`
+superuser cheklovi (rudiment) saqlangan. Testlar 367 ta — o'zgarishsiz o'tadi.
+
+**Muqobil variantlar:** (a) jazzmin/grappelli — hamon eskirgan UI, KPI dashboard
+yo'q; (b) alohida SPA dashboard — yangi frontend loyiha, TZ darajasida rejalashtirilmagan;
+ikkovi ham rad etildi. faqat unfold joriy admin'ni qamrab oladi.
+
+**Qaror:** django-unfold qo'shildi, admin visual modernizatsiya qilindi. Foydalanuvchi
+tomonidan tasdiqlangan (2026-09-18).

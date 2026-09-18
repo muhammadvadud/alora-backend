@@ -22,6 +22,9 @@ DEBUG = env("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -64,7 +67,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "config" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -187,6 +190,256 @@ SPECTACULAR_SETTINGS = {
         {"name": "knowledge", "description": "Bilim qoidalari"},
         {"name": "prompts", "description": "System prompt boshqaruvi"},
     ],
+}
+
+# Django Unfold — admin interfeysi uchun zamonaviy tema (rules.md §17.5).
+UNFOLD = {
+    "SITE_TITLE": "Alora",
+    "SITE_HEADER": "Alora",
+    "SITE_SYMBOL": "curtains",
+    # Brend palitrasi: asosiy petrol-yashil #0E5751, fon zig'ir #F2F3F0, brass #8A6620.
+    "COLORS": {
+        "primary": {
+            "50": "#F0F7F6",
+            "100": "#DCEBE9",
+            "200": "#B8D6D2",
+            "300": "#8DBAB4",
+            "400": "#5F9E96",
+            "500": "#3B8278",
+            "600": "#1E6A61",
+            "700": "#0E5751",
+            "800": "#0A423D",
+            "900": "#072F2B",
+            "950": "#041C1A",
+        },
+        "base": {
+            "50": "#FFFFFF",
+            "100": "#FCFDFC",
+            "200": "#F9FAF8",
+            "300": "#F5F6F3",
+            "400": "#F2F3F0",
+            "500": "#E4E6E2",
+            "600": "#CBD0CA",
+            "700": "#9FA89F",
+            "800": "#6E7A72",
+            "900": "#45524A",
+            "950": "#212B25",
+        },
+        "accent": {
+            "50": "#F9F6EE",
+            "100": "#F1E9D8",
+            "200": "#E2D2AC",
+            "300": "#D1B97E",
+            "400": "#BE9D52",
+            "500": "#A67F33",
+            "600": "#8A6620",
+            "700": "#6E501A",
+            "800": "#523C14",
+            "900": "#372A0E",
+            "950": "#1D1608",
+        },
+    },
+    "DASHBOARD_CALLBACK": "apps.common.admin_dashboard.dashboard_callback",
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "Foydalanuvchilar / Jamoa",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Ijarachilar",
+                        "icon": "apartment",
+                        "link": "admin:accounts_tenant_changelist",
+                    },
+                    {
+                        "title": "Foydalanuvchilar",
+                        "icon": "group",
+                        "link": "admin:accounts_user_changelist",
+                        "show_search": True,
+                        "show_history": True,
+                    },
+                    {
+                        "title": "Guruhlar",
+                        "icon": "managed_accounts",
+                        "link": "admin:auth_group_changelist",
+                    },
+                ],
+            },
+            {
+                "title": "Katalog",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Kategoriyalar",
+                        "icon": "sell",
+                        "link": "admin:catalog_category_changelist",
+                        "show_search": True,
+                        "show_history": True,
+                    },
+                    {
+                        "title": "Mahsulotlar",
+                        "icon": "inventory_2",
+                        "link": "admin:catalog_product_changelist",
+                        "show_search": True,
+                        "show_history": True,
+                    },
+                    {
+                        "title": "Mahsulot variantlari",
+                        "icon": "palette",
+                        "link": "admin:catalog_productvariant_changelist",
+                    },
+                    {
+                        "title": "Mahsulot rasmlari",
+                        "icon": "image",
+                        "link": "admin:catalog_productimage_changelist",
+                    },
+                    {
+                        "title": "Fasonlar",
+                        "icon": "curtains",
+                        "link": "admin:catalog_fason_changelist",
+                        "show_search": True,
+                    },
+                ],
+            },
+            {
+                "title": "Narx va hisob",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Hisob qoidalari",
+                        "icon": "calculate",
+                        "link": "admin:pricing_calcrule_changelist",
+                        "show_search": True,
+                    },
+                    {
+                        "title": "Xizmat narxlari",
+                        "icon": "sell",
+                        "link": "admin:pricing_serviceprice_changelist",
+                        "show_search": True,
+                    },
+                    {
+                        "title": "Chegirma bosqichlari",
+                        "icon": "percent",
+                        "link": "admin:pricing_discounttier_changelist",
+                    },
+                    {
+                        "title": "Chegirma siyosati",
+                        "icon": "policy",
+                        "link": "admin:pricing_discountpolicy_changelist",
+                    },
+                    {
+                        "title": "Buyurtma sozlamalari",
+                        "icon": "tune",
+                        "link": "admin:pricing_orderdefaults_changelist",
+                    },
+                    {
+                        "title": "Model narxlari",
+                        "icon": "attach_money",
+                        "link": "admin:pricing_modelpricing_changelist",
+                    },
+                ],
+            },
+            {
+                "title": "Bilimlar bazasi",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Bilim qoidalari",
+                        "icon": "school",
+                        "link": "admin:knowledge_knowledgerule_changelist",
+                        "show_search": True,
+                    },
+                ],
+            },
+            {
+                "title": "Suhbatlar",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Suhbatlar",
+                        "icon": "chat",
+                        "link": "admin:chat_conversation_changelist",
+                        "show_search": True,
+                        "show_history": True,
+                    },
+                    {
+                        "title": "Xabarlar",
+                        "icon": "forum",
+                        "link": "admin:chat_message_changelist",
+                        "show_search": True,
+                    },
+                ],
+            },
+            {
+                "title": "Buyurtmalar",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Buyurtmalar",
+                        "icon": "receipt_long",
+                        "link": "admin:orders_order_changelist",
+                        "show_search": True,
+                        "show_history": True,
+                    },
+                    {
+                        "title": "Buyurtma o'lchovlari",
+                        "icon": "straighten",
+                        "link": "admin:orders_ordermeasurement_changelist",
+                    },
+                    {
+                        "title": "Buyurtma parda bo'laklari",
+                        "icon": "curtains_closed",
+                        "link": "admin:orders_ordercurtainpart_changelist",
+                    },
+                    {
+                        "title": "Buyurtma aksessuarlari",
+                        "icon": "hardware",
+                        "link": "admin:orders_orderaccessory_changelist",
+                    },
+                    {
+                        "title": "Buyurtma xizmatlari",
+                        "icon": "list_alt",
+                        "link": "admin:orders_orderitem_changelist",
+                    },
+                ],
+            },
+            {
+                "title": "Sarf / limitlar",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Foydalanish qaydnomalari",
+                        "icon": "monitoring",
+                        "link": "admin:usage_usagerecord_changelist",
+                    },
+                    {
+                        "title": "Kunlik yig'malar",
+                        "icon": "calendar_month",
+                        "link": "admin:usage_usagedaily_changelist",
+                    },
+                    {
+                        "title": "Foydalanish limitlari",
+                        "icon": "speed",
+                        "link": "admin:usage_usagelimit_changelist",
+                    },
+                ],
+            },
+            {
+                "title": "Sozlamalar / prompt",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "System prompt versiyalari",
+                        "icon": "description",
+                        "link": "admin:prompts_promptversion_changelist",
+                        "show_history": True,
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 # Simple JWT

@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% load i18n unfold %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    {% if kpi %}
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-4">
+            {% for item in kpi %}
+                {% component "unfold/components/card.html" with title=item.title title_icon=item.icon description=item.subtitle footer=item.footer %}
+                    <div class="font-semibold text-2xl text-font-important-light tracking-tight dark:text-font-important-dark">{{ item.metric }}</div>
+                {% endcomponent %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if recent_orders %}
+        <div class="bg-white border border-base-200 mt-6 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+            <div class="border-b border-base-200 flex items-center mb-0 -mt-0 -mx-0 px-6 pt-4 pb-3 dark:border-base-800">
+                <h2 class="font-semibold text-[15px] text-important">{% translate "So'nggi buyurtmalar" %}</h2>
+                <a href="{% url 'admin:orders_order_changelist' %}" class="ml-auto text-primary-600 text-sm hover:text-primary-700 dark:text-primary-400">{% translate "Barchasi" %}</a>
+            </div>
+            <table class="table-auto w-full">
+                <tbody>
+                    {% for order in recent_orders %}
+                        <tr class="border-b border-base-200 last:border-0 dark:border-base-800">
+                            <td class="px-6 py-3 font-semibold text-important">{{ order.number }}</td>
+                            <td class="px-6 py-3 text-subtle">{{ order.customer }}</td>
+                            <td class="px-6 py-3 text-subtle">{{ order.status }}</td>
+                            <td class="px-6 py-3 text-right font-semibold text-important">{{ order.total }}</td>
+                            <td class="px-6 py-3 text-right text-subtle whitespace-nowrap">{{ order.created }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% include "unfold/helpers/dashboard_default.html" %}
+{% endblock %}

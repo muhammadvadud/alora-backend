@@ -16,6 +16,7 @@ dependencies = [
     "djangorestframework",
     "djangorestframework-simplejwt",
     "django-filter",
+    "django-unfold",
     "psycopg[binary]",
     "dj-database-url",
     "redis",
