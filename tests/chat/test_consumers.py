@@ -92,3 +92,48 @@ async def _test_voice_stream_passes_metadata_and_handles_events() -> None:
         },
         tenant_id="tenant-1",
     )
+
+
+def test_voice_stream_events_are_forwarded_before_stream_ends() -> None:
+    """Haqiqiy streaming (16.2): birinchi event gRPC oqimi tugashidan OLDIN yuboriladi."""
+    asyncio.run(_test_voice_stream_events_are_forwarded_before_stream_ends())
+
+
+async def _test_voice_stream_events_are_forwarded_before_stream_ends() -> None:
+    import threading
+
+    consumer = VoiceChatConsumer()
+    consumer.conversation_id = "conversation-2"
+    consumer._conversation = mock.Mock(session_id="s", tenant_id="t", mode="employee")
+    consumer._user = mock.Mock(id="u", role="employee")
+    consumer._locale = "uz"
+    consumer._transcript = ""
+    consumer._queue = asyncio.Queue()
+
+    first_sent = asyncio.Event()
+    release_second = threading.Event()
+
+    async def _send(text_data: str | None = None, bytes_data: bytes | None = None) -> None:
+        if bytes_data == b"chunk-1":
+            first_sent.set()
+
+    consumer.send = _send  # type: ignore[method-assign]
+
+    def _stream(*_args: object, **_kwargs: object):
+        yield mock.Mock(kind="audio", content="", audio_data=b"chunk-1", audio=b"")
+        # Ikkinchi event faqat birinchisi mijozga yetib borgach chiqariladi:
+        # list(...) rejimida bu deadlock bo'lardi.
+        assert release_second.wait(timeout=5), "birinchi audio oqim tugamasdan yuborilmadi"
+        yield mock.Mock(kind="audio", content="", audio_data=b"chunk-2", audio=b"")
+
+    async def _release_when_first_sent() -> None:
+        await asyncio.wait_for(first_sent.wait(), timeout=5)
+        release_second.set()
+
+    with (
+        mock.patch("apps.chat.consumers.voice_chat_stream", side_effect=_stream),
+        mock.patch.object(consumer, "_chunk_iterator", return_value=iter(())),
+    ):
+        await asyncio.gather(consumer._pump_events(), _release_when_first_sent())
+
+    assert first_sent.is_set()

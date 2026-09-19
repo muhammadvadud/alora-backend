@@ -120,13 +120,22 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
             yield chunk
 
     async def _pump_events(self) -> None:
-        """gRPC oqimini alohida thread'da aylantirib, natijani mijozga uzatadi."""
+        """gRPC oqimini alohida thread'da aylantiradi va HAR eventni darhol mijozga uzatadi.
+
+        Oqim to'liq yig'ilmaydi (tasks 16.2): birinchi audio bo'lagi kelishi bilan
+        yuboriladi — mobil "≤ 3 s ichida eshitila boshlaydi" talabi (mobil rules §13).
+        """
 
         loop = asyncio.get_running_loop()
+        events: asyncio.Queue[Any] = asyncio.Queue()
+        end_marker = object()
 
-        def _consume() -> list[Any]:
-            return list(
-                voice_chat_stream(
+        def _put(item: Any) -> None:
+            asyncio.run_coroutine_threadsafe(events.put(item), loop).result()
+
+        def _produce() -> None:
+            try:
+                for event in voice_chat_stream(
                     self._chunk_iterator(loop),
                     session_id=self._conversation.session_id,
                     user_id=str(self._user.id),
@@ -135,60 +144,72 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
                     locale=self._locale,
                     customer_mode="1" if self._conversation.mode == "customer" else "0",
                     conversation_id=self.conversation_id,
-                )
-            )
+                ):
+                    _put(event)
+            except Exception as exc:  # noqa: BLE001 — xato mijozga "error" frame bo'lib boradi
+                _put(exc)
+            finally:
+                _put(end_marker)
 
+        producer = loop.run_in_executor(None, _produce)
         try:
-            events = await asyncio.to_thread(_consume)
-        except asyncio.CancelledError:
-            raise
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("voice_stream_failed", error=str(exc))
-            await self.send(
-                text_data=json.dumps(
-                    {"kind": "error", "error": "AI xizmati vaqtincha ishlamayapti"},
-                    ensure_ascii=False,
-                )
-            )
-            await self.close(code=1011)
-            return
-
-        for event in events:
-            kind = getattr(event, "kind", "")
-            chat_event = getattr(event, "chat_event", None)
-            if kind == "transcript":
-                transcript = getattr(event, "content", "")
-                if transcript:
-                    self._transcript = f"{self._transcript} {transcript}".strip()
+            while True:
+                item = await events.get()
+                if item is end_marker:
+                    return
+                if isinstance(item, Exception):
+                    logger.warning("voice_stream_failed", error=str(item))
                     await self.send(
                         text_data=json.dumps(
-                            {"kind": "transcript", "content": transcript},
+                            {"kind": "error", "error": "AI xizmati vaqtincha ishlamayapti"},
                             ensure_ascii=False,
                         )
                     )
+                    await self.close(code=1011)
+                    return
+                await self._forward_event(item)
+        finally:
+            if producer.done():
+                producer.result()
 
-            audio = getattr(event, "audio_data", None) or getattr(event, "audio", None)
-            if audio:
-                await self.send(bytes_data=audio)
-            text = getattr(event, "content", None) or getattr(event, "text", None)
-            if not isinstance(text, str):
-                text = None
-            if text and kind != "transcript":
+    async def _forward_event(self, event: Any) -> None:
+        """Bitta gRPC eventini WS frame(lar)iga aylantirib yuboradi."""
+
+        kind = getattr(event, "kind", "")
+        chat_event = getattr(event, "chat_event", None)
+        if kind == "transcript":
+            transcript = getattr(event, "content", "")
+            if transcript:
+                self._transcript = f"{self._transcript} {transcript}".strip()
                 await self.send(
                     text_data=json.dumps(
-                        {"kind": kind or "content", "content": text},
+                        {"kind": "transcript", "content": transcript},
                         ensure_ascii=False,
                     )
                 )
 
-            if kind == "done":
-                usage = getattr(chat_event, "usage", None) or getattr(event, "usage", None)
-                save_message_and_usage.delay(
-                    conversation_id=self.conversation_id,
-                    user_message_content=self._transcript,
-                    ai_event_data={"content": "", "usage": self._proto_to_dict(usage)},
-                    tenant_id=str(self._conversation.tenant_id),
+        audio = getattr(event, "audio_data", None) or getattr(event, "audio", None)
+        if audio:
+            await self.send(bytes_data=audio)
+        text = getattr(event, "content", None) or getattr(event, "text", None)
+        if not isinstance(text, str):
+            text = None
+        if text and kind != "transcript":
+            await self.send(
+                text_data=json.dumps(
+                    {"kind": kind or "content", "content": text},
+                    ensure_ascii=False,
                 )
+            )
+
+        if kind == "done":
+            usage = getattr(chat_event, "usage", None) or getattr(event, "usage", None)
+            save_message_and_usage.delay(
+                conversation_id=self.conversation_id,
+                user_message_content=self._transcript,
+                ai_event_data={"content": "", "usage": self._proto_to_dict(usage)},
+                tenant_id=str(self._conversation.tenant_id),
+            )
 
     @staticmethod
     def _proto_to_dict(value: Any) -> dict[str, Any]:

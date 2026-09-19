@@ -215,4 +215,4 @@ Xabarning oqimi `done` yoki `error` qabul qilingach avtomatik tugaydi. Mijoz tom
 Server → mijoz: audio **binary**; text `{"kind":"transcript","content":"..."}`, `{"kind":"content","content":"..."}`,
 `{"kind":"done"}`, `{"kind":"error","error":"..."}` (keyin 1011 bilan yopiladi).
 
-> Eslatma (tasks 16.2): hozircha server gRPC oqimini to'liq yig'ib keyin yuboradi — haqiqiy streaming keyingi bosqich.
+Server gRPC oqimini **event-by-event** uzatadi — birinchi audio bo'lagi kelishi bilan yuboriladi (yig'ib turmaydi).
