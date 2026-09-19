@@ -259,6 +259,19 @@
 
 ---
 
+## Bosqich 16 — Mobil ilova so'rovlari (mobil `rules.md` §19.7, `tasks.md` blokerlari)
+
+> Mobil ilova (projects/mobil) 242/250 band — qolganlari quyidagi endpoint/shartnomalarga bog'liq.
+> Har biri tayyor bo'lgach `docs/API-GUIDE.md` yangilanadi, keyin mobil `ApiPaths` → DTO (mobil rules §8.1 tartibi).
+
+- [ ] 16.1 **WS JWT auth** — `config/asgi.py` `AuthMiddlewareStack` (session) o'rniga JWT middleware: `?token=<access>` query yoki `Sec-WebSocket-Protocol` orqali; noto'g'ri/muddati o'tgan token → 1008. Mobil `VoiceSocket` `?token=` variantiga tayyor (mobil 15.11)
+- [ ] 16.2 **Ovoz — haqiqiy streaming** — `VoiceChatConsumer` gRPC oqimini `list(...)` bilan yig'masdan event-by-event yuborsin (birinchi audio chunk ≤ 3 s, mobil rules §13); binary audio frame + `{"kind":"content"|"transcript"|"done"|"error"}` text frame'lar (mobil rules §8.6)
+- [ ] 16.3 **LLM sozlamalari (admin)** — `GET/PATCH settings/llm/`: `{provider, model, temperature, max_tokens}`; faqat admin (mobil 14.4)
+- [ ] 16.4 **Ovoz sozlamalari (admin)** — `GET/PATCH settings/voice/`: `{tts_provider, tts_voice, tts_speed, stt_provider, locale}` (mobil 14.5)
+- [ ] 16.5 **Push token** — `PATCH auth/me/` `{device_id, push_token, platform}` yoki `POST auth/device/`; limit tugadi / yangi buyurtma / status o'zgardi bildirishnomalari (Celery, FCM) (mobil 18.4, 18.5)
+- [ ] 16.6 **Chatga rasm** — `POST conversations/{id}/messages/` multipart (`image` fayl) yoki `image_url` maydoni; SSE javobida rasm bo'yicha tavsiya (mobil 18.6)
+- [ ] 16.7 `docs/API-GUIDE.md` — 16.1–16.6 shartnomalari (so'rov/javob namunalari), mobil `docs/API-CONTRACT.md` bilan sinxron
+
 ## Ish tartibi (bog'liqliklar)
 
 ```
