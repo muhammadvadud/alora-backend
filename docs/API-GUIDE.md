@@ -197,3 +197,22 @@ Agar serverda xatolik kuzatilsa, masalan AI xizmati ishlamayotgan bo'lsa:
 data: {"kind": "error", "detail": "AI xizmati vaqtincha ishlamayapti"}
 ```
 Xabarning oqimi `done` yoki `error` qabul qilingach avtomatik tugaydi. Mijoz tomon xuddi shu oqimni tugatishi yoki uzib qo'yishi mumkin, bu holda backend ham jarayonni bekor qiladi.
+
+## 7. Ovozli kanal — WebSocket (`/ws/voice/{conversation_id}/`)
+
+**Autentifikatsiya — JWT** (session cookie emas; `apps/chat/middleware.py`):
+
+| Usul | Misol |
+|---|---|
+| Query (mobil ilova ishlatadi) | `wss://<host>/ws/voice/<conversation_id>/?token=<access>&locale=uz` |
+| Subprotocol | `Sec-WebSocket-Protocol: bearer, <access>` |
+
+- Token yo'q, yaroqsiz, muddati o'tgan yoki foydalanuvchi bloklangan → ulanish **1008** bilan yopiladi.
+- `access` 15 daqiqa — uzoq sessiyada mijoz yangi `access` bilan qayta ulanadi.
+- `locale` — `uz` | `ru` (default `uz`).
+
+**Frame'lar:** mijoz → server: audio bo'laklar **binary** (PCM16/Opus 16 kHz mono, ~200 ms), gap tugaganda text `{"kind":"end"}`.
+Server → mijoz: audio **binary**; text `{"kind":"transcript","content":"..."}`, `{"kind":"content","content":"..."}`,
+`{"kind":"done"}`, `{"kind":"error","error":"..."}` (keyin 1011 bilan yopiladi).
+
+> Eslatma (tasks 16.2): hozircha server gRPC oqimini to'liq yig'ib keyin yuboradi — haqiqiy streaming keyingi bosqich.
