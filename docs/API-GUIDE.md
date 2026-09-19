@@ -167,6 +167,8 @@ Xatolar 3 qismdan iborat bo'ladi:
 
 Yangi xabar yuborish `POST /api/v1/conversations/{id}/messages/` orqali JSON yuborilgach, server **SSE oqimi** qaytaradi (`content_type="text/event-stream"`). Ilova ushbu oqimni tinglashi kerak.
 
+Mijoz `Accept: text/event-stream` (yoki `application/json`, `*/*`) yuborishi mumkin — ikkalasi ham qabul qilinadi. Xato holatlarida (401/403/404/429) javob har doim JSON (`Content-Type: application/json`, §5 formati), SSE emas.
+
 Har bir voqea qatori gRPC xabarining JSON formatiga aylantirilgan shaklidir. 
 
 **Voqea turlari (kind):**

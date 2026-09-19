@@ -13,5 +13,7 @@ services:
       - .:/app
 
   celery_beat:
+    # /app host'dan mount (uid farqi) — jadval fayli /tmp ga
+    command: celery -A config beat -l INFO --schedule /tmp/celerybeat-schedule
     volumes:
       - .:/app

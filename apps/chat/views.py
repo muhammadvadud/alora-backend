@@ -9,6 +9,7 @@ from drf_spectacular.utils import extend_schema
 from google.protobuf.json_format import MessageToDict
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
+from rest_framework.renderers import BaseRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -74,10 +75,35 @@ class ConversationViewSet(
         return Response(transcript)
 
 
+class EventStreamRenderer(BaseRenderer):
+    """`Accept: text/event-stream` uchun renderer — SSE mijozlari (mobil ilova,
+    EventSource) shu header'ni yuboradi; u bo'lmasa DRF 406 qaytarardi.
+    Javob `StreamingHttpResponse` bo'lgani uchun render chaqirilmaydi;
+    xato holatida (`Response`) JSON qaytariladi."""
+
+    media_type = "text/event-stream"
+    format = "sse"
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return JSONRenderer().render(data, "application/json", renderer_context)
+
+
 class ConversationMessagesView(APIView):
     """Suhbat xabarlarini olish (GET) va SSE orqali yuborish (POST)."""
 
     permission_classes = (IsConversationOwnerOrManager,)
+    renderer_classes = (JSONRenderer, EventStreamRenderer)
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        response = super().finalize_response(request, response, *args, **kwargs)
+        # Oddiy (xato) javob SSE renderer bilan kelishilgan bo'lsa ham JSON sifatida
+        # belgilanadi — mijoz `detail` ni parse qila olsin (API-GUIDE §xato formati).
+        if isinstance(response, Response) and isinstance(
+            getattr(response, "accepted_renderer", None), EventStreamRenderer
+        ):
+            response.content_type = "application/json"
+        return response
+
     serializer_class = MessageSerializer
     throttle_scope = "chat"
 

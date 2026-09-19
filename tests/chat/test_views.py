@@ -93,6 +93,43 @@ class TestChatStream:
         assert 'data: {"kind": "done", "content": ""}' in content
 
     @patch("apps.chat.views.chat_stream")
+    def test_stream_accepts_event_stream_header(
+        self, mock_chat_stream, api_client, employee_user, conversation_factory
+    ):
+        """SSE mijozlari `Accept: text/event-stream` yuboradi — 406 bo'lmasligi kerak
+        (mobil ilova, EventSource). Xato holati esa JSON bo'lib qaytadi."""
+        conv = conversation_factory(user=employee_user)
+
+        class MockEvent:
+            def __init__(self, kind, content=""):
+                self.kind = kind
+                self.content = content
+
+        mock_chat_stream.return_value = iter([MockEvent("start"), MockEvent("done")])
+        api_client.force_authenticate(user=employee_user)
+        url = reverse("chat:conversation-messages-stream", kwargs={"pk": str(conv.id)})
+
+        with patch(
+            "apps.chat.views.MessageToDict",
+            side_effect=lambda obj, **kwargs: {"kind": obj.kind, "content": obj.content},
+        ):
+            response = api_client.post(
+                url, {"content": "salom"}, format="json", HTTP_ACCEPT="text/event-stream"
+            )
+        assert response.status_code == status.HTTP_200_OK
+        assert response["Content-Type"].startswith("text/event-stream")
+
+        missing = reverse(
+            "chat:conversation-messages-stream",
+            kwargs={"pk": "00000000-0000-0000-0000-000000000000"},
+        )
+        response = api_client.post(
+            missing, {"content": "x"}, format="json", HTTP_ACCEPT="text/event-stream"
+        )
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.json()["detail"]
+
+    @patch("apps.chat.views.chat_stream")
     def test_agent_unavailable_returns_error_event(
         self, mock_chat_stream, api_client, employee_user, conversation_factory
     ):
