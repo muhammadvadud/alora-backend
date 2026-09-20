@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django import forms
+from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesRadioFilter, RangeDateTimeFilter
@@ -11,6 +14,59 @@ from .models import Tenant, User
 
 def _fmt_uzs(value) -> str:
     return f"{value:,.2f} UZS" if value is not None else "—"
+
+
+class UserAdminForm(forms.ModelForm):
+    """Admin orqali parolni xavfsiz yangilash formasi.
+
+    Amaldagi parol hech qachon ko'rsatilmaydi. Maydonlar bo'sh qolsa,
+    foydalanuvchining hozirgi paroli o'zgarmaydi.
+    """
+
+    password = forms.CharField(
+        label=_("Yangi parol"),
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(render_value=False),
+        help_text=_("O'zgartirmasangiz bo'sh qoldiring."),
+    )
+    password_confirmation = forms.CharField(
+        label=_("Yangi parolni takrorlang"),
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(render_value=False),
+    )
+
+    class Meta:
+        model = User
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_password = self.instance.password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirmation = cleaned_data.get("password_confirmation")
+        if not password and not confirmation:
+            return cleaned_data
+        if not password or password != confirmation:
+            raise ValidationError(_("Yangi parollar bir xil bo'lishi kerak."))
+        password_validation.validate_password(password, self.instance)
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get("password")
+        if password:
+            user.set_password(password)
+        else:
+            user.password = self._original_password
+        if commit:
+            user.save()
+            self.save_m2m()
+        return user
 
 
 @admin.register(Tenant)
@@ -34,6 +90,7 @@ class TenantAdmin(ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(ModelAdmin):
+    form = UserAdminForm
     list_display = (
         "phone",
         "full_name",
@@ -57,7 +114,15 @@ class UserAdmin(ModelAdmin):
         ),
         (
             _("Xavfsizlik va kirish"),
-            {"fields": ("password_state", "is_staff", "device_id")},
+            {
+                "fields": (
+                    "password_state",
+                    "password",
+                    "password_confirmation",
+                    "is_staff",
+                    "device_id",
+                )
+            },
         ),
         (_("Faollik"), {"fields": ("is_active",)}),
         (_("Tizim maydonlari"), {"fields": ("created_at", "updated_at")}),
