@@ -398,18 +398,23 @@ def _build_measurements(
         return
 
     for index, measurement_payload in enumerate(payload["measurements"]):
+        parts_payload = measurement_payload.get("parts", [])
+        coefficient = measurement_payload.get("coefficient")
+        if coefficient is None and parts_payload:
+            coefficient = parts_payload[0].get("coefficient") or parts_payload[0].get("coef")
+        if coefficient is None:
+            coefficient = load_pricing_snapshot().calc_rules["coef_default"].value
         measurement = OrderMeasurement.objects.create(
             order=order,
             room_name=measurement_payload.get("room_name", f"Xona {index + 1}"),
             cornice_length_m=measurement_payload.get("cornice_length_m"),
             height_m=measurement_payload.get("height_m"),
             layers=measurement_payload.get("layers", []),
-            coefficient=measurement_payload.get("coefficient"),
+            coefficient=coefficient,
             note=measurement_payload.get("note", ""),
         )
 
         result_measurement = result_measurements[index] if index < len(result_measurements) else {}
-        parts_payload = measurement_payload.get("parts", [])
         result_parts = result_measurement.get("parts", [])
         for part_index, part_payload in enumerate(parts_payload):
             result_part = result_parts[part_index] if part_index < len(result_parts) else {}
@@ -577,6 +582,11 @@ def update_order_from_draft(
                 result,
                 prepayment_percent=_to_decimal(prepayment) if prepayment is not None else None,
             )
+            if payload.get("payment_status") == PaymentStatus.PAID:
+                order.payment_status = PaymentStatus.PAID
+                order.prepayment_percent = Decimal("100")
+                order.prepayment = order.total
+                order.balance = ZERO
             order.save(
                 update_fields=[
                     *header_fields,
@@ -593,6 +603,14 @@ def update_order_from_draft(
                 ]
             )
         else:
+            if "payment_status" in payload:
+                if payload["payment_status"] != PaymentStatus.PAID:
+                    raise ValueError("Faqat to'liq to'langan holatga o'tkazish qo'llab-quvvatlanadi")
+                order.payment_status = PaymentStatus.PAID
+                order.prepayment_percent = Decimal("100")
+                order.prepayment = order.total
+                order.balance = ZERO
+                header_fields.extend(["payment_status", "prepayment_percent", "prepayment", "balance"])
             order.save(update_fields=header_fields)
 
     logger.info(

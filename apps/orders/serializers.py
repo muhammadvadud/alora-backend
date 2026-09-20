@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.catalog.models import ProductVariant
-from apps.common.choices import CurtainPartRole, OrderStatus
+from apps.common.choices import CurtainPartRole, OrderStatus, PaymentStatus
 from apps.orders.models import (
     Order,
     OrderAccessory,
@@ -193,7 +193,9 @@ class OrderMeasurementWriteSerializer(serializers.Serializer):
     room_name = serializers.CharField(max_length=255)
     cornice_length_m = serializers.DecimalField(max_digits=8, decimal_places=3)
     height_m = serializers.DecimalField(max_digits=8, decimal_places=3)
-    coefficient = serializers.DecimalField(max_digits=8, decimal_places=3)
+    coefficient = serializers.DecimalField(
+        max_digits=8, decimal_places=3, required=False, allow_null=True
+    )
     layers = serializers.ListField(child=serializers.CharField(), required=False, default=list)
     note = serializers.CharField(required=False, allow_blank=True, default="")
     parts = OrderPartWriteSerializer(many=True, required=False, default=list)
@@ -215,6 +217,7 @@ class OrderWriteSerializer(serializers.Serializer):
     prepayment_percent = serializers.DecimalField(
         max_digits=5, decimal_places=2, required=False, allow_null=True, default=None
     )
+    payment_status = serializers.ChoiceField(choices=PaymentStatus.choices, required=False)
     discount_percent = serializers.DecimalField(
         max_digits=5, decimal_places=2, required=False, default="0.00"
     )
