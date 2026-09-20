@@ -121,3 +121,29 @@ def test_update_conversation_stage_ignores_unknown_stage(conversation_factory, e
     conv = conversation_factory(user=employee_user)
     assert update_conversation_stage(conversation_id=str(conv.id), stage="teleport") is False
     assert Conversation.objects.get(pk=conv.pk).stage == ConversationStage.NEED
+
+
+@patch("apps.chat.views.set_conversation_title")
+@patch("apps.chat.views.chat_stream")
+def test_title_event_is_forwarded_and_queued_to_celery(
+    mock_chat_stream, mock_title_task, api_client, employee_user, conversation_factory
+):
+    """Go birinchi navbatdan keyin `title` event yuboradi — mobilga o'tadi, Celery saqlaydi."""
+    conv = conversation_factory(user=employee_user)
+    mock_chat_stream.return_value = iter(
+        [MockEvent("start"), MockEvent("title", "Oshxona uchun parda"), MockEvent("done")]
+    )
+
+    api_client.force_authenticate(user=employee_user)
+    url = reverse("chat:conversation-messages-stream", kwargs={"pk": str(conv.id)})
+    with (
+        patch("apps.chat.views.MessageToDict", side_effect=_to_dict),
+        patch("apps.chat.views.save_message_and_usage"),
+    ):
+        response = api_client.post(url, {"content": "salom"}, format="json")
+        content = asyncio.run(_read(response))
+
+    assert '"kind": "title", "content": "Oshxona uchun parda"' in content
+    mock_title_task.delay.assert_called_once_with(
+        conversation_id=str(conv.id), title="Oshxona uchun parda"
+    )

@@ -170,6 +170,26 @@ def generate_conversation_title(self, conversation_id: str, message_text: str = 
 
 
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
+def set_conversation_title(self, conversation_id: str, title: str) -> str | None:
+    """Go agentning `title` event'idan kelgan AI sarlavhasini saqlaydi.
+
+    AI sarlavhasi `generate_conversation_title` qo'ygan zaxira (birinchi xabar
+    matni) ustidan yoziladi — zaxira esa AI sarlavhasini hech qachon bosmaydi
+    (u faqat `title=""` bo'lganda yozadi). Idempotent: bir xil sarlavha qayta
+    kelsa hech narsa o'zgarmaydi.
+    """
+    cleaned = " ".join((title or "").split()).strip("\"'«»“” ")[: _title_max_len()]
+    if not cleaned:
+        return None
+    updated = (
+        Conversation.objects.filter(pk=conversation_id).exclude(title=cleaned).update(title=cleaned)
+    )
+    if updated:
+        logger.info("conversation_title_set", conversation_id=conversation_id, title=cleaned)
+    return cleaned
+
+
+@shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
 def archive_old_conversations(self, older_than_months: int = 6) -> int:
     """6 oydan eski suhbatlarni arxiv holatiga o'tkazadi. · 13.5
 

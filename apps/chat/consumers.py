@@ -25,7 +25,7 @@ from django.contrib.auth import get_user_model
 
 from apps.chat.grpc_client import voice_chat_stream
 from apps.chat.models import Conversation
-from apps.chat.tasks import save_message_and_usage
+from apps.chat.tasks import save_message_and_usage, set_conversation_title
 
 logger = structlog.get_logger(__name__)
 
@@ -194,13 +194,20 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
         text = getattr(event, "content", None) or getattr(event, "text", None)
         if not isinstance(text, str):
             text = None
+        # Go VoiceEvent.kind chat event'lari uchun doim "text" — haqiqiy tur
+        # chat_event.kind da (stage/title/content). Mobilga aniq tur bilan yuboriladi.
+        chat_kind = getattr(chat_event, "kind", "") if chat_event is not None else ""
         if text and kind != "transcript":
             await self.send(
                 text_data=json.dumps(
-                    {"kind": kind or "content", "content": text},
+                    {"kind": chat_kind or kind or "content", "content": text},
                     ensure_ascii=False,
                 )
             )
+
+        if chat_kind == "title" and text:
+            # AI birinchi navbatdan keyin qo'ygan sarlavha (Go title.go).
+            set_conversation_title.delay(conversation_id=self.conversation_id, title=text)
 
         if kind == "done":
             usage = getattr(chat_event, "usage", None) or getattr(event, "usage", None)

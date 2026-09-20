@@ -26,7 +26,11 @@ from apps.chat.services import (
     check_usage_limit,
     reset_conversation_context,
 )
-from apps.chat.tasks import save_message_and_usage, update_conversation_stage
+from apps.chat.tasks import (
+    save_message_and_usage,
+    set_conversation_title,
+    update_conversation_stage,
+)
 from apps.common.models import TenantScopedQuerySetMixin
 from apps.common.pagination import StandardCursorPagination
 
@@ -208,6 +212,13 @@ class ConversationMessagesView(APIView):
                             conversation_id=str(conversation.id),
                             stage=event_dict.get("content", ""),
                             state_json=event_dict.get("result", ""),
+                        )
+
+                    if event_dict.get("kind") == "title" and event_dict.get("content"):
+                        # AI birinchi navbatdan keyin qo'ygan sarlavha (Go title.go).
+                        set_conversation_title.delay(
+                            conversation_id=str(conversation.id),
+                            title=event_dict["content"],
                         )
 
                     yield f"data: {json.dumps(event_dict)}\n\n"

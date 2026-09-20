@@ -14,6 +14,7 @@ from apps.chat.tasks import (
     generate_conversation_title,
     save_message,
     save_message_and_usage,
+    set_conversation_title,
 )
 from apps.common.choices import MessageRole
 from apps.usage.models import UsageRecord
@@ -90,6 +91,36 @@ class TestSaveMessage:
         save_message(**kwargs)
         save_message(**kwargs)
         assert Message.objects.filter(conversation=conversation).count() == 1
+
+
+class TestSetConversationTitle:
+    """Go `title` event'i — AI sarlavhasi zaxira ustidan yoziladi, zaxira AI'ni bosmaydi."""
+
+    def test_overwrites_fallback_title(self, conversation):
+        generate_conversation_title(str(conversation.id), message_text="salom")
+        title = set_conversation_title(str(conversation.id), '  "Oshxona uchun parda"  ')
+        conversation.refresh_from_db()
+        assert title == conversation.title == "Oshxona uchun parda"
+        # Zaxira keyin kelsa ham AI sarlavhasi qoladi.
+        generate_conversation_title(str(conversation.id), message_text="salom")
+        conversation.refresh_from_db()
+        assert conversation.title == "Oshxona uchun parda"
+
+    def test_empty_title_ignored(self, conversation):
+        assert set_conversation_title(str(conversation.id), "  ") is None
+        conversation.refresh_from_db()
+        assert conversation.title == ""
+
+    def test_clipped_to_calcrule_length(self, conversation):
+        from apps.pricing.models import CalcRule
+
+        CalcRule.objects.create(
+            key="conversation_title_max_len", value="12", unit="chars", description="t"
+        )
+        assert (
+            set_conversation_title(str(conversation.id), "Juda uzun sarlavha matni")
+            == "Juda uzun sa"
+        )
 
 
 class TestGenerateConversationTitle:
@@ -236,6 +267,7 @@ class TestRetryConfiguration:
         tasks = (
             save_message,
             generate_conversation_title,
+            set_conversation_title,
             archive_old_conversations,
             save_message_and_usage,
         )
