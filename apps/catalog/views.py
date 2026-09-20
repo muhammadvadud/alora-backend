@@ -9,7 +9,13 @@ from rest_framework.response import Response
 from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Fason, Product, ProductImage, ProductVariant
 from apps.catalog.permissions import IsManagerOrReadOnly
-from apps.catalog.selectors import get_categories, get_fasons, get_products, get_variants
+from apps.catalog.selectors import (
+    get_categories,
+    get_fasons,
+    get_product_by_identifier,
+    get_products,
+    get_variants,
+)
 from apps.catalog.serializers import (
     BulkPriceSerializer,
     CatalogImportReportSerializer,
@@ -50,6 +56,14 @@ class ProductViewSet(BaseCatalogViewSet):
         if getattr(self, "swagger_fake_view", False):
             return Product.objects.none()
         return get_products(tenant_id=self.request.user.tenant_id)
+
+    def get_object(self):
+        product = get_product_by_identifier(
+            self.kwargs.get(self.lookup_url_kwarg or self.lookup_field),
+            tenant_id=self.request.user.tenant_id,
+        )
+        self.check_object_permissions(self.request, product)
+        return product
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:

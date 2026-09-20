@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.catalog.models import Category, Product
+from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.factories import EmployeeFactory, ManagerFactory, TenantFactory
 
 
@@ -68,3 +68,25 @@ class TestPermissions:
         url = reverse("product-list")
         resp = employee_client.get(url)
         assert resp.status_code == status.HTTP_200_OK
+
+    def test_employee_can_read_product_by_variant_id(self, employee_client, tenant):
+        category = Category.objects.create(tenant=tenant, name="Pardalar", slug="pardalar")
+        product = Product.objects.create(
+            tenant=tenant,
+            category=category,
+            code="P-V1",
+            name="Velvet parda",
+        )
+        variant = ProductVariant.objects.create(
+            tenant=tenant,
+            product=product,
+            sku="P-V1-RED",
+            color_name="Qizil",
+            price="20000.00",
+        )
+
+        url = reverse("product-detail", args=[variant.id])
+        resp = employee_client.get(url)
+
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data["id"] == str(product.id)
