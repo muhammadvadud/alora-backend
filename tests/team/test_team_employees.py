@@ -146,16 +146,16 @@ class TestEmployeeManagement:
         employee.refresh_from_db()
         assert employee.check_password("new-password-123")
 
-    def test_manager_cannot_change_manager_password_with_employee_action(
-        self, auth_client, manager
-    ):
+    def test_manager_can_change_manager_password(self, auth_client, manager):
         target = ManagerFactory(tenant=manager.tenant)
         response = auth_client(manager).post(
             f"{TEAM_LIST_URL}{target.id}/password/",
             {"password": "new-password-123", "password_confirmation": "new-password-123"},
         )
 
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.status_code == status.HTTP_200_OK
+        target.refresh_from_db()
+        assert target.check_password("new-password-123")
 
 
 class TestEmployeeLimit:

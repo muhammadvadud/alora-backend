@@ -1,6 +1,6 @@
 from django.apps import apps
 from drf_spectacular.utils import OpenApiParameter, OpenApiTypes, extend_schema, extend_schema_view
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -161,9 +161,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def password(self, request, pk=None):
         employee = self.get_object()
-        if employee.role != UserRole.EMPLOYEE:
-            raise serializers.ValidationError({"detail": "Faqat xodim parolini almashtirish mumkin."})
-
         serializer = EmployeePasswordSerializer(data=request.data, context={"user": employee})
         serializer.is_valid(raise_exception=True)
         serializer.save()
