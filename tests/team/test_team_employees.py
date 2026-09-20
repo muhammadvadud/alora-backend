@@ -136,6 +136,27 @@ class TestEmployeeManagement:
         employee.refresh_from_db()
         assert employee.role == "manager"
 
+    def test_manager_can_change_employee_password(self, auth_client, manager, employee):
+        response = auth_client(manager).post(
+            f"{TEAM_LIST_URL}{employee.id}/password/",
+            {"password": "new-password-123", "password_confirmation": "new-password-123"},
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        employee.refresh_from_db()
+        assert employee.check_password("new-password-123")
+
+    def test_manager_cannot_change_manager_password_with_employee_action(
+        self, auth_client, manager
+    ):
+        target = ManagerFactory(tenant=manager.tenant)
+        response = auth_client(manager).post(
+            f"{TEAM_LIST_URL}{target.id}/password/",
+            {"password": "new-password-123", "password_confirmation": "new-password-123"},
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
 
 class TestEmployeeLimit:
     def test_set_unlimited_limit(self, auth_client, manager, employee):

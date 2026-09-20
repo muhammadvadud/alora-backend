@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth import password_validation
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -106,3 +107,24 @@ class EmployeeLimitSerializer(serializers.Serializer):
     max_messages = serializers.IntegerField(required=False, min_value=0, allow_null=True)
     on_exceed = serializers.ChoiceField(choices=OnExceed.choices, required=False)
     is_active = serializers.BooleanField(required=False)
+
+
+class EmployeePasswordSerializer(serializers.Serializer):
+    """Xodim parolini almashtirish uchun yozish serializer'i."""
+
+    password = serializers.CharField(write_only=True, min_length=8, style={"input_type": "password"})
+    password_confirmation = serializers.CharField(
+        write_only=True, min_length=8, style={"input_type": "password"}
+    )
+
+    def validate(self, attrs: dict[str, str]) -> dict[str, str]:
+        if attrs["password"] != attrs["password_confirmation"]:
+            raise serializers.ValidationError({"password_confirmation": "Parollar bir xil bo'lishi kerak."})
+        password_validation.validate_password(attrs["password"], self.context.get("user"))
+        return attrs
+
+    def save(self, **kwargs: Any) -> User:
+        user = self.context["user"]
+        user.set_password(self.validated_data["password"])
+        user.save(update_fields=["password"])
+        return user

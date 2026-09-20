@@ -1,6 +1,6 @@
 from django.apps import apps
 from drf_spectacular.utils import OpenApiParameter, OpenApiTypes, extend_schema, extend_schema_view
-from rest_framework import status, viewsets
+from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,6 +13,7 @@ from apps.accounts.serializers import (
     CustomTokenObtainPairSerializer,
     EmployeeLimitSerializer,
     EmployeeListSerializer,
+    EmployeePasswordSerializer,
     EmployeeWriteSerializer,
 )
 from apps.common.choices import UserRole
@@ -73,6 +74,12 @@ class AuthMeView(APIView):
         request=EmployeeLimitSerializer,
         summary="Xodim foydalanish limitini o'rnatish",
         responses={200: dict},
+    ),
+    password=extend_schema(
+        parameters=[OpenApiParameter("id", OpenApiTypes.UUID, OpenApiParameter.PATH)],
+        request=EmployeePasswordSerializer,
+        summary="Xodim parolini almashtirish",
+        responses={200: EmployeeListSerializer},
     ),
     conversations=extend_schema(
         parameters=[OpenApiParameter("id", OpenApiTypes.UUID, OpenApiParameter.PATH)],
@@ -150,6 +157,17 @@ class EmployeeViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK,
         )
+
+    @action(detail=True, methods=["post"])
+    def password(self, request, pk=None):
+        employee = self.get_object()
+        if employee.role != UserRole.EMPLOYEE:
+            raise serializers.ValidationError({"detail": "Faqat xodim parolini almashtirish mumkin."})
+
+        serializer = EmployeePasswordSerializer(data=request.data, context={"user": employee})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(EmployeeListSerializer(employee).data, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=["get"])
     def conversations(self, request, pk=None):
