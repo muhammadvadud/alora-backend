@@ -100,11 +100,58 @@ oshmasligi kerak.
 - `GET, PATCH, DELETE /api/v1/settings/prompt/{id}/` - System prompt boshqaruvi
 - `POST /api/v1/settings/prompt/{id}/rollback/` - Oldingi prompt versiyasiga qaytarish
 
-### Tahliliy Ma'lumotlar (`/api/v1/`)
-- `GET, POST /api/v1/usage/` - Ishlatilgan resurslar ro'yxati
-- `GET /api/v1/usage/{id}/` - Ishlatish ma'lumoti detali
-- `GET, POST /api/v1/analytics/` - Analitika ma'lumotlari
-- `GET /api/v1/analytics/{id}/` - Analitika detali
+### AI foydalanish statistikasi (`/api/v1/usage/`) — manager+
+- `GET /api/v1/usage/summary/?period=day|week|month[&user=<uuid>]` - Token/xarajat xulosasi
+- `GET /api/v1/usage/by-user/?period=` - Xodimlar bo'yicha AI xarajati reytingi
+- `GET /api/v1/usage/conversations/` - Eng qimmat suhbatlar
+
+### Analitika (`/api/v1/analytics/`) — manager+
+- `GET /api/v1/analytics/conversion/` - Suhbat → buyurtma konversiyasi (umumiy)
+- `GET /api/v1/analytics/dashboard/?period=day|week|month|custom[&date_from&date_to]` - Sotuv dashboard'i (quyida)
+
+#### Sotuv dashboard'i — `GET /analytics/dashboard/`
+
+Bitta so'rovda menejer uchun davr xulosasi. `period=day` (standart, bugun), `week`
+(dushanbadan bugungacha), `month` (oy boshidan), `custom` (`date_from` majburiy,
+`date_to` bo'lmasa bugun; oraliq ≤ 366 kun). Barcha bloklar buyurtma/suhbatning
+`created_at` sanasi bo'yicha; **"sotildi"** = holati `confirmed` va undan keyingi
+(`draft` va `cancelled` kirmaydi). Pul — so'm, 2 kasrli matn.
+
+```json
+{
+  "period": "day", "date_from": "2026-09-20", "date_to": "2026-09-20",
+  "orders": {
+    "created": 7, "sold": 5, "completed": 1, "cancelled": 1, "draft": 1, "in_progress": 4,
+    "by_status": {"draft": 1, "confirmed": 3, "production": 1, "completed": 1, "cancelled": 1}
+  },
+  "sales": {
+    "revenue": "12450000.00", "prepayment": "6200000.00", "balance_due": "6250000.00",
+    "discount_total": "450000.00", "delivery_total": "150000.00", "average_check": "2490000.00"
+  },
+  "conversations": {"total": 12, "with_order": 5, "conversion_rate": "41.67"},
+  "ai": {"tokens": 84210, "cost_uzs": "18400.00", "messages": 96},
+  "top_products": [
+    {"variant_id": "…", "sku": "P-V1-RED", "name": "Velvet Parda", "color_name": "Qizil",
+     "area_sqm": "24.500", "revenue": "4900000.00", "orders": 3}
+  ],
+  "by_user": [
+    {"user_id": "…", "full_name": "Aziza K.", "orders": 4, "sold": 3, "revenue": "7300000.00"}
+  ],
+  "daily": [
+    {"date": "2026-09-20", "orders_created": 7, "orders_sold": 5, "revenue": "12450000.00"}
+  ],
+  "previous": {
+    "date_from": "2026-09-19", "date_to": "2026-09-19",
+    "orders_created": 5, "revenue": "9800000.00", "conversations": 10,
+    "orders_change_pct": "40.00", "revenue_change_pct": "27.04"
+  }
+}
+```
+
+- `top_products` — sotilgan buyurtmalardagi parda qismlari bo'yicha, summa bo'yicha top‑5.
+- `daily` — davrning har bir kuni (bo'sh kunlar 0) — grafik uchun.
+- `previous` — xuddi shu uzunlikdagi oldingi davr; `*_change_pct` oldingi 0 bo'lsa `null`.
+- `400 validation_error`: `custom` da `date_from` yo'q, `date_to < date_from`, 366 kundan uzun.
 
 ## 4. Cursor Pagination Formati
 

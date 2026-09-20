@@ -19,6 +19,8 @@ from apps.usage.serializers import (
     ByUserItemSerializer,
     ConversationStatSerializer,
     ConversionSerializer,
+    DashboardQuerySerializer,
+    DashboardSerializer,
     PeriodQuerySerializer,
     SummaryQuerySerializer,
     SummarySerializer,
@@ -90,3 +92,29 @@ class AnalyticsViewSet(viewsets.GenericViewSet):
 
         data = selectors.get_conversion_stats(request.user.tenant)
         return Response(ConversionSerializer(data).data)
+
+    @extend_schema(
+        summary="Sotuv dashboard'i — buyurtmalar, summa, suhbatlar, AI xarajati",
+        description=(
+            "Bitta so'rovda menejer uchun davr xulosasi: holatlar bo'yicha buyurtmalar, "
+            "sotuv summalari (tasdiqlangan+ holatdagi buyurtmalar), suhbat konversiyasi, "
+            "AI xarajati, top matolar, xodimlar reytingi, kunlik qator va oldingi davr "
+            "bilan taqqoslash. `period=day|week|month|custom`; custom uchun `date_from`/`date_to`."
+        ),
+        parameters=[DashboardQuerySerializer],
+        responses={200: DashboardSerializer},
+    )
+    @action(detail=False, methods=["get"])
+    def dashboard(self, request: HttpRequest) -> Response:
+        """Sotuv dashboard'i."""
+
+        query = DashboardQuerySerializer(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        params = query.validated_data
+        data = selectors.get_sales_dashboard(
+            request.user.tenant,
+            period=params["period"],
+            date_from=params.get("date_from"),
+            date_to=params.get("date_to"),
+        )
+        return Response(DashboardSerializer(data).data)

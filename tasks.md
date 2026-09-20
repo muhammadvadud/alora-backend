@@ -270,6 +270,7 @@
 - [ ] 16.4 **Ovoz sozlamalari (admin)** — `GET/PATCH settings/voice/`: `{tts_provider, tts_voice, tts_speed, stt_provider, locale}` (mobil 14.5)
 - [ ] 16.5 **Push token** — `PATCH auth/me/` `{device_id, push_token, platform}` yoki `POST auth/device/`; limit tugadi / yangi buyurtma / status o'zgardi bildirishnomalari (Celery, FCM) (mobil 18.4, 18.5)
 - [ ] 16.6 **Chatga rasm** — `POST conversations/{id}/messages/` multipart (`image` fayl) yoki `image_url` maydoni; SSE javobida rasm bo'yicha tavsiya (mobil 18.6)
+- [x] 16.8 **Sotuv dashboard'i** — `GET analytics/dashboard/?period=day|week|month|custom`: buyurtmalar (holatlar), sotuv summalari, suhbat konversiyasi, AI xarajati, top matolar, xodimlar reytingi, kunlik qator, oldingi davr bilan taqqoslash; manager+. Swagger teglari `/api/v1/` prefiksidan keyingi segment bo'yicha (`SCHEMA_PATH_PREFIX`) — har API o'z bo'limida
 - [~] 16.7 `docs/API-GUIDE.md` — 16.1–16.6 shartnomalari (so'rov/javob namunalari), mobil `docs/API-CONTRACT.md` bilan sinxron
 
 ## Ish tartibi (bog'liqliklar)

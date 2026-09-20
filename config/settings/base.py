@@ -180,16 +180,20 @@ SPECTACULAR_SETTINGS = {
         "OrderStatusEnum": "apps.common.choices.OrderStatus.choices",
         "ConversationStatusEnum": "apps.chat.models.ConversationStatus.choices",
     },
+    # Teglar URL'ning /api/v1/ dan keyingi birinchi segmentidan olinadi (auth, orders,
+    # analytics ...). Prefix berilmasa hammasi "v1" bo'limiga tushib qoladi.
+    "SCHEMA_PATH_PREFIX": r"/api/v1",
     "TAGS": [
-        {"name": "auth", "description": "Autentifikatsiya (login, logout, token)"},
-        {"name": "accounts", "description": "Foydalanuvchilar va jamoa"},
-        {"name": "catalog", "description": "Katalog: kategoriya, mahsulot, variant"},
-        {"name": "pricing", "description": "Narx hisob-kitobi va chegirmalar"},
-        {"name": "chat", "description": "Suhbat va SSE gateway"},
-        {"name": "orders", "description": "Buyurtmalar"},
-        {"name": "usage", "description": "Foydalanish statistikasi"},
+        {"name": "auth", "description": "Autentifikatsiya: login, refresh, logout, me"},
+        {"name": "team", "description": "Jamoa: xodimlar boshqaruvi"},
+        {"name": "catalog", "description": "Katalog: kategoriya, mahsulot, variant, rasm, fason"},
+        {"name": "pricing", "description": "Narx qoidalari, chegirmalar, hisob-kitob (calc/preview)"},
+        {"name": "conversations", "description": "Suhbatlar va SSE chat gateway"},
+        {"name": "orders", "description": "Buyurtmalar: yaratish, tasdiqlash, holat, PDF"},
+        {"name": "usage", "description": "AI foydalanish statistikasi (token, xarajat)"},
+        {"name": "analytics", "description": "Analitika: sotuv dashboard'i, konversiya"},
         {"name": "knowledge", "description": "Bilim qoidalari"},
-        {"name": "prompts", "description": "System prompt boshqaruvi"},
+        {"name": "settings", "description": "Sozlamalar: system prompt versiyalari"},
     ],
 }
 
