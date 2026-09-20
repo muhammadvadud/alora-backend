@@ -62,6 +62,13 @@ services:
       AGENT_SERVICE_TOKEN: ${AGENT_SERVICE_TOKEN:?AGENT_SERVICE_TOKEN is required}
     expose:
       - "9091"
+    healthcheck:
+      test:
+        ["CMD-SHELL", "python -c \"import socket; s=socket.create_connection(('127.0.0.1', 9091), 2); s.close()\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     depends_on:
       db:
         condition: service_healthy
