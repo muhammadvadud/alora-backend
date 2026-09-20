@@ -37,6 +37,26 @@ class AuthMeView(APIView):
         return Response(serializer.data)
 
 
+class AuthMePasswordView(APIView):
+    """Joriy foydalanuvchi o'z parolini almashtirishi uchun endpoint."""
+
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(
+        request=EmployeePasswordSerializer,
+        responses={200: dict},
+        summary="O'z parolini almashtirish",
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = EmployeePasswordSerializer(
+            data=request.data,
+            context={"user": request.user},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Parol muvaffaqiyatli o'zgartirildi."}, status=status.HTTP_200_OK)
+
+
 @extend_schema_view(
     list=extend_schema(
         responses={200: EmployeeListSerializer},

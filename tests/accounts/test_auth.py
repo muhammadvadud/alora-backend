@@ -2,6 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.common.factories import UserFactory
 
@@ -58,3 +59,17 @@ class TestAuth:
         assert me_response.status_code == status.HTTP_200_OK
         assert me_response.data["profile"]["phone"] == user.phone
         assert "limit" in me_response.data
+
+    def test_authenticated_user_can_change_own_password(self, client):
+        user = UserFactory(password="securepass123")
+        token = str(RefreshToken.for_user(user).access_token)
+
+        response = client.post(
+            reverse("me-password"),
+            {"password": "new-password-123", "password_confirmation": "new-password-123"},
+            HTTP_AUTHORIZATION=f"Bearer {token}",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        user.refresh_from_db()
+        assert user.check_password("new-password-123")
