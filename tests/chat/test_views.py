@@ -30,21 +30,26 @@ class TestConversationViews:
         assert str(my_conv.id) in ids
         assert str(other_conv.id) not in ids
 
-    def test_manager_can_see_all_tenant_conversations(
+    def test_manager_list_shows_only_own_but_can_open_others(
         self, api_client, manager_user, conversation_factory
     ):
-        """Boshqaruvchi barcha suhbatlarni ko'ra oladi."""
+        """Bosh sahifa ro'yxati — faqat o'z suhbatlari (manager ham); xodimniki
+        boshqaruv orqali ochiladi (retrieve tenant bo'yicha ruxsat)."""
         my_conv = conversation_factory(user=manager_user, tenant=manager_user.tenant)
         other_conv = conversation_factory(tenant=manager_user.tenant)
 
         api_client.force_authenticate(user=manager_user)
-        url = reverse("chat:conversation-list")
-        response = api_client.get(url)
+        response = api_client.get(reverse("chat:conversation-list"))
 
         assert response.status_code == status.HTTP_200_OK
         ids = [item["id"] for item in response.data["results"]]
         assert str(my_conv.id) in ids
-        assert str(other_conv.id) in ids
+        assert str(other_conv.id) not in ids
+
+        messages = api_client.get(
+            reverse("chat:conversation-messages-stream", args=[other_conv.id])
+        )
+        assert messages.status_code == status.HTTP_200_OK
 
 
 class TestChatStream:

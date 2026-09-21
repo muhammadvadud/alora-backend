@@ -49,9 +49,13 @@ class ConversationViewSet(
     pagination_class = StandardCursorPagination
 
     def get_queryset(self):
-        qs = Conversation.objects.all().order_by("-updated_at")
-        if getattr(self.request.user, "role", None) == "employee":
-            qs = qs.filter(user=self.request.user)
+        user = self.request.user
+        qs = Conversation.objects.filter(tenant_id=user.tenant_id).order_by("-updated_at")
+        # Bosh sahifa ro'yxati — har kim faqat O'Z suhbatlarini ko'radi (manager ham).
+        # Xodimlar suhbatlari boshqaruvda: /team/employees/{id}/conversations/.
+        # Bitta suhbatni ochish (retrieve/messages) manager uchun tenant bo'yicha ochiq.
+        if self.action == "list" or getattr(user, "role", None) == "employee":
+            qs = qs.filter(user=user)
         return qs
 
     def perform_create(self, serializer):
