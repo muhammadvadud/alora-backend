@@ -265,12 +265,9 @@ def _apply_prepayment(
     order.prepayment_percent = percent
     order.prepayment = prepayment
     order.balance = balance
-    if prepayment <= ZERO:
-        order.payment_status = PaymentStatus.UNPAID
-    elif balance <= ZERO:
-        order.payment_status = PaymentStatus.PAID
-    else:
-        order.payment_status = PaymentStatus.PREPAID
+    # Avans — REJA (to'lanishi kerak bo'lgan summa), to'lov fakti emas. Yangi
+    # buyurtma model default'i bilan UNPAID qoladi; PREPAID/PAID faqat sotuvchi
+    # to'lovni belgilaganda (payment_status bilan yangilash) qo'yiladi.
 
 
 def _apply_calc_result(

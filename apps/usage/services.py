@@ -230,24 +230,34 @@ def calculate_cost(
     return usd, cost_uzs
 
 
+def _limit_set(value: Any) -> bool:
+    """Maydonlar null bo'lmaydi (default 0) — 0 "cheklov qo'yilmagan" degani.
+
+    Aks holda faqat token limiti kiritilgan xodim `0/0.00` xarajat bilan darhol
+    bloklanadi.
+    """
+
+    return value is not None and _decimal(value) > 0
+
+
 def _is_exceeded(limit: Any, usage: PeriodUsage) -> bool:
     """Limit qiymatlarini joriy foydalanish bilan solishtiradi."""
 
-    if limit.max_tokens is not None and usage.tokens >= limit.max_tokens:
+    if _limit_set(limit.max_tokens) and usage.tokens >= limit.max_tokens:
         return True
-    if limit.max_cost_uzs is not None and usage.cost_uzs >= _decimal(limit.max_cost_uzs):
+    if _limit_set(limit.max_cost_uzs) and usage.cost_uzs >= _decimal(limit.max_cost_uzs):
         return True
-    return bool(limit.max_messages is not None and usage.messages >= limit.max_messages)
+    return bool(_limit_set(limit.max_messages) and usage.messages >= limit.max_messages)
 
 
 def _resolve_exceed_reason(limit: Any, usage: PeriodUsage) -> str:
     """Limit oshganining sababini o'zbekcha tavsiflaydi."""
 
-    if limit.max_tokens is not None and usage.tokens >= limit.max_tokens:
+    if _limit_set(limit.max_tokens) and usage.tokens >= limit.max_tokens:
         return f"Tokenlar limiti tugadi ({usage.tokens}/{limit.max_tokens})"
-    if limit.max_cost_uzs is not None and usage.cost_uzs >= _decimal(limit.max_cost_uzs):
+    if _limit_set(limit.max_cost_uzs) and usage.cost_uzs >= _decimal(limit.max_cost_uzs):
         return f"Xarajat limiti tugadi ({usage.cost_uzs}/{limit.max_cost_uzs})"
-    if limit.max_messages is not None and usage.messages >= limit.max_messages:
+    if _limit_set(limit.max_messages) and usage.messages >= limit.max_messages:
         return f"Xabarlar limiti tugadi ({usage.messages}/{limit.max_messages})"
     return "Foydalanish limiti tugadi"
 

@@ -33,7 +33,7 @@ class TestCreateOrder:
         assert data["total"] == "78000.00"
         assert data["prepayment"] == "39000.00"
         assert data["balance"] == "39000.00"
-        assert data["payment_status"] == "prepaid"
+        assert data["payment_status"] == "unpaid"  # avans reja, to'lov fakti emas
         assert data["customer_name"] == "Aziz Karimov"
 
         order = Order.objects.get(number=data["number"])
