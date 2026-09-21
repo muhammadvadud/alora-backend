@@ -190,7 +190,8 @@ class OrderAccessoryWriteSerializer(serializers.Serializer):
 class OrderMeasurementWriteSerializer(serializers.Serializer):
     """O'lchov — yozish (AI draft formati)."""
 
-    room_name = serializers.CharField(max_length=255)
+    # AI hisobida (Go quote) xona nomi bo'lmaydi — bo'sh kelsa services.py "Xona N" qo'yadi.
+    room_name = serializers.CharField(max_length=255, required=False, allow_blank=True, default="")
     cornice_length_m = serializers.DecimalField(max_digits=8, decimal_places=3)
     height_m = serializers.DecimalField(max_digits=8, decimal_places=3)
     coefficient = serializers.DecimalField(

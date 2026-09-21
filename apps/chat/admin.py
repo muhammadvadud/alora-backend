@@ -21,6 +21,8 @@ class MessageInline(TabularInline):
 
 @admin.register(Conversation)
 class ConversationAdmin(ModelAdmin):
+    ordering = ("-created_at",)
+
     list_display = ("title", "user", "status_badge", "mode", "stage_badge", "created_at")
     list_filter = (
         ("status", ChoicesDropdownFilter),
@@ -72,6 +74,8 @@ class ConversationAdmin(ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(ModelAdmin):
+    ordering = ("-created_at",)
+
     list_display = ("conversation", "role_badge", "tokens_in", "tokens_out", "created_at")
     list_filter = (
         ("role", ChoicesDropdownFilter),
@@ -79,7 +83,7 @@ class MessageAdmin(ModelAdmin):
         ("created_at", RangeDateTimeFilter),
     )
     search_fields = ("content", "conversation__title", "conversation__session_id")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("id", "created_at", "updated_at")
     fieldsets = (
         (
             _("Xabar"),
@@ -94,7 +98,7 @@ class MessageAdmin(ModelAdmin):
             {"fields": ("tool_calls", "tool_result", "audio_url")},
         ),
         (_("Faollik"), {"fields": ("is_active",)}),
-        (_("Tizim maydonlari"), {"fields": ("created_at", "updated_at")}),
+        (_("Tizim maydonlari"), {"fields": ("id", "created_at", "updated_at")}),
     )
 
     @display(

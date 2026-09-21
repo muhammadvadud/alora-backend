@@ -378,6 +378,14 @@ def create_order_from_draft(
             ]
         )
 
+        if conversation_id is not None:
+            from apps.chat.models import Conversation
+
+            Conversation.objects.filter(
+                id=conversation_id,
+                tenant_id=user.tenant_id,
+            ).update(order=order, updated_at=timezone.now())
+
     logger.info(
         "order_created",
         order_id=str(order.pk),
@@ -406,7 +414,7 @@ def _build_measurements(
             coefficient = load_pricing_snapshot().calc_rules["coef_default"].value
         measurement = OrderMeasurement.objects.create(
             order=order,
-            room_name=measurement_payload.get("room_name", f"Xona {index + 1}"),
+            room_name=measurement_payload.get("room_name") or f"Xona {index + 1}",
             cornice_length_m=measurement_payload.get("cornice_length_m"),
             height_m=measurement_payload.get("height_m"),
             layers=measurement_payload.get("layers", []),
