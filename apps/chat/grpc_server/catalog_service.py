@@ -22,6 +22,9 @@ logger = structlog.get_logger(__name__)
 
 # Redis pub/sub kanali nomi
 CATALOG_DELTA_CHANNEL = "alora:catalog:deltas"
+# Watch stream'ida delta bo'lmasa har N soniyada heartbeat yuboriladi — Go agent
+# `SyncedAt` ni yangilab, katalog o'zgarmaganda ham "stale" deb hisoblamaydi.
+WATCH_HEARTBEAT_SECONDS = 60
 CATALOG_VERSION_KEY = "alora:catalog:version"
 
 
@@ -235,7 +238,13 @@ class CatalogServicer(alora_pb2_grpc.CatalogServicer):
 
     # ── Watch ──────────────────────────────────────────────────────────────
 
-    def _iter_deltas(self, from_version: int, tenant_id: str, pb2: Any) -> Any:
+    def _iter_deltas(
+        self,
+        from_version: int,
+        tenant_id: str,
+        pb2: Any,
+        heartbeat_seconds: float = WATCH_HEARTBEAT_SECONDS,
+    ) -> Any:
         """Redis pub/sub dan delta'larni o'qib uzatadi.
 
         `from_version` joriy versiyadan orqada bo'lsa oraliq delta'lar Redis'da
@@ -259,7 +268,19 @@ class CatalogServicer(alora_pb2_grpc.CatalogServicer):
         pubsub.subscribe(CATALOG_DELTA_CHANNEL)
 
         try:
-            for message in pubsub.listen():
+            while True:
+                message = pubsub.get_message(timeout=heartbeat_seconds)
+                if message is None:
+                    # Tinchlik — aloqa tirikligini bildirish (Go: entity="heartbeat" → Touch)
+                    yield pb2.CatalogDelta(
+                        version=from_version,
+                        entity="heartbeat",
+                        entity_id="",
+                        action="PING",
+                        tenant_id=tenant_id,
+                        payload_json="",
+                    )
+                    continue
                 if message["type"] != "message":
                     continue
 
