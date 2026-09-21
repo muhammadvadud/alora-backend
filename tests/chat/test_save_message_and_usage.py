@@ -49,3 +49,23 @@ def test_toliq_assistant_matni_saqlanadi(conversation_factory, tenant) -> None:
         )
 
     assert Message.objects.filter(conversation=conversation, role=MessageRole.ASSISTANT).count() == 1
+
+
+@pytest.mark.django_db
+def test_bir_xil_matn_keyinroq_yana_saqlanadi(conversation_factory) -> None:
+    from datetime import timedelta
+
+    from django.utils import timezone
+
+    from apps.chat.tasks import save_message
+
+    conversation = conversation_factory()
+    first = save_message(session_id=conversation.session_id, role=MessageRole.USER, content="ha")
+    # Retry oynasida — dublikat emas
+    again = save_message(session_id=conversation.session_id, role=MessageRole.USER, content="ha")
+    assert again == first
+    # Oynadan tashqarida — yangi xabar
+    Message.objects.filter(pk=first).update(created_at=timezone.now() - timedelta(minutes=5))
+    later = save_message(session_id=conversation.session_id, role=MessageRole.USER, content="ha")
+    assert later != first
+    assert Message.objects.filter(conversation=conversation, role=MessageRole.USER).count() == 2

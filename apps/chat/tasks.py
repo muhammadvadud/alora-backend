@@ -17,6 +17,9 @@ from apps.common.choices import MessageRole
 
 logger = structlog.get_logger(__name__)
 
+# Bir xil xabar shu oynada qayta kelsa (Celery retry, ikki marta yetkazish) dublikat yozilmaydi.
+MESSAGE_DEDUPE_SECONDS = 15
+
 
 def _parse_json(raw: str, fallback: Any) -> Any:
     """JSON matnini xavfsiz parse qiladi."""
@@ -84,14 +87,31 @@ def save_message(
         "audio_url": audio_url or "",
     }
 
-    message, created = Message.objects.get_or_create(
-        conversation=conversation,
-        role=msg_role,
-        content=content or "",
-        tokens_in=int(tokens_in or 0),
-        tokens_out=int(tokens_out or 0),
-        defaults=defaults,
+    # Idempotentlik faqat qisqa oynada (retry/dublikat yetkazish holati): aks holda
+    # sotuvchi bir xil matnni ("ha") keyinroq yana yozsa, u umuman saqlanmasdi.
+    dedupe_since = timezone.now() - dt.timedelta(seconds=MESSAGE_DEDUPE_SECONDS)
+    message = (
+        Message.objects.filter(
+            conversation=conversation,
+            role=msg_role,
+            content=content or "",
+            tokens_in=int(tokens_in or 0),
+            tokens_out=int(tokens_out or 0),
+            created_at__gte=dedupe_since,
+        )
+        .order_by("-created_at")
+        .first()
     )
+    created = message is None
+    if created:
+        message = Message.objects.create(
+            conversation=conversation,
+            role=msg_role,
+            content=content or "",
+            tokens_in=int(tokens_in or 0),
+            tokens_out=int(tokens_out or 0),
+            **defaults,
+        )
 
     if not created:
         for field, value in defaults.items():
