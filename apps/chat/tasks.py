@@ -235,21 +235,27 @@ def save_message_and_usage(
                 content=user_message_content,
             )
 
-        ai_message = save_message(
-            session_id=conversation.session_id,
-            role=MessageRole.ASSISTANT,
-            content=ai_event_data.get("content", ""),
-            tokens_in=usage.get("prompt_tokens", 0),
-            tokens_out=usage.get("completion_tokens", 0),
-        )
+        # SSE `done` eventida matn bo'lmaydi (tokenlar oldin oqib ketgan) — to'liq
+        # assistant xabarini Go `LogMessage` orqali yozadi. Bo'sh matn saqlansa har
+        # javobga ikkita yozuv (biri bo'sh) paydo bo'ladi va ro'yxatda joy egallaydi.
+        ai_content = ai_event_data.get("content", "") or ""
+        ai_message = None
+        if ai_content.strip():
+            ai_message = save_message(
+                session_id=conversation.session_id,
+                role=MessageRole.ASSISTANT,
+                content=ai_content,
+                tokens_in=usage.get("prompt_tokens", 0),
+                tokens_out=usage.get("completion_tokens", 0),
+            )
 
         generate_conversation_title(
             conversation_id=str(conversation.id),
             message_text=user_message_content,
         )
 
-        if ai_message is None:
-            return
+        if ai_content.strip() and ai_message is None:
+            return  # suhbat topilmadi — usage ham yozilmaydi
 
         from apps.usage.services import calculate_cost
         from apps.usage.tasks import save_usage_record
