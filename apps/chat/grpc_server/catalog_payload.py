@@ -60,6 +60,7 @@ def variant_payload(variant: Any) -> dict[str, Any]:
         "price_unit": variant.price_unit,
         "old_price": _float(variant.old_price),
         "is_active": bool(variant.is_active),
+        "tenant_id": str(variant.tenant_id) if getattr(variant, "tenant_id", None) else "",
     }
 
 
@@ -91,6 +92,7 @@ def product_payload(product: Any, *, include_variants: bool = True) -> dict[str,
         "tags_json": json.dumps(product.tags or {}, ensure_ascii=False),
         "variants": variants,
         "image_urls": images,
+        "tenant_id": str(product.tenant_id) if getattr(product, "tenant_id", None) else "",
     }
 
 
@@ -101,6 +103,7 @@ def category_payload(category: Any) -> dict[str, Any]:
         "slug": category.slug,
         "parent_id": str(category.parent_id) if category.parent_id else "",
         "sort_order": int(category.sort_order or 0),
+        "tenant_id": str(category.tenant_id) if getattr(category, "tenant_id", None) else "",
     }
 
 
@@ -133,6 +136,7 @@ def fason_payload(fason: Any) -> dict[str, Any]:
             }
             for a in fason.accessories.all().order_by("id")
         ],
+        "tenant_id": str(fason.tenant_id) if getattr(fason, "tenant_id", None) else "",
     }
 
 

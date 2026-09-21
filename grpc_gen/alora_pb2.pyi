@@ -272,7 +272,7 @@ class CatalogFasonAccessory(_message.Message):
     def __init__(self, id: _Optional[str] = ..., category: _Optional[str] = ..., default_qty: _Optional[str] = ..., qty_formula: _Optional[str] = ...) -> None: ...
 
 class CatalogFason(_message.Message):
-    __slots__ = ("id", "name", "style", "rooms", "image_url", "part_count", "parts", "accessories")
+    __slots__ = ("id", "name", "style", "rooms", "image_url", "part_count", "parts", "accessories", "tenant_id")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     STYLE_FIELD_NUMBER: _ClassVar[int]
@@ -281,6 +281,7 @@ class CatalogFason(_message.Message):
     PART_COUNT_FIELD_NUMBER: _ClassVar[int]
     PARTS_FIELD_NUMBER: _ClassVar[int]
     ACCESSORIES_FIELD_NUMBER: _ClassVar[int]
+    TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     style: str
@@ -289,7 +290,8 @@ class CatalogFason(_message.Message):
     part_count: int
     parts: _containers.RepeatedCompositeFieldContainer[CatalogFasonPart]
     accessories: _containers.RepeatedCompositeFieldContainer[CatalogFasonAccessory]
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., style: _Optional[str] = ..., rooms: _Optional[_Iterable[str]] = ..., image_url: _Optional[str] = ..., part_count: _Optional[int] = ..., parts: _Optional[_Iterable[_Union[CatalogFasonPart, _Mapping]]] = ..., accessories: _Optional[_Iterable[_Union[CatalogFasonAccessory, _Mapping]]] = ...) -> None: ...
+    tenant_id: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., style: _Optional[str] = ..., rooms: _Optional[_Iterable[str]] = ..., image_url: _Optional[str] = ..., part_count: _Optional[int] = ..., parts: _Optional[_Iterable[_Union[CatalogFasonPart, _Mapping]]] = ..., accessories: _Optional[_Iterable[_Union[CatalogFasonAccessory, _Mapping]]] = ..., tenant_id: _Optional[str] = ...) -> None: ...
 
 class CatalogPrompt(_message.Message):
     __slots__ = ("version", "content", "updated_at")
@@ -302,7 +304,7 @@ class CatalogPrompt(_message.Message):
     def __init__(self, version: _Optional[int] = ..., content: _Optional[str] = ..., updated_at: _Optional[str] = ...) -> None: ...
 
 class CatalogProduct(_message.Message):
-    __slots__ = ("id", "category_id", "name", "code", "description", "fabric_type", "pattern", "style", "transparency", "density", "composition", "care", "recommended_rooms", "recommended_coef", "default_width_m", "is_sewing_required", "segment", "tags_json", "variants", "image_urls")
+    __slots__ = ("id", "category_id", "name", "code", "description", "fabric_type", "pattern", "style", "transparency", "density", "composition", "care", "recommended_rooms", "recommended_coef", "default_width_m", "is_sewing_required", "segment", "tags_json", "variants", "image_urls", "tenant_id")
     ID_FIELD_NUMBER: _ClassVar[int]
     CATEGORY_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -323,6 +325,7 @@ class CatalogProduct(_message.Message):
     TAGS_JSON_FIELD_NUMBER: _ClassVar[int]
     VARIANTS_FIELD_NUMBER: _ClassVar[int]
     IMAGE_URLS_FIELD_NUMBER: _ClassVar[int]
+    TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     id: str
     category_id: str
     name: str
@@ -343,10 +346,11 @@ class CatalogProduct(_message.Message):
     tags_json: str
     variants: _containers.RepeatedCompositeFieldContainer[CatalogVariant]
     image_urls: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, id: _Optional[str] = ..., category_id: _Optional[str] = ..., name: _Optional[str] = ..., code: _Optional[str] = ..., description: _Optional[str] = ..., fabric_type: _Optional[str] = ..., pattern: _Optional[str] = ..., style: _Optional[str] = ..., transparency: _Optional[str] = ..., density: _Optional[float] = ..., composition: _Optional[str] = ..., care: _Optional[str] = ..., recommended_rooms: _Optional[_Iterable[str]] = ..., recommended_coef: _Optional[float] = ..., default_width_m: _Optional[float] = ..., is_sewing_required: _Optional[bool] = ..., segment: _Optional[str] = ..., tags_json: _Optional[str] = ..., variants: _Optional[_Iterable[_Union[CatalogVariant, _Mapping]]] = ..., image_urls: _Optional[_Iterable[str]] = ...) -> None: ...
+    tenant_id: str
+    def __init__(self, id: _Optional[str] = ..., category_id: _Optional[str] = ..., name: _Optional[str] = ..., code: _Optional[str] = ..., description: _Optional[str] = ..., fabric_type: _Optional[str] = ..., pattern: _Optional[str] = ..., style: _Optional[str] = ..., transparency: _Optional[str] = ..., density: _Optional[float] = ..., composition: _Optional[str] = ..., care: _Optional[str] = ..., recommended_rooms: _Optional[_Iterable[str]] = ..., recommended_coef: _Optional[float] = ..., default_width_m: _Optional[float] = ..., is_sewing_required: _Optional[bool] = ..., segment: _Optional[str] = ..., tags_json: _Optional[str] = ..., variants: _Optional[_Iterable[_Union[CatalogVariant, _Mapping]]] = ..., image_urls: _Optional[_Iterable[str]] = ..., tenant_id: _Optional[str] = ...) -> None: ...
 
 class CatalogVariant(_message.Message):
-    __slots__ = ("id", "product_id", "sku", "color_name", "color_hex", "width_m", "price", "price_unit", "old_price", "is_active")
+    __slots__ = ("id", "product_id", "sku", "color_name", "color_hex", "width_m", "price", "price_unit", "old_price", "is_active", "tenant_id")
     ID_FIELD_NUMBER: _ClassVar[int]
     PRODUCT_ID_FIELD_NUMBER: _ClassVar[int]
     SKU_FIELD_NUMBER: _ClassVar[int]
@@ -357,6 +361,7 @@ class CatalogVariant(_message.Message):
     PRICE_UNIT_FIELD_NUMBER: _ClassVar[int]
     OLD_PRICE_FIELD_NUMBER: _ClassVar[int]
     IS_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     id: str
     product_id: str
     sku: str
@@ -367,21 +372,24 @@ class CatalogVariant(_message.Message):
     price_unit: str
     old_price: float
     is_active: bool
-    def __init__(self, id: _Optional[str] = ..., product_id: _Optional[str] = ..., sku: _Optional[str] = ..., color_name: _Optional[str] = ..., color_hex: _Optional[str] = ..., width_m: _Optional[float] = ..., price: _Optional[float] = ..., price_unit: _Optional[str] = ..., old_price: _Optional[float] = ..., is_active: _Optional[bool] = ...) -> None: ...
+    tenant_id: str
+    def __init__(self, id: _Optional[str] = ..., product_id: _Optional[str] = ..., sku: _Optional[str] = ..., color_name: _Optional[str] = ..., color_hex: _Optional[str] = ..., width_m: _Optional[float] = ..., price: _Optional[float] = ..., price_unit: _Optional[str] = ..., old_price: _Optional[float] = ..., is_active: _Optional[bool] = ..., tenant_id: _Optional[str] = ...) -> None: ...
 
 class CatalogCategory(_message.Message):
-    __slots__ = ("id", "name", "slug", "parent_id", "sort_order")
+    __slots__ = ("id", "name", "slug", "parent_id", "sort_order", "tenant_id")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     SLUG_FIELD_NUMBER: _ClassVar[int]
     PARENT_ID_FIELD_NUMBER: _ClassVar[int]
     SORT_ORDER_FIELD_NUMBER: _ClassVar[int]
+    TENANT_ID_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     slug: str
     parent_id: str
     sort_order: int
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., slug: _Optional[str] = ..., parent_id: _Optional[str] = ..., sort_order: _Optional[int] = ...) -> None: ...
+    tenant_id: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., slug: _Optional[str] = ..., parent_id: _Optional[str] = ..., sort_order: _Optional[int] = ..., tenant_id: _Optional[str] = ...) -> None: ...
 
 class CatalogCalcRule(_message.Message):
     __slots__ = ("key", "value", "unit", "description", "applies_to_json")
