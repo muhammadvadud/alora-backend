@@ -5,6 +5,7 @@ from typing import Any
 from uuid import UUID
 
 import pytest
+from django.core.exceptions import ValidationError
 
 from apps.catalog.models import Category, Product, ProductVariant
 from apps.common.choices import PriceUnit, UserRole
@@ -165,6 +166,9 @@ def test_ten_part_curtain_is_handled(minimal_catalog: dict[str, Any]) -> None:
 def test_zero_dimension_does_not_crash(minimal_catalog: dict[str, Any]) -> None:
     """Nol o'lchamli bo'lak nol natija qaytarishini tekshiradi."""
 
+    from apps.pricing.models import CalcRule
+    CalcRule.objects.update_or_create(key="min_cornice_length_m", defaults={"value": "0.000", "unit": "m", "is_active": True})
+    
     variant_id = str(minimal_catalog["variant"].id)
     payload = {
         "measurements": [
@@ -210,3 +214,64 @@ def test_negative_price_is_rejected(db: Any) -> None:
     assert serializer.is_valid() is False
     assert "price" in serializer.errors
     assert "0 dan kichik" in str(serializer.errors["price"][0])
+
+def test_default_limits_rejects_out_of_bounds(minimal_catalog: dict[str, Any]) -> None:
+    """Default chegaralar (0.5 - 15) ishlashini tekshiradi."""
+    
+    variant_id = str(minimal_catalog["variant"].id)
+    payload = {
+        "measurements": [
+            {
+                "length": "0.300",
+                "height": "2.500",
+                "parts": [
+                    {
+                        "variant_id": variant_id,
+                        "role": "portyera",
+                        "width_m": "0.300",
+                        "height_m": "2.500",
+                        "coef": "2.500",
+                    }
+                ],
+                "accessories": [],
+            }
+        ]
+    }
+    
+    with pytest.raises(ValidationError) as exc:
+        calculate_preview(payload)
+    
+    assert "0.500" in str(exc.value)
+
+
+def test_custom_limits_allows_large_cornice(minimal_catalog: dict[str, Any]) -> None:
+    """max_cornice_length_m=30 bo'lsa 20 m o'tishini tekshiradi."""
+    
+    from apps.pricing.models import CalcRule
+    CalcRule.objects.update_or_create(
+        key="max_cornice_length_m", 
+        defaults={"value": Decimal("30.000"), "unit": "m", "is_active": True}
+    )
+    
+    variant_id = str(minimal_catalog["variant"].id)
+    payload = {
+        "measurements": [
+            {
+                "length": "20.000",
+                "height": "2.500",
+                "parts": [
+                    {
+                        "variant_id": variant_id,
+                        "role": "portyera",
+                        "width_m": "20.000",
+                        "height_m": "2.500",
+                        "coef": "2.500",
+                    }
+                ],
+                "accessories": [],
+            }
+        ]
+    }
+    
+    result = calculate_preview(payload)
+    assert result["measurements"][0]["parts"][0]["width_m"] == "20.000"

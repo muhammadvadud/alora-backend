@@ -387,14 +387,55 @@ def _build_service_lines(
     return service_lines, total_service_sum, delivery_amount
 
 
-def _normalize_measurements(payload: Mapping[str, Any]) -> Sequence[Mapping[str, Any]]:
-    """O'lchovlar ro'yxatini xavfsiz qaytaradi."""
+def _normalize_measurements(
+    payload: Mapping[str, Any], snapshot: PricingSnapshot
+) -> Sequence[Mapping[str, Any]]:
+    """O'lchovlar ro'yxatini xavfsiz qaytaradi va chegaralarni tekshiradi."""
 
     measurement_payloads = payload.get("measurements", [])
     if not isinstance(measurement_payloads, Sequence) or isinstance(
         measurement_payloads, (str, bytes)
     ):
         raise ValidationError({"measurements": "O'lchovlar ro'yxat bo'lishi kerak"})
+
+    def _get_limit(key: str, default: Decimal) -> Decimal:
+        rule = snapshot.calc_rules.get(key)
+        return _to_decimal(rule.value) if rule else default
+
+    min_length = _get_limit("min_cornice_length_m", Decimal("0.500"))
+    max_length = _get_limit("max_cornice_length_m", Decimal("15.000"))
+    min_height = _get_limit("min_height_m", Decimal("0.500"))
+    max_height = _get_limit("max_height_m", Decimal("6.000"))
+    min_coef = _get_limit("min_coef", Decimal("1.000"))
+    max_coef = _get_limit("max_coef", Decimal("4.000"))
+
+    for measurement in measurement_payloads:
+        length = _to_decimal(measurement.get("length", ZERO))
+        height = _to_decimal(measurement.get("height", ZERO))
+
+        if not (min_length <= length <= max_length):
+            raise ValidationError(
+                {
+                    "measurements": f"karniz uzunligi {min_length}–{max_length} m oralig'ida bo'lishi kerak, kiritildi: {length}"
+                }
+            )
+
+        if not (min_height <= height <= max_height):
+            raise ValidationError(
+                {
+                    "measurements": f"karniz balandligi {min_height}–{max_height} m oralig'ida bo'lishi kerak, kiritildi: {height}"
+                }
+            )
+
+        for part in measurement.get("parts", []):
+            coef = _to_decimal(part.get("coef", _rule_value(snapshot, "coef_default")))
+            if not (min_coef <= coef <= max_coef):
+                raise ValidationError(
+                    {
+                        "measurements": f"burma koeffitsienti {min_coef}–{max_coef} oralig'ida bo'lishi kerak, kiritildi: {coef}"
+                    }
+                )
+
     return measurement_payloads
 
 
@@ -415,7 +456,7 @@ def calculate_preview(
     """Preview kalkulyatsiyasini bajaradi."""
 
     snapshot = load_pricing_snapshot()
-    measurement_payloads = _normalize_measurements(payload)
+    measurement_payloads = _normalize_measurements(payload, snapshot)
     requested_services = _normalize_services(payload)
     measurement_previews = [
         _build_measurement_preview(measurement, snapshot) for measurement in measurement_payloads
