@@ -36,7 +36,7 @@ chiqaradi, 3 xil variant tayyorlaydi va buyurtma qoralamasini shakllantiradi.
 |---|---|---|
 | `employee` | Sotuvchi | AI chat (matn + ovoz), o'z suhbatlari tarixi, buyurtma qoralamasi yaratish |
 | `manager` | Do'kon rahbari | `employee` hamma imkoniyatlari + **mahsulot bazasi va narxlarni boshqarish (mobil ilovada)**, xodimlar, har bir xodimning token/xarajat statistikasi, suhbatlarni ko'rish, limit qo'yish, buyurtmalar |
-| `admin` | Texnik admin | `manager` + system prompt, LLM sozlamalari, tannarx, ModelPricing |
+| `admin` | Texnik admin | `manager` + LLM sozlamalari, tannarx (system prompt va ModelPricing — manager ham) |
 
 **Mijoz rejimi:** sotuvchi o'z planshetida "Mijoz rejimi"ni yoqib, qurilmani mijozga uzatishi mumkin.
 Bu rejimda faqat chat ko'rinadi (narx tannarxi, ichki izohlar, admin tugmalar yashiriladi).

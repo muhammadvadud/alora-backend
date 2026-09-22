@@ -9,7 +9,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.common.permissions import IsAdmin
+from apps.common.permissions import IsManager
 from apps.prompts.models import PromptVersion
 from apps.prompts.selectors import get_prompt_history
 from apps.prompts.serializers import PromptReadSerializer, PromptWriteSerializer
@@ -24,7 +24,7 @@ class PromptVersionViewSet(viewsets.GenericViewSet):
     - `POST /settings/prompt/{version}/rollback/` — eski versiyaga qaytish (11.4-band).
     """
 
-    permission_classes = (IsAdmin,)
+    permission_classes = (IsManager,)
     lookup_field = "version"
     queryset = PromptVersion.objects.all()
     serializer_class = PromptReadSerializer

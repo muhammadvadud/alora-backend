@@ -246,7 +246,7 @@ def test_model_pricing_endpoints(api_client: APIClient) -> None:
     assert api_client.get(url_list).status_code == 403
 
     api_client.force_authenticate(user=manager)
-    assert api_client.get(url_list).status_code == 403
+    assert api_client.get(url_list).status_code == 200  # 2026-09-22: manager ham ko'radi
 
     api_client.force_authenticate(user=admin)
     assert api_client.get(url_list).status_code == 200

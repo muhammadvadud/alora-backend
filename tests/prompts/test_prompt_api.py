@@ -42,17 +42,18 @@ class TestPermission:
         response = auth_client(employee).post(f"{PROMPT_URL}1/rollback/")
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_manager_cannot_list(self, auth_client: Any, manager: Any) -> None:
-        assert auth_client(manager).get(PROMPT_URL).status_code == status.HTTP_403_FORBIDDEN
+    # 2026-09-22: TZ o'zgardi — system prompt manager uchun ham ochiq.
+    def test_manager_can_list(self, auth_client: Any, manager: Any) -> None:
+        assert auth_client(manager).get(PROMPT_URL).status_code == status.HTTP_200_OK
 
-    def test_manager_cannot_create(self, auth_client: Any, manager: Any) -> None:
+    def test_manager_can_create(self, auth_client: Any, manager: Any) -> None:
         response = auth_client(manager).post(PROMPT_URL, {"content": "test"})
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_201_CREATED
 
-    def test_manager_cannot_rollback(self, auth_client: Any, manager: Any, admin: Any) -> None:
+    def test_manager_can_rollback(self, auth_client: Any, manager: Any, admin: Any) -> None:
         _seed_versions(admin=admin, contents=["A", "B"])
         response = auth_client(manager).post(f"{PROMPT_URL}1/rollback/")
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_200_OK
 
     def test_admin_can_list(self, auth_client: Any, admin: Any) -> None:
         assert auth_client(admin).get(PROMPT_URL).status_code == status.HTTP_200_OK

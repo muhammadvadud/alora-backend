@@ -529,7 +529,7 @@ Har qoidada `description` bor — mobil ilovada tushuntirish matni sifatida ko'r
 
 Manager "shu xonaga shu fasonni tavsiya qil" degan qoidani telefondan qo'sha oladi.
 
-### 6.4 System prompt (faqat admin)
+### 6.4 System prompt (manager va admin)
 | Method | Endpoint |
 |---|---|
 | GET | `/settings/prompt/` (joriy + versiyalar tarixi) |

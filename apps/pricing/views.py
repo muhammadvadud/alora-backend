@@ -11,7 +11,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.common.permissions import IsAdmin, IsManager
+from apps.common.permissions import IsManager
 from apps.pricing.models import (
     CalcRule,
     DiscountPolicy,
@@ -212,7 +212,7 @@ class OrderDefaultsViewSet(ManagerOnlyViewSetMixin, viewsets.GenericViewSet):
 class ModelPricingViewSet(viewsets.ModelViewSet):
     """Model narxlari uchun admin-only CRUD."""
 
-    permission_classes = [IsAdmin]
+    permission_classes = [IsManager]
     queryset = ModelPricing.objects.all()
     serializer_class = ModelPricingSerializer
 
