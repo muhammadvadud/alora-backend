@@ -63,3 +63,6 @@ celerybeat.pid
 .forge/
 ruff_errors.json
 staticfiles/
+
+# Lokal agent/muharrir sozlamalari
+.claude/
