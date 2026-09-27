@@ -1,11 +1,10 @@
 from typing import Any
 
-from django.contrib.auth import get_user_model
-from django.contrib.auth import password_validation
+from django.contrib.auth import get_user_model, password_validation
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from apps.common.choices import OnExceed, UsagePeriod
+from apps.common.choices import OnExceed, UsagePeriod, UserRole
 
 User = get_user_model()
 
@@ -73,6 +72,27 @@ class EmployeeWriteSerializer(serializers.ModelSerializer):
             "is_active": {"required": False},
         }
 
+    def validate_role(self, value: str) -> str:
+        # Jamoa paneli admin yaratmaydi va admin'ga ko'tarmaydi: aks holda manager
+        # o'zini yoki yangi akkauntni admin qilib, tenantni to'liq egallardi.
+        if value == UserRole.ADMIN:
+            raise serializers.ValidationError("Admin rolini jamoa panelidan berib bo'lmaydi.")
+        return value
+
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        request = self.context.get("request")
+        is_self = (
+            self.instance is not None
+            and request is not None
+            and self.instance.pk == request.user.pk
+        )
+        # O'z rolini/holatini o'zgartirish — imtiyoz oshirish yoki o'zini bloklab qo'yish yo'li.
+        if is_self and ({"role", "is_active"} & attrs.keys()):
+            raise serializers.ValidationError(
+                "O'z rolingiz yoki holatingizni jamoa panelidan o'zgartira olmaysiz."
+            )
+        return attrs
+
     def create(self, validated_data: dict[str, Any]) -> User:
         password = validated_data.pop("password", None)
         user = User.objects.create_user(**validated_data)
@@ -112,14 +132,18 @@ class EmployeeLimitSerializer(serializers.Serializer):
 class EmployeePasswordSerializer(serializers.Serializer):
     """Xodim parolini almashtirish uchun yozish serializer'i."""
 
-    password = serializers.CharField(write_only=True, min_length=8, style={"input_type": "password"})
+    password = serializers.CharField(
+        write_only=True, min_length=8, style={"input_type": "password"}
+    )
     password_confirmation = serializers.CharField(
         write_only=True, min_length=8, style={"input_type": "password"}
     )
 
     def validate(self, attrs: dict[str, str]) -> dict[str, str]:
         if attrs["password"] != attrs["password_confirmation"]:
-            raise serializers.ValidationError({"password_confirmation": "Parollar bir xil bo'lishi kerak."})
+            raise serializers.ValidationError(
+                {"password_confirmation": "Parollar bir xil bo'lishi kerak."}
+            )
         password_validation.validate_password(attrs["password"], self.context.get("user"))
         return attrs
 

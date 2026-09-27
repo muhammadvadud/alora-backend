@@ -54,7 +54,9 @@ class AuthMePasswordView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": "Parol muvaffaqiyatli o'zgartirildi."}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "Parol muvaffaqiyatli o'zgartirildi."}, status=status.HTTP_200_OK
+        )
 
 
 @extend_schema_view(
@@ -130,7 +132,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         return self.queryset
 
     def get_serializer_class(self):
-        if self.action in ("create", "partial_update"):
+        # PUT ham yozish serializer'idan o'tadi — ro'yxat serializer'ida role/is_active
+        # tekshiruvsiz yoziladigan edi.
+        if self.action in ("create", "update", "partial_update"):
             return EmployeeWriteSerializer
         return EmployeeListSerializer
 

@@ -196,3 +196,72 @@ class TestEmployeeConversations:
         outsider = EmployeeFactory(tenant=other_tenant)
         response = auth_client(manager).get(f"{TEAM_LIST_URL}{outsider.id}/")
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+class TestRoleEscalation:
+    """Imtiyoz oshirish yo'llari yopiq (xavfsizlik auditi 2026-09-27)."""
+
+    def test_manager_cannot_promote_self_to_admin(self, auth_client, manager):
+        response = auth_client(manager).patch(f"{TEAM_LIST_URL}{manager.id}/", {"role": "admin"})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        manager.refresh_from_db()
+        assert manager.role == "manager"
+
+    def test_manager_cannot_promote_self_via_put(self, auth_client, manager):
+        response = auth_client(manager).put(
+            f"{TEAM_LIST_URL}{manager.id}/",
+            {"phone": manager.phone, "full_name": "X", "role": "admin"},
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        manager.refresh_from_db()
+        assert manager.role == "manager"
+
+    def test_manager_cannot_create_admin(self, auth_client, manager):
+        response = auth_client(manager).post(
+            TEAM_LIST_URL,
+            {
+                "phone": "+998907770003",
+                "full_name": "Rogue",
+                "password": "x1234567A!",
+                "role": "admin",
+            },
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert not User.objects.filter(phone="+998907770003").exists()
+
+    def test_manager_cannot_make_employee_admin(self, auth_client, manager, employee):
+        response = auth_client(manager).patch(f"{TEAM_LIST_URL}{employee.id}/", {"role": "admin"})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        employee.refresh_from_db()
+        assert employee.role == "employee"
+
+    def test_admin_cannot_create_admin_via_team(self, auth_client, admin):
+        response = auth_client(admin).post(
+            TEAM_LIST_URL,
+            {
+                "phone": "+998907770004",
+                "full_name": "A2",
+                "password": "x1234567A!",
+                "role": "admin",
+            },
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_manager_cannot_deactivate_self(self, auth_client, manager):
+        response = auth_client(manager).patch(f"{TEAM_LIST_URL}{manager.id}/", {"is_active": False})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        manager.refresh_from_db()
+        assert manager.is_active
+
+    def test_manager_can_still_edit_own_name(self, auth_client, manager):
+        response = auth_client(manager).patch(
+            f"{TEAM_LIST_URL}{manager.id}/", {"full_name": "Yangi Ism"}
+        )
+
+        assert response.status_code == status.HTTP_200_OK
