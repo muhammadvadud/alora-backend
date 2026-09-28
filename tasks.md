@@ -248,6 +248,7 @@
 - [x] 14.8 Katalog API ≤ 300 ms o'lchovi
 - [x] 14.9 DB indekslarini `EXPLAIN` bilan tekshirish
 - [x] 14.10 Xavfsizlik auditi (2026-09-27): jamoa panelidan admin roli berilmaydi, o'z roli/holati o'zgartirilmaydi, PUT ham yozish serializer'idan o'tadi
+- [x] 14.11 gRPC service token vaqtga bog'liq bo'lmagan solishtirish (`hmac.compare_digest`), token sozlanmagan bo'lsa fail-closed
 
 ## Bosqich 15 — Hujjat va yetkazish
 

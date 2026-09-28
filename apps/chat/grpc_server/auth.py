@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hmac
 from collections.abc import Callable
 from typing import Any
 
@@ -19,6 +20,28 @@ def _metadata_token(details: grpc.HandlerCallDetails) -> str:
         if key.lower() == "x-service-token":
             return value
     return ""
+
+
+def tokens_match(provided: str | None, expected: str | None) -> bool:
+    """Ikki tokenni vaqtga bog'liq bo'lmagan usulda solishtiradi.
+
+    `!=` operatori satrlarni qisqa-circuit (mexanizm bo'yicha) solishtiradi:
+    birinchi farqli belgida to'xtaydi. Masalan `""` bilan `"ab..."` ni solishtirish
+    uchun chaqiruvchi 1, `"ab"` bilan `"ac..."` ni solishtirish uchun 2 ta urinish
+    kerak bo'lardi — bu token'ni bosqichma-bosqich topishga (oracle attack) imkon
+    beradi. `hmac.compare_digest` esa har doim ikkala argumentning to'liq
+    uzunligini tekshiradi va vaqtga bog'liq bo'lmagan taqqoslashni kafolatlaydi.
+
+    `None` va bo'sh satr bir xil — "token yuborilmagan" holati. Kutilgan token
+    bo'sh bo'lsa solishtirish har doim rad etadi: aks holda `"" == ""` bo'lib,
+    token sozlanmagan prod'da tokensiz har qanday so'rov o'tib ketardi (fail-closed).
+    """
+
+    left = provided or ""
+    right = expected or ""
+    if not right:
+        return False
+    return hmac.compare_digest(left, right)
 
 
 class ServiceTokenInterceptor(grpc.ServerInterceptor):
@@ -40,7 +63,7 @@ class ServiceTokenInterceptor(grpc.ServerInterceptor):
             return None
 
         def check(context: grpc.ServicerContext) -> bool:
-            if _metadata_token(handler_call_details) != expected:
+            if not tokens_match(_metadata_token(handler_call_details), expected):
                 context.abort(grpc.StatusCode.UNAUTHENTICATED, "service token noto'g'ri")
             return True
 
