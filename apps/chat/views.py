@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+import structlog
 from django.http import StreamingHttpResponse
 from drf_spectacular.utils import extend_schema
 from google.protobuf.json_format import MessageToDict
@@ -33,6 +34,12 @@ from apps.chat.tasks import (
 )
 from apps.common.models import TenantScopedQuerySetMixin
 from apps.common.pagination import StandardCursorPagination
+
+logger = structlog.get_logger(__name__)
+
+# Mijozga qaytariladigan umumiy xato matni. Ichki xato tafsilotlari
+# (grpc `debug_error_string`, iz manzillari, tracing id) faqat server logida qoladi.
+GENERIC_STREAM_ERROR = "AI javob berishda xatolik yuz berdi. Qayta urinib ko'ring."
 
 
 class ConversationViewSet(
@@ -203,9 +210,23 @@ class ConversationMessagesView(APIView):
                         if isinstance(event, AgentUnavailable) or (
                             hasattr(event, "code") and event.code() == grpc.StatusCode.UNAVAILABLE
                         ):
+                            logger.warning(
+                                "chat_agent_unavailable",
+                                conversation_id=str(conversation.id),
+                            )
                             yield f"data: {json.dumps({'kind': 'error', 'detail': 'AI xizmati vaqtincha ishlamayapti'})}\n\n"
                         else:
-                            yield f"data: {json.dumps({'kind': 'error', 'detail': str(event)})}\n\n"
+                            # Ichki xato matni (grpc `debug_error_string`: ichki
+                            # manzilar, kod nuqtalari, tracing id) mijozga
+                            # yuborilmaydi — faqat umumiy matn. To'liq xato
+                            # serverda qoladi (rules.md §12).
+                            logger.error(
+                                "chat_stream_failed",
+                                conversation_id=str(conversation.id),
+                                error=str(event),
+                                exc_info=event,
+                            )
+                            yield f"data: {json.dumps({'kind': 'error', 'detail': GENERIC_STREAM_ERROR})}\n\n"
                         break
 
                     event_dict = MessageToDict(event, preserving_proto_field_name=True)

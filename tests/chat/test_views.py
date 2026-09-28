@@ -1,5 +1,6 @@
 """Chat viewlari testlari."""
 
+from unittest import mock
 from unittest.mock import patch
 
 import pytest
@@ -7,6 +8,7 @@ from django.urls import reverse
 from rest_framework import status
 
 from apps.chat.exceptions import AgentUnavailable
+from apps.chat.views import GENERIC_STREAM_ERROR
 
 pytestmark = pytest.mark.django_db
 
@@ -163,13 +165,80 @@ class TestChatStream:
         content = asyncio.run(_read_stream())
         assert 'data: {"kind": "error", "detail": "AI xizmati vaqtincha ishlamayapti"}' in content
 
+    @patch("apps.chat.views.chat_stream")
+    def test_internal_grpc_error_not_leaked_to_client(
+        self, mock_chat_stream, api_client, employee_user, conversation_factory
+    ):
+        """Ichki xato matni (grpc `debug_error_string`) SSE orqali mijozga ketmaydi."""
+        conv = conversation_factory(user=employee_user)
+
+        internal = (
+            "<_InactiveRpcError of RPC that terminated with:\n"
+            "\tstatus = StatusCode.INTERNAL\n"
+            '\tdetails = "db:5432 password=secret"\n'
+            '\tdebug_error_string = "UNKNOWN:Error received from peer 10.0.0.7:9091"'
+        )
+        mock_chat_stream.side_effect = RuntimeError(internal)
+
+        api_client.force_authenticate(user=employee_user)
+        url = reverse("chat:conversation-messages-stream", kwargs={"pk": str(conv.id)})
+
+        response = api_client.post(url, {"content": "salom"}, format="json")
+        assert response.status_code == status.HTTP_200_OK
+
+        import asyncio
+
+        async def _read_stream():
+            chunks = []
+            async for chunk in response.streaming_content:
+                if type(chunk) == bytes:
+                    chunks.append(chunk.decode("utf-8"))
+                else:
+                    chunks.append(chunk)
+            return "".join(chunks)
+
+        content = asyncio.run(_read_stream())
+
+        assert f'"detail": "{GENERIC_STREAM_ERROR}"' in content
+        assert "debug_error_string" not in content
+        assert "10.0.0.7" not in content
+        assert "db:5432" not in content
+        assert "password=secret" not in content
+
+    @patch("apps.chat.views.chat_stream")
+    def test_internal_error_is_logged_server_side(
+        self, mock_chat_stream, api_client, employee_user, conversation_factory
+    ):
+        """To'liq xato serverda qoladi: `conversation_id` bilan log'ga yoziladi."""
+        conv = conversation_factory(user=employee_user)
+        mock_chat_stream.side_effect = RuntimeError("grpc: internal manzil 10.0.0.7:9091")
+
+        api_client.force_authenticate(user=employee_user)
+        url = reverse("chat:conversation-messages-stream", kwargs={"pk": str(conv.id)})
+        response = api_client.post(url, {"content": "salom"}, format="json")
+
+        import asyncio
+
+        async def _drain():
+            async for _ in response.streaming_content:
+                pass
+
+        fake_logger = mock.Mock()
+        with patch("apps.chat.views.logger", fake_logger):
+            asyncio.run(_drain())
+
+        calls = [call.kwargs for call in fake_logger.error.call_args_list]
+        assert calls, "chat_stream_failed log'lanmadi"
+        assert calls[0]["conversation_id"] == str(conv.id)
+        assert "10.0.0.7" in calls[0]["error"]
+
     @patch("apps.chat.services.cache.incr")
     def test_rate_limit_exceeded(
         self, mock_cache_incr, api_client, employee_user, conversation_factory
     ):
         """Limitdan oshib ketganda 429 xatosi qaytariladi."""
         conv = conversation_factory(user=employee_user)
-        mock_cache_incr.return_value = 100  # Xodim limiti 10
+        mock_cache_incr.return_value = 100  # xodim chegarasi (fallback 20)dan ko'p
 
         api_client.force_authenticate(user=employee_user)
         url = reverse("chat:conversation-messages-stream", kwargs={"pk": str(conv.id)})
