@@ -1,6 +1,8 @@
 services:
   django:
-    command: python manage.py runserver 0.0.0.0:8000
+    # runserver WSGI (daphne yo'q) — ovozli WS ishlamaydi; dev ham prod kabi ASGI
+    # (uvicorn) da, --reload kod o'zgarishini kuzatadi (rules.md 17.6).
+    command: uvicorn config.asgi:application --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/app
 
