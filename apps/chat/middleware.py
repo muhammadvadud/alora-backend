@@ -19,6 +19,8 @@ from __future__ import annotations
 from typing import Any
 
 from channels.db import database_sync_to_async
+from channels.security.websocket import OriginValidator
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -70,3 +72,29 @@ class JwtAuthMiddleware:
         scope = dict(scope)
         scope["user"] = await _get_user(token) if token else AnonymousUser()
         return await self.inner(scope, receive, send)
+
+
+class NativeClientOriginValidator(OriginValidator):
+    """`Origin` sarlavhasisiz native (mobil) klientga ruxsat beruvchi validator.
+
+    Channels'ning standart validatori `Origin` yo'q ulanishni rad etadi, `dart:io`
+    WebSocket esa uni yubormaydi — mobil ovozli chat 403 olardi. Origin tekshiruvi
+    brauzer cookie'si bilan bo'ladigan CSWSH'dan himoya qiladi; bu kanalda auth
+    faqat subprotocol'dagi JWT orqali (brauzer uni o'zi qo'sha olmaydi), shuning
+    uchun `Origin` yo'qligi xavf emas. `Origin` kelsa — ALLOWED_HOSTS bo'yicha
+    avvalgidek tekshiriladi.
+    """
+
+    def valid_origin(self, parsed_origin: Any) -> bool:
+        if parsed_origin is None:
+            return True
+        return bool(super().valid_origin(parsed_origin))
+
+
+def allowed_hosts_origin_validator(application: Any) -> NativeClientOriginValidator:
+    """`AllowedHostsOriginValidator` ekvivalenti, native klient istisnosi bilan."""
+
+    allowed_hosts = list(settings.ALLOWED_HOSTS)
+    if settings.DEBUG and not allowed_hosts:
+        allowed_hosts = ["localhost", "127.0.0.1", "[::1]"]
+    return NativeClientOriginValidator(application, allowed_hosts)

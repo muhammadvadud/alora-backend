@@ -254,6 +254,7 @@
 - [x] 14.14 Ovozli WS: token faqat `Sec-WebSocket-Protocol: bearer, <token>` orqali, `?token=` qabul qilinmaydi, server `bearer` ni tanlaydi
 - [x] 14.15 Xodim uchun chat limiti fallback'i daqiqasiga 10 → 20 (CalcRule ustunligi saqlanadi)
 - [x] 14.16 Ovozli WS infratuzilmasi: `websockets` (uvicorn WS backend), nginx `/ws/` Upgrade proksisi, dev'da ASGI (uvicorn --reload) — rules.md 17.6
+- [x] 14.17 WS Origin validatori: `Origin`siz native (mobil) klient o'tadi, `Origin` kelsa ALLOWED_HOSTS tekshiriladi; handshake haqiqiy ASGI zanjiri orqali testlanadi
 
 ## Bosqich 15 — Hujjat va yetkazish
 
