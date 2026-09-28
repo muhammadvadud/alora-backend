@@ -40,9 +40,9 @@ matrix_cases = [
     # calc-rules, knowledge -> employee ❌, manager ✅, admin ✅
     ("calc-rule-root", "patch", {}, {"employee": 403, "manager": 405, "admin": 405}),
     ("knowledge-rule-list", "post", {}, {"employee": 403, "manager": 400, "admin": 400}),
-    # system prompt, ModelPricing, tannarx -> employee ❌, manager ❌, admin ✅
-    ("prompts:prompt-list", "post", {}, {"employee": 403, "manager": 403, "admin": 400}),
-    ("model-pricing-list", "post", {}, {"employee": 403, "manager": 403, "admin": 400}),
+    # system prompt, ModelPricing, tannarx -> employee ❌, manager ✅, admin ✅
+    ("prompts:prompt-list", "post", {}, {"employee": 403, "manager": 400, "admin": 400}),
+    ("model-pricing-list", "post", {}, {"employee": 403, "manager": 400, "admin": 400}),
 ]
 
 

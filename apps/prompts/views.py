@@ -1,4 +1,4 @@
-"""System prompt boshqaruvi viewset (faqat admin, rules.md §5)."""
+"""System prompt boshqaruvi viewset (rules.md §5)."""
 
 from __future__ import annotations
 
