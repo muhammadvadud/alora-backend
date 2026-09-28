@@ -1,8 +1,14 @@
 """WebSocket uchun JWT autentifikatsiya middleware'i (mobil rules §8.6, tasks 16.1).
 
-Session cookie o'rniga `access` token quyidagi joylardan olinadi (birinchisi ustun):
-1. Query: `?token=<access>` — mobil `VoiceSocket` shu variantni ishlatadi.
-2. `Sec-WebSocket-Protocol: bearer, <access>` sarlavhasi.
+`access` token FAQAT `Sec-WebSocket-Protocol: bearer, <access>` sarlavhasidan
+olinadi. Mijoz handshake'da "bearer" subprotocol'ini taklif qiladi, server
+shu javobni tanlab qabul qiladi (boshqa subprotocol'ni tanlash xato — mijoz
+javob sarlavhasini tekshirib, mos kelmasa ulanishni uzadi).
+
+`?token=` query parametri **qo'llab-quvvatlanmaydi**: URL access-log'ga,
+proksi log'iga va server tarixiga to'liq yoziladi, shuning uchun token
+tashqariga sizib chiqadi. `locale` kabi token bo'lmagan parametrlar
+query'da qolishi mumkin.
 
 Token yo'q/yaroqsiz bo'lsa `scope["user"]` `AnonymousUser` bo'ladi va consumer
 1008 bilan yopadi. Ma'lumotlar bazasiga faqat token tekshirilgandan keyin murojaat qilinadi.
@@ -11,7 +17,6 @@ Token yo'q/yaroqsiz bo'lsa `scope["user"]` `AnonymousUser` bo'ladi va consumer
 from __future__ import annotations
 
 from typing import Any
-from urllib.parse import parse_qs
 
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
@@ -20,22 +25,22 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.settings import api_settings as jwt_settings
 from rest_framework_simplejwt.tokens import AccessToken
 
-_PROTOCOL_PREFIX = "bearer"
+# Handshake'da tanlanadigan subprotocol nomi (mobil shu nomni yuboradi).
+BEARER_SUBPROTOCOL = "bearer"
 
 
 def extract_token(scope: dict[str, Any]) -> str | None:
-    """Scope'dan access tokenni ajratadi (query → subprotocol)."""
+    """Scope'dan access tokenni ajratadi (faqat `Sec-WebSocket-Protocol` dan).
 
-    query = parse_qs(scope.get("query_string", b"").decode("utf-8"))
-    token = (query.get("token") or [""])[0].strip()
-    if token:
-        return token
+    Query string'dan o'qish ataylab bajarilmaydi: `?token=` bilan kelgan
+    ulanish autentifikatsiyasiz deb hisoblanadi va consumer 1008 bilan yopadi.
+    """
 
     for name, value in scope.get("headers", []):
         if name != b"sec-websocket-protocol":
             continue
         parts = [p.strip() for p in value.decode("utf-8").split(",")]
-        if len(parts) >= 2 and parts[0].lower() == _PROTOCOL_PREFIX:
+        if len(parts) >= 2 and parts[0].lower() == BEARER_SUBPROTOCOL:
             return parts[1] or None
     return None
 

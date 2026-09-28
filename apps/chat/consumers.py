@@ -2,6 +2,12 @@
 
 Kanal: /ws/voice/{conversation_id}/
 
+Autentifikatsiya: `access` token `Sec-WebSocket-Protocol: bearer, <token>`
+sarlavhasidan olinadi (query'dagi `?token=` qo'llab-quvvatlanmaydi — u
+access-log'larga tushadi). Mijoz "bearer" ni taklif qilgan bo'lsa, server
+shu subprotocol'ni tanlab qabul qiladi (RFC 6455: `accept()` da tanlanmagan
+subprotocol mijozning taklifiga mos kelmasa mijoz ulanishni uzadi).
+
 Oqim: mijozdan kelgan audio bo'laklari (bytes) navbatga qo'yiladi, ular
 Agent.VoiceChat bidi-stream'iga uzatiladi; Go qaytargan VoiceEvent'lar
 mijozga qaytariladi (audio — binary, matn — JSON).
@@ -24,6 +30,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
 
 from apps.chat.grpc_client import voice_chat_stream
+from apps.chat.middleware import BEARER_SUBPROTOCOL
 from apps.chat.models import Conversation
 from apps.chat.tasks import save_message_and_usage, set_conversation_title
 
@@ -31,6 +38,17 @@ logger = structlog.get_logger(__name__)
 
 # Mijozdan kelayotgan audio bo'laklari uchun navbat chegarasi
 QUEUE_MAXSIZE = 64
+
+
+def _offers_bearer_subprotocol(scope: dict[str, Any]) -> bool:
+    """Mijoz handshake'da `bearer` subprotocol'ini taklif qilganmi?"""
+
+    for name, value in scope.get("headers", []):
+        if name != b"sec-websocket-protocol":
+            continue
+        parts = [p.strip() for p in value.decode("utf-8").split(",")]
+        return bool(parts) and parts[0].lower() == BEARER_SUBPROTOCOL
+    return False
 
 
 class VoiceChatConsumer(AsyncWebsocketConsumer):
@@ -58,11 +76,17 @@ class VoiceChatConsumer(AsyncWebsocketConsumer):
         self._conversation = conversation
         self._user = user
         query_string = self.scope.get("query_string", b"").decode("utf-8")
+        # `locale` token bo'lmagan parametr — query'da qoladi.
         self._locale = parse_qs(query_string).get("locale", ["uz"])[0] or "uz"
         self._transcript = ""
 
         self._queue = asyncio.Queue(maxsize=QUEUE_MAXSIZE)
-        await self.accept()
+        # Mobil "bearer" ni taklif qiladi — javobda aynan shuni tanlaymiz,
+        # aks holda mijoz javobni "bearer" deb kutsa ulanishni uzadi.
+        if _offers_bearer_subprotocol(self.scope):
+            await self.accept(subprotocol=BEARER_SUBPROTOCOL)
+        else:
+            await self.accept()
         self._pump_task = asyncio.create_task(self._pump_events())
         logger.info("voice_ws_connected", conversation_id=self.conversation_id)
 

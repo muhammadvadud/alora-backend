@@ -251,6 +251,7 @@
 - [x] 14.11 gRPC service token vaqtga bog'liq bo'lmagan solishtirish (`hmac.compare_digest`), token sozlanmagan bo'lsa fail-closed
 - [x] 14.12 Usage yozuvida `tenant_id` chaqiruvchidan emas, foydalanuvchining haqiqiy tenantidan olinadi
 - [x] 14.13 SSE xato javobida ichki gRPC xato matni mijozga qaytmaydi, faqat server log'ida
+- [x] 14.14 Ovozli WS: token faqat `Sec-WebSocket-Protocol: bearer, <token>` orqali, `?token=` qabul qilinmaydi, server `bearer` ni tanlaydi
 
 ## Bosqich 15 — Hujjat va yetkazish
 
