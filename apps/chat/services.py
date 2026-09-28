@@ -40,8 +40,9 @@ def check_rate_limit(user: Any) -> None:
         rule = CalcRule.objects.get(key=f"chat_rate_limit_{role}")
         limit = int(rule.value)
     except Exception:  # noqa: BLE001
-        limits = {"employee": 10, "manager": 30, "admin": 100}
-        limit = limits.get(role, 10)
+        # Fallback: xodim uchun 20 (tez yozadigan sotuvchi 429 olmasligi uchun)
+        limits = {"employee": 20, "manager": 30, "admin": 100}
+        limit = limits.get(role, 20)
 
     key = f"chat_rate_limit:{user.id}"
 
