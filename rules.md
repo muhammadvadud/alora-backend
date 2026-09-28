@@ -477,3 +477,26 @@ ikkovi ham rad etildi. faqat unfold joriy admin'ni qamrab oladi.
 
 **Qaror:** django-unfold qo'shildi, admin visual modernizatsiya qilindi. Foydalanuvchi
 tomonidan tasdiqlangan (2026-09-18).
+
+### 17.6 `websockets` bog'liqligi qo'shildi (2026-09-28)
+
+**Chetlanish:** `pyproject.toml` ga yangi tashqi bog'liqlik — `websockets` (sof Python,
+uvicorn'ning rasmiy WebSocket backend'i) qo'shildi. nginx'ga `/ws/` uchun Upgrade
+proksisi, dev override'da Django `runserver` o'rniga `uvicorn --reload` (ASGI).
+
+**Sabab:** TZ 5.2 ovozli suhbat kanali (`/ws/voice/{id}/`) hech qaysi muhitda
+ishlamas edi: uvicorn WebSocket kutubxonasisiz o'rnatilgan ("No supported WebSocket
+library detected" → HTTP 404), nginx `Upgrade`/`Connection` sarlavhalarini
+uzatmas, dev `runserver` esa (daphne yo'q) WSGI bo'lib WS'ni umuman bilmas edi.
+2026-09-28 xavfsizlik auditida WS auth'ni jonli tekshirishda aniqlandi.
+
+**Ta'sir doirasi:** `pyproject.toml`, `requirements.txt`, `docker/nginx.conf`,
+`docker-compose.override.yml`. Kod o'zgarmaydi — `config/asgi.py` va Channels
+marshruti allaqachon mavjud.
+
+**Muqobil variantlar:** (a) `uvicorn[standard]` — websockets bilan birga uvloop,
+httptools, watchfiles (C-extension'lar) keladi, bu vazifa uchun ortiqcha; (b) `wsproto`
+— ishlaydi, lekin uvicorn hujjatlarida birlamchi emas; (c) `daphne` — ikkinchi ASGI
+server, prod'da uvicorn bor, ikkitasini saqlash ortiqcha. Hammasi rad etildi.
+
+**Qaror:** `websockets` qo'shildi. Foydalanuvchi tomonidan tasdiqlangan (2026-09-28).
