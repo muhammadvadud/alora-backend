@@ -79,6 +79,37 @@ def _tenant_exists(backend_tenant_id: str) -> bool:
     return Tenant.objects.filter(pk=backend_tenant_id).exists()
 
 
+def resolve_tenant_id(reported: str, user: Any) -> str:
+    """Hisob yozuvi uchun ishonchli tenant id qaytaradi.
+
+    `tenant_id` gRPC orqali keladi — ya'ni tashqi chaqiruvchining bergan
+    qiymati. Kelgan qiymat foydalanuvchining haqiqiy tenant'idan farq qilsa,
+    HISOB boshqa tenant'ga yozilishi mumkin edi (bir tenant'ning foydalanishi
+    ikkinchisining hisobiga tushishi). Shuning uchun ishonchli manba —
+    `user.tenant_id`. Farq `logger.warning` bilan qayd etiladi: bu holat
+    odatiy emas va sababni izlash kerak.
+
+    Args:
+        reported: chaqiruvchidan kelgan tenant id (ishonchsiz).
+        user: topilgan foydalanuvchi obyekti (`tenant_id` maydoni mavjud).
+
+    Returns:
+        Foydalanuvchining haqiqiy tenant id si; user'da tenant yo'q bo'lsa
+        kelgan qiymat (keyin `_tenant_exists` tekshiruvi qo'llaniladi).
+    """
+    trusted = str(getattr(user, "tenant_id", "") or "")
+    claimed = str(reported or "")
+
+    if trusted and claimed and claimed != trusted:
+        logger.warning(
+            "usage_record_tenant_mismatch",
+            user_id=str(getattr(user, "pk", "")),
+            reported_tenant_id=claimed,
+            actual_tenant_id=trusted,
+        )
+    return trusted or claimed
+
+
 @shared_task(bind=True, max_retries=3, autoretry_for=(Exception,), retry_backoff=True)
 def save_usage_record(
     self,
@@ -107,13 +138,17 @@ def save_usage_record(
     yangi yozuv yaratilmaydi, mavjud yozuv yangilanadi. Foydalanuvchi
     yoki tenant topilmasa hech narsa yozilmaydi (qaytadan urinishdan
     takror yozuv paydo bo'lmaydi).
+
+    `tenant_id` chaqiruvchidan keladi va ishonchsiz — u foydalanuvchining
+    haqiqiy tenant'i bilan solishtiriladi, mos kelmasa user'niki ishlatiladi
+    (`resolve_tenant_id`).
     """
     user = _user(user_id)
     if user is None:
         logger.warning("usage_record_user_not_found", user_id=user_id, session_id=session_id)
         return None
 
-    tenant_id = tenant_id or str(user.tenant_id or "")
+    tenant_id = resolve_tenant_id(tenant_id, user)
     if not _tenant_exists(tenant_id):
         logger.warning("usage_record_tenant_not_found", tenant_id=tenant_id, session_id=session_id)
         return None

@@ -21,6 +21,32 @@ from grpc_gen import alora_pb2_grpc
 logger = structlog.get_logger(__name__)
 
 
+def _trusted_tenant_id(data: dict[str, Any]) -> str:
+    """gRPC so'rovidagi `tenant_id` ni ishonchli qiymat bilan almashtiradi.
+
+    `ReportUsage` chaqiruvchisi (Go agent) `tenant_id` ni o'zi yuboradi — bu
+    ishonchsiz qiymat: noto'g'ri tenant ko'rsatilsa, foydalanish hisobi boshqa
+    tenant'ga yozilishi (boshqa mijozga yuklanishi) mumkin. Shu sababli foydalanuvchi
+    topilib, uning haqiqiy tenant'i olinadi; topilmasa kelgan qiymat qoldiriladi
+    (Celery task foydalanuvchini qayta tekshiradi va topilmasa yozmaydi).
+    """
+
+    reported = str(data.get("tenant_id", "") or "")
+    user_id = str(data.get("user_id", "") or "")
+    if not user_id:
+        return reported
+
+    from django.apps import apps
+
+    from apps.usage.tasks import resolve_tenant_id
+
+    User = apps.get_model("accounts", "User")
+    user = User.objects.filter(pk=user_id).only("pk", "tenant_id").first()
+    if user is None:
+        return reported
+    return resolve_tenant_id(reported, user)
+
+
 def report_usage(data: dict[str, Any]) -> dict[str, Any]:
     """Ishlatilgan tokenlar/xarajat haqida hisobot qabul qiladi.
 
@@ -41,7 +67,7 @@ def report_usage(data: dict[str, Any]) -> dict[str, Any]:
         save_usage_record.delay(
             session_id=data.get("session_id", ""),
             user_id=data.get("user_id", ""),
-            tenant_id=data.get("tenant_id", ""),
+            tenant_id=_trusted_tenant_id(data),
             conversation_id=data.get("conversation_id", ""),
             message_id=data.get("message_id", ""),
             provider=usage.get("provider", ""),

@@ -5,6 +5,8 @@ from __future__ import annotations
 import datetime as dt
 import uuid
 from decimal import Decimal
+from types import SimpleNamespace
+from unittest import mock
 
 import pytest
 from django.utils import timezone
@@ -73,14 +75,214 @@ class TestSaveUsageRecord:
         assert result is None
         assert UsageRecord.objects.count() == 0
 
-    def test_unknown_tenant_is_noop(self, employee):
+    def test_unknown_tenant_id_is_no_longer_blocking(self, employee):
+        """Noma'lum `tenant_id` endi yozuvni bloklamaydi — user'ning tenant'i yoziladi.
+
+        Eski xatti-harakat: kelgan `tenant_id` bazada yo'q bo'lsa `None` qaytardi,
+        ya'ni chaqiruvchi boshqa tenant'ga yozib bo'lmas edi. Endi kelgan qiymat
+        umuman ishonchsiz deb hisoblanadi (`TestSaveUsageRecordTenantTrust`).
+        """
+
         result = save_usage_record(
             user_id=str(employee.id),
             tenant_id=str(uuid.uuid4()),
             message_id=str(uuid.uuid4()),
         )
+
+        record = _rec(result)
+        assert record is not None
+        assert record.tenant_id == employee.tenant_id
+
+    def test_user_without_tenant_is_noop(self, monkeypatch):
+        """User'da tenant ham, kelgan tenant_id ham bo'sh bo'lsa hech narsa yozilmaydi."""
+
+        from apps.usage import tasks as usage_tasks
+
+        monkeypatch.setattr(
+            usage_tasks, "_user", lambda _user_id: SimpleNamespace(pk="u1", tenant_id=None)
+        )
+
+        result = save_usage_record(
+            user_id="u1",
+            tenant_id="",
+            message_id=str(uuid.uuid4()),
+        )
+
         assert result is None
         assert UsageRecord.objects.count() == 0
+
+
+class TestSaveUsageRecordTenantTrust:
+    """`tenant_id` gRPC chaqiruvchisidan keladi — ishonchli tenant user'ning tenant'i."""
+
+    def test_foreign_tenant_id_is_replaced_with_user_tenant(self, employee):
+        """Boshqa tenant id kelganda yozuv user'ning haqiqiy tenant'iga tushadi.
+
+        Aks holda bir tenant'ning foydalanishi ikkinchisining hisobiga yozilishi
+        mumkin edi — ya'ni noto'g'ri `tenant_id` billing'ni buzadi.
+        """
+
+        from apps.common.factories import TenantFactory
+
+        other_tenant = TenantFactory.create()
+        assert other_tenant.pk != employee.tenant_id
+
+        result = save_usage_record(
+            user_id=str(employee.id),
+            tenant_id=str(other_tenant.pk),
+            message_id=str(uuid.uuid4()),
+        )
+
+        record = _rec(result)
+        assert record is not None
+        assert record.tenant_id == employee.tenant_id
+
+    def test_mismatched_tenant_logs_warning(self, employee, monkeypatch):
+        """Farq `logger.warning` bilan qayd etiladi (user_id + kelgan va haqiqiy tenant)."""
+
+        from apps.common.factories import TenantFactory
+        from apps.usage import tasks as usage_tasks
+
+        other_tenant = TenantFactory.create()
+        fake_logger = FakeLogger()
+        monkeypatch.setattr(usage_tasks, "logger", fake_logger)
+
+        save_usage_record(
+            user_id=str(employee.id),
+            tenant_id=str(other_tenant.pk),
+            message_id=str(uuid.uuid4()),
+        )
+
+        mismatches = [
+            item for item in fake_logger.warnings if item[0] == "usage_record_tenant_mismatch"
+        ]
+        assert len(mismatches) == 1
+        _, kwargs = mismatches[0]
+        assert kwargs["user_id"] == str(employee.id)
+        assert kwargs["reported_tenant_id"] == str(other_tenant.pk)
+        assert kwargs["actual_tenant_id"] == str(employee.tenant_id)
+
+    def test_matching_tenant_logs_no_warning(self, employee, monkeypatch):
+        """Teng tenant id da shubha log'i chiqmaydi."""
+
+        from apps.usage import tasks as usage_tasks
+
+        fake_logger = FakeLogger()
+        monkeypatch.setattr(usage_tasks, "logger", fake_logger)
+
+        save_usage_record(
+            user_id=str(employee.id),
+            tenant_id=str(employee.tenant_id),
+            message_id=str(uuid.uuid4()),
+        )
+
+        assert [item for item in fake_logger.warnings if "mismatch" in item[0]] == []
+
+    def test_empty_tenant_id_falls_back_to_user_tenant(self, employee):
+        """Bo'sh tenant id — user'ning tenant'i ishlatiladi (eski xatti-harakat)."""
+
+        result = save_usage_record(
+            user_id=str(employee.id),
+            tenant_id="",
+            message_id=str(uuid.uuid4()),
+        )
+
+        record = _rec(result)
+        assert record is not None
+        assert record.tenant_id == employee.tenant_id
+
+    def test_unknown_user_still_noop_with_foreign_tenant(self):
+        """User topilmasa mavjud xatti-harakat saqlanadi — yozuv yaratilmaydi."""
+
+        from apps.common.factories import TenantFactory
+
+        other_tenant = TenantFactory.create()
+        result = save_usage_record(
+            user_id=str(uuid.uuid4()),
+            tenant_id=str(other_tenant.pk),
+            message_id=str(uuid.uuid4()),
+        )
+
+        assert result is None
+        assert UsageRecord.objects.count() == 0
+
+    def test_idempotent_across_reported_tenant_change(self, employee):
+        """Noto'g'ri tenant bilan kelgan takror yozuv bitta yozuvda qoladi (13.9)."""
+
+        from apps.common.factories import TenantFactory
+
+        other_tenant = TenantFactory.create()
+        message_id = str(uuid.uuid4())
+
+        first = _rec(
+            save_usage_record(user_id=str(employee.id), tenant_id="", message_id=message_id)
+        )
+        second = _rec(
+            save_usage_record(
+                user_id=str(employee.id), tenant_id=str(other_tenant.pk), message_id=message_id
+            )
+        )
+
+        assert first.id == second.id
+        assert UsageRecord.objects.filter(message_id=message_id).count() == 1
+        assert second.tenant_id == employee.tenant_id
+
+
+class TestResolveTenantId:
+    """`resolve_tenant_id` — ishonchli tenant tanlash."""
+
+    def test_prefers_user_tenant(self, employee):
+        from apps.usage.tasks import resolve_tenant_id
+
+        assert resolve_tenant_id("boshqa-tenant", employee) == str(employee.tenant_id)
+
+    def test_falls_back_to_reported_when_user_has_no_tenant(self):
+        from apps.usage.tasks import resolve_tenant_id
+
+        user = type("U", (), {"pk": "u1", "tenant_id": None})()
+
+        assert resolve_tenant_id("kelgan-tenant", user) == "kelgan-tenant"
+
+    def test_empty_reported_uses_user_tenant(self, employee):
+        from apps.usage.tasks import resolve_tenant_id
+
+        assert resolve_tenant_id("", employee) == str(employee.tenant_id)
+
+
+class TestReportUsageTenantTrust:
+    """`BackendServicer.ReportUsage` gRPC chegarasida tenant ishonchi."""
+
+    def test_report_usage_sends_user_tenant(self, employee):
+        """Go kelgan `tenant_id` emas, user'ning tenant'i Celery'ga uzatiladi."""
+
+        from apps.chat.grpc_server.backend_service import report_usage
+        from apps.common.factories import TenantFactory
+
+        other_tenant = TenantFactory.create()
+
+        with mock.patch("apps.usage.tasks.save_usage_record.delay") as delay:
+            result = report_usage(
+                {
+                    "session_id": "s1",
+                    "user_id": str(employee.id),
+                    "tenant_id": str(other_tenant.pk),
+                    "usage": {"model": "gpt-4o-mini"},
+                }
+            )
+
+        assert result["success"] is True
+        assert delay.call_args.kwargs["tenant_id"] == str(employee.tenant_id)
+
+    def test_report_usage_unknown_user_keeps_reported(self):
+        """User topilmasa kelgan qiymat o'tadi — task yozmaydi (mavjud xatti-harakat)."""
+
+        from apps.chat.grpc_server.backend_service import report_usage
+
+        reported = str(uuid.uuid4())
+        with mock.patch("apps.usage.tasks.save_usage_record.delay") as delay:
+            report_usage({"user_id": str(uuid.uuid4()), "tenant_id": reported, "usage": {}})
+
+        assert delay.call_args.kwargs["tenant_id"] == reported
 
 
 class TestDailyUsageRollup:
