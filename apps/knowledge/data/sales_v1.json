@@ -1,0 +1,394 @@
+{
+  "version": "2026.10.25.1",
+  "reviewed_at": "2026-10-25",
+  "sources": {
+    "alora": "internal:TZ-and-catalog-contract",
+    "editorial": "internal:uzbekistan-sales-editorial",
+    "uz-parda": "https://www.parda.uz/uz/categories",
+    "uz-textile": "https://smart-market.uz/ru/product/999559",
+    "uz-clean": "https://gaya.uz/uz/parda-yuvish.html",
+    "uz-blackout": "https://market.yandex.uz/card/tkan-na-otrez-5-metrov-vsetkanitut-blekaut-bacio-vysota-280sm/102095674371",
+    "opacity": "https://www.ikea.com/us/en/cat/room-darkening-curtains-700219/",
+    "privacy": "https://www.hunterdouglas.ca/stories/buyers-guides/window-shade-opacities-explained",
+    "privacy-night": "https://in.hunterdouglas.asia/stories/at-a-glance/can-you-see-through-cellular-shades-at-night/",
+    "light-gaps": "https://www.hunterdouglashospitality.com/rb500-blockout-system/",
+    "measure-ikea": "https://www.ikea.com/us/en/files/pdf/c9/ee/c9ee9195/betydlig_racka_hugad_apr2025.pdf",
+    "measure-track": "https://static.theshadestore.com/s3/theshadestore/cms/files/Measuring-for-Drapes-1.pdf",
+    "wave": "https://www.silentgliss.co.uk/fileadmin/redaktion/used/Images/Web%20Partner%20Downloads/SGGB/Various%20Documents/Wave%20-%20Curtain%20Workroom%20Guide.pdf",
+    "care-kvadrat": "https://www.kvadrat.dk/en/products/curtains/5512-value",
+    "care-sunbrella": "https://www.sunbrella.com/media/pdf/sunbrella-stocked-drapery-care-cleaning-en-us.pdf",
+    "energy": "https://www.energy.gov.au/households/windows",
+    "safety": "https://www.cpsc.gov/gocordless",
+    "fire-certificate": "https://content.camirafabrics.com/media/0uwkqipf/blazer-fr-treatment-z-en-13773-curtains-oct-22pdf.pdf"
+  },
+  "retire_legacy": [
+  {
+    "kind": "construction",
+    "recommendation": "Burma: parda yopilganda chiroyli burmalanishi uchun mato eni karnizdan 2–2.5 barobar keng bo'lsin (koeffitsient 2–2.5). Koeffitsient 1.5 — tekis, tejamkor; 3 — juda boy."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Blackout: mato orqasiga zich astar. Karniz derazadan keng va shiftga yaqin bo'lsa yorug'lik tepadan/yondan o'tmaydi. Rulon blackout bilan birga eng ishonchli."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Yotoqxona: qoraytiruvchi (blackout) astarli qalin portyera — velvet, shenil yoki zich paxta. Uzunlik polga tegib tursin. Karniz ustidan yorug'lik o'tmasligi uchun lambrekan yoki devorga yaqin karniz."
+  },
+  {
+    "kind": "general",
+    "recommendation": "Tanlashni 4 savoldan boshlang: qaysi xona? qancha yorug'lik kerak (shaffof / yarim / qorong'i)? uy uslubi? deraza o'lchami? Shunga qarab mato, burma va uzunlik tanlanadi."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Uzunlik: polga tegib tursin yoki poldan 1–2 sm yuqori. Polda yig'ilib turadigan ('puddle') uzunlik faqat tantanavor xonalarga — chang ko'p yig'adi."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Karniz: deraza tepasi bilan shift orasining yuqori 1/3 qismiga, derazadan har tomonga 15–30 sm chiqarib o'rnating — ochiq parda shishani emas devorni yopadi, xona balandroq ko'rinadi."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Rang tanlash: xonadagi mavjud rangdan birini oling (divan, gilam, yostiq) — interyer yaxlit bo'ladi. Bitta xonada 3 tadan ortiq rang ishlatmang."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Tul (shaffof): kunduzi tashqaridan ichkari ko'rinmaydi, ichkaridan tashqari ko'rinadi; yorug'likni to'smaydi. Kechasi chiroq yonganda maxfiylik yo'q — portyera bilan juftlang."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Mehmonxona: ikki qatlam — pastda tul, ustida yengil portyera. Qatlamlar chuqurlik va hashamat beradi, yorug'likni boshqarish oson."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "To'liq qorong'ilik uchun blackout astar + tul qatlami. Karniz derazadan har tomonga 15–30 sm chiqsin, shunda yon tomondan yorug'lik kirmaydi."
+  },
+  {
+    "kind": "general",
+    "recommendation": "Mato xonaga qarab: yotoqxona — blackout velvet/shenil; mehmonxona — zig'ir, paxta, jakkard; oshxona/hammom — yuviladigan paxta/polyester. Qalin matolar ovozni ham yutadi."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Ochish-yopish qiyin': halqali (lyuvers), to'lqin rels yoki halqali burma taklif qiling — oson siljiydi. Cho'ntakli va ilmoqli osish qiyin siljiydi. Katta pardaga elektr karniz."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Qimmat' e'tirozi: koeffitsientni 2.5 dan 2 ga tushirish, lambrekansiz variant, arzonroq tul yoki tayyor standart o'lcham taklif qiling. Xizmatlarni (montaj, yetkazish) alohida ko'rsating."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Xavfsiz tanlov — neytral: oq, krem, bej, kulrang, tabiiy zig'ir. Har uslubga mos, modadan chiqmaydi, xonani keng va yorug' ko'rsatadi."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Yarim shaffof: yumshoq tarqoq yorug'lik va ozgina maxfiylik. Yengil paxta/polyester, koeffitsient 2. To'g'ri quyoshni yumshatadi, xonani qorong'i qilmaydi."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Zamonaviy: tekis to'lqin burma, yashirin karniz/rels, bir rangli mato. Tul + portyera juftligi, ortiqcha dekorsiz."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Minimalizm: neytral ranglar (oq, kulrang, bej, tabiiy zig'ir), tekis mato, lambrekansiz. Burma koeffitsienti 1.5–2, bezaksiz karniz yoki yashirin rels."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "To'yxona/katta zal: baland derazalarga polga tushadigan og'ir portyera, lambrekan va dekorativ bog'lagichlar. Bir xil rangli ko'p panel — tantanavor ko'rinish."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Bolalar xonasi: blackout astar (kunduzgi uyqu), oson yuviladigan mato, mayda naqsh yoki yorqin ranglar. Uzun shnur va og'ir bezaklardan qoching — xavfsizlik."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Oshxona: oson yuviladigan paxta/polyester, qisqa (deraza tokchasigacha yoki 'kafe' uslubi — faqat pastki yarmi). Yog' va hidni tez yutmaydigan mato."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Klassik mehmonxona: og'ir mato (velvet, jakkard, brokar), burma koeffitsienti 2.5, lambrekan bilan. Boy ranglar — bordo, to'q ko'k, zumrad."
+  },
+  {
+    "kind": "general",
+    "recommendation": "Ikki qatlam tizimi: pastda funksiya (tul, rulon yoki rim parda), ustida go'zallik (portyera). Maxfiylik va yorug'lik nazorati birga."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Ham yorug'lik, ham maxfiylik kerak': ikki qatlam — kunduzi tul, kechasi portyera. Ikkala ehtiyoj bir buyurtmada qoplanadi."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Chang yig'adi': polda yig'iladigan uzunlikdan qoching, pol darajasida tugating. Velvet changga moyil; tekis va sintetik matolar oson parvarishlanadi."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Metall halqa yoqmaydi': qisqichli halqa (klips) yoki orqa ilmoq — old tomondan karniz ko'rinmaydi, oson ochiladi."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Astar: blackout astar — qoraytiradi; termo-astar — izolyatsiya; oddiy astar — matoni quyosh va changdan saqlaydi, chiroyli osiltiradi. Tulga astar shart emas."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Deraza ostida radiator yoki mebel bo'lsa — deraza tokchasidan 10–15 sm pastroq tugaydigan qisqa parda; uzun parda issiqlikni to'sadi va mebelga to'g'ri kelmaydi."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Kichik/tor xona: ochiq rangli parda — xona kengroq va balandroq ko'rinadi. Quyuq rang kichik xonani 'yopib' qo'yadi; katta baland xonada esa aksent bo'ladi."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Janubga qaragan deraza: yorug' mato issiqni qaytaradi, quyuq mato blikni kamaytiradi. Rangi tez o'chmasligi uchun polyester yoki astarli mato tanlang."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Sharqona: boy ranglar (zar, bordo, zumrad), jakkard/atlas, lambrekan va shokila bezaklar. Ko'p qatlam — hashamat."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Provans: paxta/zig'ir, mayda gul yoki katak naqsh, pastel ranglar (lavanda, krem, och yashil). Ilmoqli (tab top) osish va bog'lagichlar mos."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Klassika: velvet/brokar/jakkard, qo'sh yoki uch burma (pinch pleat), lambrekan, bog'lagichlar. Uzunlik polga tegib tursin yoki 2–3 sm yig'ilsin."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Hi-tech: metall tusli yoki sovuq kulrang matolar, rulon/rim parda, halqali (lyuvers) osish. Naqshsiz, aniq chiziqlar."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Zal/koridor: yorug'likni ko'p o'tkazadigan tul yoki yengil parda, ochiq ranglar — tor joy kengroq ko'rinadi."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Ofis: monitorga blik tushmasligi uchun zich yoki yarim shaffof mato, tekis burma (koeffitsient 1.5–2), rulon yoki rim parda bilan birga. Ranglar neytral."
+  },
+  {
+    "kind": "general",
+    "recommendation": "Aksessuarlar: bog'lagich (tasma yoki metall tutqich), karniz uchi bezagi, halqalar, shokila, chekka kant — pardani 'tugallangan' ko'rsatadi. Ularni taklifga alohida qator qilib qo'shing."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Mato chiroyli osilmaydi': eng yaxshi osiladigan — zig'ir, ipak, velvet; yengil paxta ham bo'ladi. Juda yengil mato osilmaydi, juda og'ir burmani ko'tarmaydi. Namunani derazaga tutib ko'rsating."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Oddiy ko'rinadi': qo'sh/uch burma (pinch pleat) yoki burma tasmasi bilan 'buyurtma' ko'rinish; bog'lagich, shokila yoki chekka kant qo'shing."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Lambrekan/karniz qopqog'i relsni yashiradi va tepadan yorug'likni to'sadi. Zamonaviy uslubda tekis qattiq lambrekan, klassikada burmali yoki svag."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Burchakli (erker) deraza: burchaklarni kuzatadigan egiluvchan rels, odatda 3–4 panel — markazga ikkita, yon derazalarga bittadan."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Balkon eshigi/katta deraza: polga tushadigan bitta keng yoki ikki panel, termo-astar bilan (eshik issiqlik yo'qotadi). Tez-tez ochiladigan bo'lsa halqali (lyuvers) yoki to'lqin rels."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Vertikal chiziq shiftni baland ko'rsatadi, gorizontal — xonani keng. Past shiftli xonaga vertikal chiziqli parda."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Geometrik naqsh zamonaviy/minimal uslubga mos; katta naqsh — katta xonaga, mayda — kichik xonaga. Devor tekis bo'lsin."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Tekis (naqshsiz) mato devori naqshli xonaga mos — aks holda xona 'olomon' ko'rinadi. Tekstura (velvet, zig'ir) bilan boyiting."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Ko'chaga qaragan deraza: maxfiylik uchun zich mato yoki tul + portyera juftligi. Tul yolg'iz faqat kunduzi maxfiylik beradi."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Issiqlik/sovuq izolyatsiyasi: qalin velvet yoki termo-astar yozda issiqni qaytaradi, qishda sovuqni tutadi. Katta derazalar va balkon eshigi uchun ayniqsa foydali."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Gulli klassik mato katta xonaga mos; kichik xonada mayda gul tanlang. Devor naqshli bo'lsa — parda tekis rangda bo'lsin."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "'Tepadan yorug'lik o'tadi': lambrekan/karniz qopqog'i qo'shing yoki karnizni shiftga yaqin, devorga zich o'rnating."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Parvarish: velvet, brokar — kimyoviy tozalash; paxta, polyester — uyda yuviladi. Yiliga kamida bir marta tozalang — chang va allergen matoga yopishadi."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Zig'ir nam havoda cho'zilib polda yotib qoladi, quruqda qisqaradi — uzunlikni 1–2 sm zaxira bilan bering. Eng chiroyli osiladigan matolar: velvet, paxta, ipak, zig'ir."
+  },
+  {
+    "kind": "color",
+    "recommendation": "Quyosh tushadigan derazada yorqin/quyuq ranglar tez o'chadi — polyester aralash mato yoki astar tanlang."
+  },
+  {
+    "kind": "light",
+    "recommendation": "Janubiy taraf uchun blackout mato tavsiya qilamiz — quyosh nurini to'liq to'sadi."
+  },
+  {
+    "kind": "room_style",
+    "recommendation": "Bolalar xonasi uchun yuviladigan va yorqin rangli matolarni tavsiya qilamiz."
+  },
+  {
+    "kind": "construction",
+    "recommendation": "Balkon eshigi uchun eshik ochilishiga joy qoldiramiz, karnizni devor bo'ylab o'rnatamiz."
+  },
+  {
+    "kind": "objection",
+    "recommendation": "Narx katta tuyulsa — burma koeffitsientini pasaytirish yoki arzon analogni taklif qilish mumkin."
+  }
+],
+  "rules": [
+    {"key":"function-first","kind":"general","condition":{},"priority":98,"sources":["editorial"],"recommendation":"Parda tanlashda avval vazifa: quyoshni yumshatish, qorong'ilik, kechki maxfiylik yoki bezak. Did va budjet keyin moslanadi. Gulsiz grafit degani blackout degani emas; katalogdagi transparency ustun."},
+    {"key":"no-unverified-properties","kind":"general","condition":{},"priority":97,"sources":["alora"],"recommendation":"Mato nomidan tarkib, kelib chiqish, yuvish harorati yoki qoraytirish foizini taxmin qilmang. Yorliq/katalogda yozilmagan xususiyatni aniq emas deb ayting. Umumiy bilim alohida mahsulot sertifikati emas."},
+    {"key":"quote-is-not-payment","kind":"general","condition":{},"priority":96,"sources":["alora"],"recommendation":"Hisob va avans — taklif/reja. Pul olindi, buyurtma tasdiqlandi yoki tikuv boshlandi deb aytmang: buni sotuvchi tizimda belgilaydi. Qoralamadan so'ng ism/telefon/manzil ilova formasida kiritiladi."},
+    {"key":"exposure-without-compass","kind":"light","condition":{},"priority":84,"sources":["editorial"],"recommendation":"Mijozdan shimol/janubni bilishni talab qilmang: 'Derazaga kuchli quyosh tushadimi?' deb so'rang. Mijoz yo'nalishni o'zi aytsa tushuning, ammo tavsiyani real quyosh, uyqu va ko'rinish ehtiyojiga bog'lang."},
+    {"key":"blackout-material-vs-room","kind":"light","condition":{"transparency":"blackout"},"priority":95,"sources":["opacity","light-gaps"],"recommendation":"Blackout mato yorug'likni to'sishga mo'ljallangan; butun xona mutlaq qorong'i bo'lishi chetlar, ustki tirqish va montajga ham bog'liq. 100% qorong'ilikni mato nomiga qarab va'da qilmang."},
+    {"key":"semi-is-not-blackout","kind":"light","condition":{"transparency":"semi"},"priority":94,"sources":["opacity"],"recommendation":"Yarim shaffof mato yorug'likni yumshatadi, blackout o'rnini bosmaydi. Mijoz to'liq qorong'ilik istasa, bu variant cheklovini ayting va katalogdagi blackout asosiy qatlamni qidiring."},
+    {"key":"sheer-no-privacy-guarantee","kind":"light","condition":{"transparency":"transparent"},"priority":94,"sources":["privacy","privacy-night"],"recommendation":"Tul/vual yorug'lik beradi, ammo kunduzi ham maxfiylikni kafolatlamaydi: ko'cha yaqinligi va ichki-tashqi yorug'lik muhim. Kechasi xona chirog'i yonsa odam va buyumlar ko'rinishi mumkin; yopiq zich qatlam kerak."},
+    {"key":"night-privacy","kind":"light","condition":{},"priority":82,"sources":["privacy-night"],"recommendation":"'Tashqaridan ko'rinmasin' deganda kunduzimi yoki chiroq yongan kechasimi — aniqlang. Kechki maxfiylikka faqat tul yoki yarim shaffof mato yetarli deb aytmang; zich qatlamni namuna bilan tekshiring."},
+    {"key":"dark-color-not-opacity","kind":"light","condition":{},"priority":81,"sources":["privacy"],"recommendation":"Qora/grafit rang bilan blackout xususiyati bir xil emas. To'q rangli semi mato ham yorug'lik o'tkazishi mumkin; oq yoki bej rangda ham blackout bo'lishi mumkin. Mahsulotning shaffoflik maydonini tekshiring."},
+    {"key":"room-darkening-levels","kind":"light","condition":{},"priority":78,"sources":["opacity","uz-blackout"],"recommendation":"Dimout/xonani qoraytirish va blackout bir xil daraja emas. Bozor nomi turlicha ishlatiladi; aniq foiz bo'lmasa uni aytmang. Uyqu uchun kuchli qoraytirish kerakligini alohida qayd eting."},
+    {"key":"sun-heat-and-lining","kind":"light","condition":{},"priority":77,"sources":["energy"],"recommendation":"Kuchli quyosh va issiqda mos astar hamda oynaga yaqin yopilish foydali bo'lishi mumkin. 'Xona falon darajaga soviydi' yoki energiya falon foiz tejaladi deb va'da qilmang; deraza va montaj ham ta'sir qiladi."},
+    {"key":"lining-not-all-blackout","kind":"light","condition":{},"priority":83,"sources":["opacity","alora"],"recommendation":"Oddiy astar va blackout astar farqli. Katalogdagi Astar Soft semi bo'lsa uni qoraytiruvchi astar demang. Qalin ko'rinish, astar borligi yoki yuqori narxning o'zi blackout dalili emas."},
+    {"key":"glare-vs-darkness","kind":"light","condition":{"room":"office"},"priority":91,"sources":["privacy"],"recommendation":"Ofisda monitorga yaltirash tushishini kamaytirish bilan xonani qorong'i qilish farqli. Ekranda aks bormi yoki mijoz to'liq qoraytirishni xohlaydimi — aniqlang; semi variantni blackout deb ko'rsatmang."},
+    {"key":"north-brightness","kind":"light","condition":{"light":"brighter"},"priority":90,"sources":["opacity"],"recommendation":"Xona yorug'roq qolsin desa, shaffof yoki yengil yarim shaffof qatlamdan boshlang. Kechasi maxfiylik ham kerak bo'lsa, alohida yopiladigan zich portyera bilan juftlang."},
+    {"key":"sleep-darkness","kind":"light","condition":{"light":"darker"},"priority":91,"sources":["opacity","light-gaps"],"recommendation":"Xona qorong'i bo'lsin desa, asosiy qatlamni blackout bo'yicha qidiring. Chetdan yorug'lik o'tishi mumkinligini qisqa ayting; mos blackout topilmasa semi matoni aynan teng o'rinbosar qilmang."},
+    {"key":"living-flexibility","kind":"room_style","condition":{"room":"living"},"priority":89,"sources":["editorial"],"recommendation":"Mehmonxonada kunduz yorug'ligi va kechki maxfiylikni alohida boshqarish uchun tul+portyera qulay. Tayyor tul bor bo'lsa uni yana sotib olishga majburlamang; mavjud qatlamga mos rang va zichlik tanlang."},
+    {"key":"living-modern","kind":"room_style","condition":{"room":"living","style":"modern"},"priority":92,"sources":["editorial"],"recommendation":"Zamonaviy mehmonxonaga tekis portyera+tul yoki sokin to'lqinli ko'rinish mos bo'lishi mumkin. Lambrekan majburiy emas. Oddiy uslubni arzon degani bilan tenglashtirmang: sifatli mato va tikuv ham premium bo'lishi mumkin."},
+    {"key":"bedroom-sleep","kind":"room_style","condition":{"room":"bedroom"},"priority":92,"sources":["opacity"],"recommendation":"Yotoqxonada uyqu va maxfiylik ustuvor. Kunduz ham uxlash yoki ko'cha chirog'i bezovta qilsa blackout qatlam kerakligini tekshiring; faqat yumshoq bezak istalsa barcha mijozga majburan blackout shart emas."},
+    {"key":"bedroom-maintenance","kind":"room_style","condition":{"room":"bedroom"},"priority":86,"sources":["editorial"],"recommendation":"Yotoqxonaga sokin rangni didga mos taklif qiling. Chang va tez-tez tozalash muhim bo'lsa, polda yig'iladigan uzunlik va ortiqcha bezak o'rniga tozalashga qulay yechimni muhokama qiling."},
+    {"key":"wedding-is-couple-room","kind":"room_style","condition":{"room":"wedding"},"priority":95,"sources":["alora","editorial"],"recommendation":"room=wedding — kelin-kuyov xonasi, avtomatik to'yxona emas. Kelin-kuyov uchun did, yorug'lik va maxfiylikni so'rang; hashamat yoki lambrekanni majburlamang. Oq/ivori, sokin klassik yoki zamonaviy fason ham tanlov."},
+    {"key":"wedding-ornament-choice","kind":"room_style","condition":{"room":"wedding","style":"classic"},"priority":91,"sources":["editorial"],"recommendation":"Kelin-kuyov xonasida klassik ko'rinish istalsa portyera+tul, xohlasa lambrekan yoki kantni alohida variant sifatida ko'rsating. Barcha bezaklarni birdan qo'shmang; ochroq rang kechki maxfiylik dalili emas."},
+    {"key":"kids-cordless","kind":"room_style","condition":{"room":"kids"},"priority":99,"sources":["safety"],"recommendation":"Bolalar xonasida xavfsizlik birinchi: bolaga yetadigan shnur/halqa zanjir xavfi bor, shnursiz boshqaruvni afzal ko'ring. Beshik/karavot va chiqib olish mumkin bo'lgan mebelni shnur yoniga qo'ymang."},
+    {"key":"kids-function","kind":"room_style","condition":{"room":"kids"},"priority":93,"sources":["editorial","opacity"],"recommendation":"Bolalar xonasida faqat rang yoki multfilm naqshiga qarab tanlamang. Kunduzgi uyqu kerak bo'lsa blackout, yuvish tez-tez bo'lsa yorliqdagi parvarish ustun. Kids Rainbow shaffof bo'lsa uyquni qoraytiradi demang."},
+    {"key":"kitchen-practical","kind":"room_style","condition":{"room":"kitchen"},"priority":91,"sources":["editorial"],"recommendation":"Oshxonada parda plita/olov, suv, ish yuzasi va deraza ochilishiga xalaqit bermasin. Qisqa tul yoki sodda ochiladigan fasonni ko'rib chiqing; yuviladi degan xususiyatni yorliqsiz va'da qilmang."},
+    {"key":"kitchen-no-substitution","kind":"room_style","condition":{"room":"kitchen"},"priority":87,"sources":["editorial","alora"],"recommendation":"Oshxonaga mos mato topilmasa 'oshxona uchun maxsus' deb boshqa xona matosini atamang. Office Minimal singari moslashtirilgan sodda variantni uning haqiqiy xususiyati va cheklovi bilan taklif qilish mumkin."},
+    {"key":"office-practical","kind":"room_style","condition":{"room":"office"},"priority":88,"sources":["editorial"],"recommendation":"Ofisga boshqarish oson, monitorga xalaqit bermaydigan va sokin rangli ko'rinishdan boshlang. Yig'ilgan mato eshik yoki texnikaga xalaqit bermasin; jamoat joyi talabi bo'lsa sertifikatni tekshirish kerak."},
+    {"key":"hall-meaning","kind":"room_style","condition":{"room":"hall"},"priority":88,"sources":["editorial"],"recommendation":"'Zal' katta mehmonxona yoki jamoat zali bo'lishi mumkin; uni avtomatik koridor deb talqin qilmang. Katta/baland derazada ochilish qulayligi, karniz ko'tarishi va xizmat ko'rsatishni alohida tekshiring."},
+    {"key":"modern-not-only-wave","kind":"room_style","condition":{"style":"modern"},"priority":87,"sources":["editorial"],"recommendation":"Zamonaviy uslubga gulsiz, sokin teksturali, ortiqcha bezaksiz ko'rinish mos kelishi mumkin. To'lqin, oddiy burma yoki sodda ikki qatlam variant; uslubni faqat bitta mexanizm bilan cheklamang."},
+    {"key":"minimal-no-lambrequin","kind":"room_style","condition":{"style":"minimal"},"priority":92,"sources":["editorial"],"recommendation":"Minimalizmda sof chiziq, kam bezak va ixcham ko'rinish ustuvor. Premium bo'lsa ham lambrekan, shokila va ko'p rang qo'shish majburiy emas; sifatli mos mato yoki funksional qoraytirish qiymat beradi."},
+    {"key":"hightech-local","kind":"room_style","condition":{"style":"hi_tech"},"priority":90,"sources":["uz-parda","editorial"],"recommendation":"Xay-tek/hi-tech so'rovi ko'pincha gulsiz tekis ko'rinishni anglatadi. Grafit yagona rang emas; devor/mebel va quyosh vazifasiga mos bej, oq yoki sokin ranglarni ham taklif qiling."},
+    {"key":"classic-without-pressure","kind":"room_style","condition":{"style":"classic"},"priority":88,"sources":["editorial"],"recommendation":"Klassikaga jakkard, baxmal ko'rinish, tartibli burma yoki tul-portyera uyg'unligi mos bo'lishi mumkin. Lambrekan va gul bezak — ixtiyoriy; mijoz sodda klassik istasa bezaksiz yechimni hurmat qiling."},
+    {"key":"oriental-restraint","kind":"room_style","condition":{"style":"oriental"},"priority":87,"sources":["editorial"],"recommendation":"Sharqona uslubda naqsh, iliq rang yoki kant aksenti tanlash mumkin. Mebel/devor allaqachon bezakli bo'lsa, pardaning hammasini yirik naqshli qilish shart emas; bitta aksentdan boshlang."},
+    {"key":"provence-soft","kind":"room_style","condition":{"style":"provence"},"priority":87,"sources":["editorial"],"recommendation":"Provans istagida pastel, mayda gul yoki tabiiy ko'rinishdagi teksturani taklif qilish mumkin. 'Zig'ir ko'rinishli' bilan '100% zig'ir' bir xil emas; tarkibni katalogdan tekshiring."},
+    {"key":"neoclassic-interpretation","kind":"general","condition":{},"priority":62,"sources":["editorial"],"recommendation":"Neoklassika — sodda klassik shakl va zamonaviy saranjomlikni uyg'unlashtirish istagi sifatida tushunilsin. Katalogdagi classic/modern ichidan mosini tanlang, lekin mijozga texnik enum nomlarini aytmang."},
+    {"key":"measure-cornice-first","kind":"construction","condition":{},"priority":88,"sources":["measure-ikea","measure-track"],"recommendation":"Parda enini hisoblash uchun mavjud karnizning ishchi uzunligi kerak; deraza oynasi eni bilan aralashtirmang. Faqat deraza eni ma'lum bo'lsa, karniz hali rejalashtirilmaganini ayting va yakuniy o'lchovni aniqlashtiring."},
+    {"key":"measure-drop-start","kind":"construction","condition":{},"priority":87,"sources":["measure-track"],"recommendation":"Balandlik — mato osiladigan nuqtadan tanlangan tugash joyigacha. Rels, halqa va lyuversda boshlanish nuqtasi farqlanadi; derazaning bo'yini tayyor parda balandligi deb avtomatik qabul qilmang."},
+    {"key":"measure-unit-ambiguity","kind":"construction","condition":{},"priority":86,"sources":["alora","editorial"],"recommendation":"'280', '3 ga 2.7', 'uch metrli' kabi noaniq o'lchovda eni/balandligi va sm/metrni tasdiqlang. Aniq 300 sm ni 3 m deb tushunish mumkin; o'lchovni taxmin bilan narxlash mumkin emas."},
+    {"key":"measure-several-points","kind":"construction","condition":{},"priority":76,"sources":["editorial"],"recommendation":"Pol yoki shift qiyshiq bo'lishi mumkin; bir nechta nuqtadagi balandlikni tekshirishni tavsiya qiling. Hisob uchun qaysi yakuniy balandlik ishlatilganini ayting; joyida o'lchov tasdiqlanmagan bo'lsa uni tayyor buyurtma o'lchovi demang."},
+    {"key":"measure-multiple-windows","kind":"construction","condition":{},"priority":83,"sources":["alora"],"recommendation":"Bir nechta derazada har karniz va balandlik alohida aniqlanadi. Bir xil bo'lsa sonini qayd eting; o'lchamlar turli bo'lsa bitta o'lchovga jamlamang. Butun buyurtma summasi tool hisobidan olinadi."},
+    {"key":"balcony-operation","kind":"construction","condition":{},"priority":80,"sources":["editorial"],"recommendation":"Balkon eshigi bo'lsa eshik qaysi tomonga va qanchalik ochilishi, parda qayerga yig'ilishi muhim. Eshik oldida har kuni suriladigan oddiy yechimni taklif qiling; har balkon uchun bitta majburiy panel soni yo'q."},
+    {"key":"radiator-clearance","kind":"construction","condition":{},"priority":79,"sources":["editorial"],"recommendation":"Radiator/isitgich bor bo'lsa matoni unga tekkizib qo'ymang va issiqlik chiqishini to'smang. Qisqa parda yoki boshqa osish masofasini joyida tekshirtiring; universal xavfsiz santimetrni uskunani bilmasdan aytmang."},
+    {"key":"floor-length-choice","kind":"construction","condition":{},"priority":75,"sources":["editorial"],"recommendation":"Polgacha, poldan biroz yuqori yoki tokchagacha uzunlik — foydalanishga qarab tanlanadi. Polda yig'ilish tantanavor ko'rinishi mumkin, ammo tozalash va ochish qiyinlashadi; bolalar/oshxonaga avtomatik tavsiya qilmang."},
+    {"key":"stack-back-space","kind":"construction","condition":{},"priority":78,"sources":["wave"],"recommendation":"Parda ochilganda mato yon tomonda joy egallaydi. Oyna to'liq ochiq ko'rinsin desa yig'iladigan joy, devor cheti va mebelni tekshiring; karnizni faqat deraza enicha qilish har doim yetarli emas."},
+    {"key":"wave-track-compatibility","kind":"construction","condition":{},"priority":78,"sources":["wave"],"recommendation":"To'lqin/Wave fasoniga mos rels, yuguruvchi va tasma bir tizim bo'lishi kerak. Har qanday eski karnizga to'lqin bir xil tushadi deb va'da qilmang; mosligini sotuvchi/usta tekshirsin."},
+    {"key":"wave-fabric-test","kind":"construction","condition":{},"priority":75,"sources":["wave"],"recommendation":"To'lqin fasonida matoning yumshoqligi muhim. Juda qattiq mato yoki og'ir kashta bir tekis to'lqin bermasligi mumkin; mato namunasini burmalab ko'rish va osish tizimi bilan sinash kerak."},
+    {"key":"fullness-is-design","kind":"construction","condition":{},"priority":82,"sources":["wave","alora"],"recommendation":"Burma koeffitsienti mato, fason va relsga bog'liq; barcha pardaga bitta son to'g'ri emas. K kamayishi matoni tejashi mumkin, lekin osilish o'zgaradi. Aniq miqdor va tejalgan summa faqat qayta hisobdan olinadi."},
+    {"key":"fabric-width-limit","kind":"construction","condition":{},"priority":81,"sources":["uz-textile","alora"],"recommendation":"Rulon eni 2.8/3 m degani barcha 2.8/3 m baland pardaga choksiz yetadi degani emas: bukma/chok zapasi ham bor. Mato yo'nalishi va naqshi ham muhim; aynan tanlangan variant enini tekshiring."},
+    {"key":"pattern-repeat","kind":"construction","condition":{},"priority":73,"sources":["editorial"],"recommendation":"Yirik gul yoki takroriy naqshda bo'laklarni moslashtirish qo'shimcha mato talab qilishi mumkin. Rapport katalogda bo'lmasa uni taxmin qilmang; oddiy hisob yakuniy bichish rejasi emasligini ayting."},
+    {"key":"seams-and-nap","kind":"construction","condition":{},"priority":72,"sources":["editorial"],"recommendation":"Baxmal/tukli matoda bo'laklar bir yo'nalishda bichilishi va yonma-yon rangi tekshirilishi muhim. Teskari osilganda tus farqli ko'rinishi mumkin; namunani bir xil yo'nalishda solishtirishni taklif qiling."},
+    {"key":"cornice-load","kind":"construction","condition":{},"priority":76,"sources":["wave"],"recommendation":"Og'ir portyera, qo'shimcha astar yoki ko'p qatlamda karniz va mahkamlashning yuk ko'tarishini tekshirtiring. Faqat ko'rinish yoki uzunlikka qarab mavjud karniz yetadi deb kafolat bermang."},
+    {"key":"care-label-first","kind":"general","condition":{},"priority":74,"sources":["care-kvadrat"],"recommendation":"Parvarishda aniq mahsulot yorlig'i ustun. Baxmal doim faqat kimyoviy, polyester doim mashinada yuviladi kabi umumiy hukm bermang. Harorat/siqish/bug'lashni yorliq yoki katalogdagi care tasdiqlasin."},
+    {"key":"care-unknown-label","kind":"general","condition":{},"priority":70,"sources":["care-kvadrat","editorial"],"recommendation":"Yuvish yorlig'i noma'lum bo'lsa '30°C da albatta yuving' demang. Tarkib va astarni tekshirish, kichik namuna sinovi yoki matoga mos professional tozalashni maslahat bering."},
+    {"key":"care-shrinkage","kind":"general","condition":{},"priority":69,"sources":["care-kvadrat"],"recommendation":"Yuvilganda qisqarish matoga xos: barcha matoga bir xil foiz qo'llamang. Buyurtma oldidan yorliq/namuna bo'yicha parvarish va qisqarishni tekshirishni tavsiya qiling; hisobga yashirin qo'shimcha metr qo'shmang."},
+    {"key":"care-coated-blackout","kind":"general","condition":{},"priority":72,"sources":["care-kvadrat","editorial"],"recommendation":"Qoplamali blackout va astar parvarishi oddiy tuldan farq qilishi mumkin. Kuchli siqish, yuqori harorat yoki bug'ni ko'r-ko'rona tavsiya qilmang; qoplama yorlig'ini tekshirtiring."},
+    {"key":"care-spot-cleaning","kind":"general","condition":{},"priority":66,"sources":["care-sunbrella"],"recommendation":"Dog'ni kuch bilan ishqalash yoki tasodifiy oqartirgich tavsiya qilishdan saqlaning. Mato ishlab chiqaruvchisi ruxsat bergan usulni yashirin joyda sinash kerak; boshqa brendga mos kimyo bu matoga ham mos degani emas."},
+    {"key":"care-lining-and-decoration","kind":"general","condition":{},"priority":68,"sources":["care-kvadrat","uz-clean"],"recommendation":"Portyera, astar, kant va bezak bir buyumda turlicha parvarish talab qilishi mumkin. Yechiladigan bezak/mahkamlagich va tozalash usulini oldindan aniqlang; gul, shokila yoki qoplamani umumiy yuvish rejimiga tashlamang."},
+    {"key":"care-local-service","kind":"general","condition":{},"priority":65,"sources":["uz-clean","alora"],"recommendation":"Toshkent yoki viloyatda yuvish xizmati kerak bo'lsa yechish, olib ketish, qayta osish alohida kiritilganmi aniqlashni tavsiya qiling. Alora katalogida bunday xizmat yo'q bo'lsa uni bepul/bor deb va'da qilmang."},
+    {"key":"dust-allergy-claims","kind":"general","condition":{},"priority":67,"sources":["care-kvadrat","editorial"],"recommendation":"Changga sezgir mijozga oson tozalanadigan, ortiqcha yig'ilmaydigan fasonni muhokama qiling. 'Allergiyani davolaydi', 'chang umuman tutmaydi' yoki 'antibakterial' degan xususiyatni sertifikatsiz aytmang."},
+    {"key":"color-sample-at-home","kind":"color","condition":{},"priority":79,"sources":["editorial"],"recommendation":"Rang ekran va xona yorug'ligida boshqacha ko'rinishi mumkin. Devor/mebel yonida mato namunasini kunduz va chiroqda ko'rishni taklif qiling; foto yoki rang nomidan aynan bir xil tus deb kafolat bermang."},
+    {"key":"color-neutral-not-mandatory","kind":"color","condition":{},"priority":71,"sources":["editorial"],"recommendation":"Bej, ivori, kulrang yoki tabiiy tuslar sokin yechim bo'lishi mumkin, ammo hammaga majburiy emas. Mijozning sevimli rangini interyerdagi bir element bilan bog'lang; 'faqat uchta rang mumkin' kabi qat'iy qoida yo'q."},
+    {"key":"color-ivory-white","kind":"color","condition":{},"priority":73,"sources":["editorial"],"recommendation":"Oq, sutrang, krem va ivori yaqin ko'rinsa ham boshqa tuslar. Mijoz 'oq' desa iliq sutrangmi yoki sovuq oqmi aniqlash foydali; katalogda yo'q rangni bor deb aytmang."},
+    {"key":"plain-patterned-wall","kind":"color","condition":{"pattern":"plain"},"priority":85,"sources":["editorial"],"recommendation":"Gulsiz mato naqshli devor yoki bezakli mebel bilan sokin fon bo'lishi mumkin. Tekstura ko'rinishni boyitadi, ammo gulsiz degani har doim yupqa yoki arzon degani emas."},
+    {"key":"floral-balance","kind":"color","condition":{"pattern":"floral"},"priority":84,"sources":["editorial"],"recommendation":"Gulli matoda naqsh kattaligi va ko'rinadigan yuzani solishtiring. Devor/mebel ham kuchli naqshli bo'lsa birini sokinroq tanlashni taklif qiling; mijozning didini noto'g'ri deb baholamang."},
+    {"key":"stripe-direction","kind":"color","condition":{"pattern":"striped"},"priority":83,"sources":["editorial"],"recommendation":"Vertikal chiziq balandlik hissini kuchaytirishi, gorizontal esa kenglikni ajratishi mumkin. Bu vizual tavsiya, o'lcham kafolati emas; naqshni bichish yo'nalishi va xona ko'rinishi bilan tekshiring."},
+    {"key":"geometric-scale","kind":"color","condition":{"pattern":"geometric"},"priority":83,"sources":["editorial"],"recommendation":"Geometrik naqshda yiriklik va takrorning deraza eniga qanday tushishini tekshiring. Zamonaviy xona uchun ham tekis variant bilan taqqoslash mumkin; naqsh moslashuvi hisobini to'qimang."},
+    {"key":"jacquard-is-weave","kind":"color","condition":{"pattern":"jacquard"},"priority":83,"sources":["editorial"],"recommendation":"Jakkard — naqsh/teksturali to'qilish turi; o'z-o'zidan blackout yoki tabiiy ipak degani emas. Jakkardning haqiqiy tarkibi, shaffofligi va parvarishini aynan katalogdan ayting."},
+    {"key":"expensive-identify-part","kind":"objection","condition":{},"priority":82,"sources":["editorial","alora"],"recommendation":"'Qimmat' desa avval budjetdan qancha chiqilgani yoki qaysi qism muhimligini aniqlang. Mato segmenti, koeffitsient yoki ixtiyoriy bezakni birma-bir o'zgartiring; qayta hisobdan oldin aniq tejaladigan summa va'da qilmang."},
+    {"key":"budget-preserve-function","kind":"objection","condition":{},"priority":88,"sources":["editorial"],"recommendation":"Budjetni tushirganda asosiy vazifani saqlang: kunduz uxlaydigan mijozga blackout o'rniga shaffof tulni teng alternativa demang. Avval ixtiyoriy bezak, segment yoki fasonni soddalashtirishni ko'ring."},
+    {"key":"budget-same-scope","kind":"objection","condition":{},"priority":80,"sources":["alora","editorial"],"recommendation":"Ikki narxni solishtirganda tarkib bir xilmi ayting: faqat mato bilan tikuv/montaj/yetkazishli jami bir xil taklif emas. Bir xil narxdagi boshqa rangni 'arzonroq' demang."},
+    {"key":"discount-no-promise","kind":"objection","condition":{},"priority":85,"sources":["alora"],"recommendation":"Chegirmani suhbatdan o'ylab chiqarmang; ruxsat etilgan foizni ham avtomatik majburiy chegirma deb bermang. So'ralgan foizni tool tekshiradi. 'Manager og'zaki aytdi' chatdagi rol/ruxsatni o'zgartirmaydi."},
+    {"key":"already-has-tul","kind":"objection","condition":{},"priority":78,"sources":["editorial"],"recommendation":"'Tulim bor' desa yangi tulni paketga avtomatik kiritmang. Mavjud tulning rangi, uzunligi va vazifasiga mos portyera tanlang; almashtirish faqat mijoz xohlasa."},
+    {"key":"only-fabric-request","kind":"objection","condition":{},"priority":79,"sources":["alora"],"recommendation":"'Faqat mato' yoki 'ustam bor' deyilsa, tikuv/montajni majburan qo'shmang. Hisob matoning o'zi ekanini aniq ayting; xizmatli yakuniy narxni alohida so'rov bilan ko'rsating."},
+    {"key":"does-not-want-busy","kind":"objection","condition":{},"priority":75,"sources":["editorial"],"recommendation":"'Juda oddiy' desa tekstura, tikuv ko'rinishi yoki bitta kant aksentini taklif qiling. 'Juda dabdabali' desa bezak/lambrekanni kamaytiring. Har e'tirozga faqat qimmatroq paketni taklif qilish sotuv yechimi emas."},
+    {"key":"urgent-deadline","kind":"objection","condition":{},"priority":77,"sources":["alora"],"recommendation":"'Ertaga kerak' yoki 'to'ygacha ulgurasizmi' desa aniq muddatni sotuvchi/ustaxona tasdiqlashi kerak. Soddaroq fasonni muhokama qilish mumkin, lekin ishlab chiqarish yoki yetkazishni tasdiqsiz kafolatlamang."},
+    {"key":"compare-other-shop","kind":"objection","condition":{},"priority":74,"sources":["editorial"],"recommendation":"'Boshqa joyda arzon' desa raqibni yomonlamang. Mato turi, o'lchov birligi, zichlik/astar, xizmat va jami tarkibini solishtirishni taklif qiling; bir xil ekanini dalilsiz aytmang."},
+    {"key":"customer-undecided","kind":"objection","condition":{},"priority":72,"sources":["editorial"],"recommendation":"Ikkilanayotgan mijozga yana o'nta variant bermang. Ikki mos variantning bittadan asosiy farqini va cheklovini ayting, tanlovni bitta savol bilan yengillashtiring. Shoshiltirish yoki soxta chegirma muddati ishlatmang."},
+    {"key":"budget-no-fit","kind":"objection","condition":{},"priority":81,"sources":["alora","editorial"],"recommendation":"Budjetga mos hisob chiqmasa buni ochiq ayting. Qaysi majburiy talab narxga ta'sir qilayotganini tushuntiring va ruxsat bilan soddalashtiring; mavjud bo'lmagan 'arzon paket' yoki narxni to'qimang."},
+    {"key":"budget-installation-not-hidden","kind":"objection","condition":{},"priority":76,"sources":["alora"],"recommendation":"Montaj/yetkazishni olib tashlab narxni arzon ko'rsatganda ular endi kirmasligini aniq ayting. Xizmat kaliti bir taklifda bir marta hisoblanishi kerak; takror ko'rinsa yangi hisob bilan tuzatish lozim."},
+    {"key":"respect-taste","kind":"general","condition":{},"priority":64,"sources":["editorial"],"recommendation":"Mijoz didini kamsitmang: 'bu modadan qolgan', 'sizga faqat shu yarashadi' demang. Istakni qaytarib tushunganingizni bildiring, moslik sababini va real alternativani qisqa ayting."},
+    {"key":"one-useful-question","kind":"general","condition":{},"priority":80,"sources":["editorial"],"recommendation":"Bir javobda bitta muhim savol bering. Mijoz allaqachon aytgan xona, o'lchov, budjet yoki tanlovni qayta so'ramang. Yetarli ma'lumot va aniq hisob so'rovi bo'lsa anketani davom ettirish o'rniga hisoblang."},
+    {"key":"recommend-with-tradeoff","kind":"general","condition":{},"priority":79,"sources":["editorial"],"recommendation":"Tavsiya 'chiroyli/sifatli' bilan tugamasin: bir foyda, bir zarur cheklov va keyingi qadam bo'lsin. Masalan semi yorug'likni yumshatadi, lekin uyqu uchun to'liq qoraytirmaydi."},
+    {"key":"no-forced-upsell","kind":"general","condition":{},"priority":76,"sources":["editorial"],"recommendation":"Mijozning ehtiyojiga yetadigan eng sodda mos yechimdan boshlang. Gul, podxvat, astar, lambrekan va yangi karnizni kerakligi tekshirilmasdan majburiy paket qilmang. Qimmat segment har doim eng to'g'ri tanlov emas."},
+    {"key":"local-made-to-measure","kind":"general","condition":{},"priority":85,"sources":["alora"],"recommendation":"Alora'da parda o'lchov bo'yicha tikiladi. Tayyor standart parda narxini yoki 'juft dona' narxini mato hisobiga aralashtirmang. Mato, bezak va xizmatlar alohida birliklar bilan hisoblanadi."},
+    {"key":"local-meter-sqm","kind":"general","condition":{},"priority":84,"sources":["alora","uz-textile"],"recommendation":"Bozorda 'metri' pogon metr bo'lishi mumkin; Alora matosi m² bo'yicha. Birliksiz narxni solishtirmang. Rulon eni, kerakli balandlik va burma hisobga ta'sir qiladi; konvertatsiya/jami narxni tool bersin."},
+    {"key":"local-currency","kind":"general","condition":{},"priority":68,"sources":["alora"],"recommendation":"Asosiy narx so'mda aytiladi, birlik yonida bo'lsin: so'm/m², so'm/metr yoki so'm/dona. Dollar kursi, muddatli to'lov yoki bo'lib to'lash sharti katalogda yo'q bo'lsa va'da bermang."},
+    {"key":"local-terms","kind":"general","condition":{},"priority":63,"sources":["uz-parda","editorial"],"recommendation":"Mijozning mahalliy atamasini tushuning: tul/tyul, qalin parda/portyera, blekaut/blackout, xay-tek/hi-tech, lyuvers, lambrekan, podxvat/ushlagich. Texnik nomni sodda o'zbekcha tushuntiring, mijozni imlosi uchun tuzatmang."},
+    {"key":"local-family-choice","kind":"general","condition":{},"priority":61,"sources":["editorial"],"recommendation":"Oila bilan tanlashda bitta odamning didini boshqasiga qarshi qo'ymang. Ikki maqsadni, masalan kelinning rang istagi va ota-onaning budjetini, bir mos variantda uyg'unlashtirishni taklif qiling."},
+    {"key":"local-climate-practical","kind":"general","condition":{},"priority":65,"sources":["editorial","energy"],"recommendation":"Yozgi issiq, kuchli quyosh yoki chang muhim bo'lsa aynan shu ehtiyojni qayd eting. Har bir O'zbekiston xonadoni bir xil emas; shahar/viloyatdan avtomatik mato yoki narx xulosasi chiqarmang."},
+    {"key":"local-cleaning-unit","kind":"general","condition":{},"priority":60,"sources":["uz-clean"],"recommendation":"Mahalliy parda yuvish narxi pogon metr, m² yoki buyum bo'yicha bo'lishi mumkin. Bu sotuvdagi mato narxi emas; boshqa kompaniya narxini Alora tozalash xizmati sifatida aytmang."},
+    {"key":"local-supplier-origin","kind":"general","condition":{},"priority":67,"sources":["alora","editorial"],"recommendation":"'Turkiya', 'Koreya', 'Xitoy', 'Italiya' yoki mahalliy ishlab chiqarish degan kelib chiqishni faqat mahsulot ma'lumoti tasdiqlasin. Nomdagi Milano, Atlas yoki Linen so'zi kelib chiqish/tarkib isboti emas."},
+    {"key":"local-travel-and-install","kind":"general","condition":{},"priority":62,"sources":["alora"],"recommendation":"Viloyatga yetkazish yoki ustaning chiqishi so'ralsa mavjud xizmat shartlarini tekshiring. Toshkentda xizmat borligi butun O'zbekistonga bir narx yoki bepul xizmat degani emas."},
+    {"key":"safety-fire-distance","kind":"construction","condition":{"room":"kitchen"},"priority":96,"sources":["editorial"],"recommendation":"Oshxonada parda ochiq olov yoki qiziydigan yuzaga yaqin kelmasin. Plita yonida osiladigan uzun matoni xavfsiz deb tavsiya qilmang; joyida uskunaning ko'rsatmasiga mos yechim tekshirilishi kerak."},
+    {"key":"safety-cord-no-workaround","kind":"general","condition":{},"priority":73,"sources":["safety"],"recommendation":"Bolalar uchun shnurni shunchaki balandroqqa bog'lash barcha xavfni yo'qotmaydi. Shnursiz tizimni afzal ko'ring; mavjud mexanizmda ishlab chiqaruvchi xavfsizlik ko'rsatmasini ustaga tekshirtiring."},
+    {"key":"safety-heavy-decor","kind":"room_style","condition":{"room":"kids"},"priority":94,"sources":["editorial"],"recommendation":"Bola tortib olishi mumkin bo'lgan og'ir bezak, erkin ip/shokila va pastga osilgan bog'lagichdan saqlaning. Xavfsiz mahkamlash va ochilish qulayligi rangdan muhimroq."},
+    {"key":"fireproof-no-claim","kind":"general","condition":{},"priority":71,"sources":["fire-certificate"],"recommendation":"Maktab, bog'cha, ofis yoki zal uchun 'yonmaydi', FR yoki sertifikat bor deb mato turidan xulosa qilmang. Aniq mahsulotning amaldagi sertifikati va loyiha talabi mutaxassis tomonidan tekshiriladi."},
+    {"key":"acoustic-not-soundproof","kind":"general","condition":{},"priority":68,"sources":["editorial"],"recommendation":"Og'ir mato aks-sadoni yumshatishi mumkin, ammo ko'cha shovqinini to'liq to'sadigan ovoz izolyatsiyasi deb sotmang. Akustik natija yoki dB kamayishini sinov hujjatisiz va'da qilmang."},
+    {"key":"accessibility-operation","kind":"construction","condition":{},"priority":71,"sources":["editorial"],"recommendation":"Katta/baland oynada parda boshqarish kimga qulay bo'lishini aniqlang. Har kuni ochib-yopishda tayoqcha yoki mos mexanizm yordam berishi mumkin; motorli karniz mavjudligini katalog tasdiqlasin."},
+    {"key":"returns-and-guarantee","kind":"general","condition":{},"priority":70,"sources":["alora"],"recommendation":"Buyurtma bo'yicha tikilgan pardani qaytarish, kafolat yoki bepul qayta tikish shartlarini o'ylab aytmang. Do'konning tasdiqlangan siyosati bo'lmasa sotuvchi aniqlashtirishini ayting."},
+    {"key":"photo-limitations","kind":"general","condition":{},"priority":66,"sources":["editorial"],"recommendation":"Xona rasmini ko'rmagan holda 'rasmda ko'ryapman' demang. Foto bo'lsa ham undan aniq karniz o'lchami, tarkib yoki rang kodi chiqarmang; rasm uslubni muhokama qilishga yordamchi xolos."},
+    {"key":"finish-order-no-reasking","kind":"general","condition":{},"priority":83,"sources":["alora","editorial"],"recommendation":"Mijoz paketni tanlasa tanlovni saqlab, shu paketdan qoralama tayyorlang. Buyurtmaga o'tgandan keyin xona/rang/budjetni yana so'rab savdoni boshiga qaytarmang; keyingi qadam ilovadagi mijoz formasi va sotuvchi tasdig'i."},
+    {"key":"options-honest-availability","kind":"general","condition":{},"priority":82,"sources":["alora"],"recommendation":"Uch segmentning hammasi mos bo'lishi shart emas. Bir paketda funksional talabga mos mato yo'q bo'lsa shu paketni cheklov bilan ayting yoki chiqarmang; sonni uchga to'ldirish uchun mos bo'lmagan mahsulotni maqtamang."},
+    {"key":"stock-deadline-not-inferred","kind":"general","condition":{},"priority":72,"sources":["alora"],"recommendation":"Katalogda narx borligi omborda bor yoki ertaga tayyor degani emas. Mavjudlik va muddatni sotuvchi tasdiqlaydi; boshqa saytdagi mavjudlik/chegirma Alora uchun dalil emas."},
+    {"key":"fabric-vs-fason","kind":"general","condition":{},"priority":69,"sources":["editorial"],"recommendation":"Fason — pardaning tuzilishi va osilishi, mato esa alohida tanlov. Bir fasonni turli mato bilan qilish mumkin, lekin hammasi bir xil qoraytirmaydi yoki bir xil burmalanmaydi. Fason nomi mahsulot xususiyatini almashtirmaydi."},
+    {"key":"two-color-consent","kind":"construction","condition":{},"priority":70,"sources":["editorial"],"recommendation":"Ikki rangli portyerada asosiy mato va kant/yon bo'lak ulushini fason shabloni yoki mijoz tasdiqlasin. Ikki rang so'ralgani uchun ikkita to'liq eni qatlamni hisoblab yubormang."},
+    {"key":"lambrequin-optional","kind":"construction","condition":{},"priority":74,"sources":["editorial"],"recommendation":"Lambrekan rels ustini bezashi/yashirishi mumkin, ammo har bir klassik yoki premium pardaga shart emas. Deraza ochilishi va tozalashni qiyinlashtirmasin; narxda alohida bo'lak sifatida ko'rinsin."},
+    {"key":"no-waste-charge-explanation","kind":"general","condition":{},"priority":81,"sources":["alora"],"recommendation":"Hisobdagi chok/bukma zapasi va rulonni bichishdagi chiqindi bir xil emas. Natijadagi waste_percent maydonini 'narxga falon foiz chiqindi qo'shildi' deb talqin qilmang; hisobning tayyor maydonlarini o'zgartirmay tushuntiring."},
+    {"key":"no-independent-money-math","kind":"general","condition":{},"priority":80,"sources":["alora"],"recommendation":"Jami, avans, farq, chegirma va tejashni javob ichida o'zingiz hisoblamang. Tool tayyor bergan summani ayting; yangi variantning narxi kerak bo'lsa qayta hisoblang. Taxminiy deb to'qilgan son ham narx dalili emas."},
+    {"key":"premium-value-not-decoration","kind":"general","condition":{},"priority":73,"sources":["editorial"],"recommendation":"Premium tavsiya ko'p bezak degani emas. Asosiy qiymatni ehtiyojga bog'lang: mos qoraytirish, yaxshi osilish, mato yoki qulay boshqaruv. Mijoz xohlamagan qatlam va yangi karnizni yashirin qo'shmang."},
+    {"key":"room-change-confirm","kind":"general","condition":{},"priority":71,"sources":["editorial"],"recommendation":"Mijoz boshqa xonaga o'tsa oldingi o'lcham va tanlovni yangi xonaga avtomatik ko'chirmang. Yangi derazami yoki shu hisobni o'zgartiryaptimi bitta savol bilan aniqlang; eski paketni yangi talabga mos deb ko'rsatmang."},
+    {"key":"existing-cornice","kind":"construction","condition":{},"priority":77,"sources":["editorial"],"recommendation":"Karniz bor deyilsa uni yangisiga avtomatik almashtirmang. Qo'shiladigan qatlam va mexanizm mavjud relsga mosmi tekshiring; yangi karniz faqat zarurat yoki mijoz roziligi bilan taklif qilinadi."},
+    {"key":"korean-turkish-marketing","kind":"general","condition":{},"priority":60,"sources":["editorial","alora"],"recommendation":"'Koreyscha', 'turkcha', 'yevropa fasoni' turli do'konda boshqa ma'noda ishlatilishi mumkin. Shaklini sodda so'z bilan aniqlang: tekis/to'lqin, tul-portyera, lambrekan yoki mexanizm. Nomdan narx yoki sifat chiqarmang."},
+    {"key":"language-consistency","kind":"general","condition":{},"priority":75,"sources":["alora"],"recommendation":"Mijoz yozgan tilda davom eting: o'zbek lotin/kirill yoki rus. Mahsulot nomini o'zgartirmang, ammo xizmat va tushuntirishni shu tilda ayting; inglizcha xizmat preambulasi qo'shmang."},
+    {"key":"one-recommendation-not-catalog-dump","kind":"general","condition":{},"priority":74,"sources":["editorial"],"recommendation":"Oddiy savolga katalogni to'kib tashlamang. Eng mos bitta tavsiya va zarur bo'lsa bitta muqobil yetadi. Uch paket faqat mijoz variant/taqqoslash so'raganda; ma'lumot yetarli bo'lsa tool'ni takrorlamang."},
+    {"key":"children-day-sleep","kind":"room_style","condition":{"room":"kids","transparency":"blackout"},"priority":97,"sources":["safety","light-gaps"],"recommendation":"Kunduz uxlaydigan bola uchun mos blackout qatlamni xavfsiz shnursiz osish va tirqish nazorati bilan ko'ring. Shunchaki rangli bolalar tuli yoki oddiy astar bu vazifani to'liq bajarmaydi."},
+    {"key":"bedroom-minimal-two-layer","kind":"room_style","condition":{"room":"bedroom","style":"minimal"},"priority":94,"sources":["editorial"],"recommendation":"Minimal yotoqxonada tul va tekis blackout portyera mustaqil boshqarilishi mumkin. Lambrekan qo'shmasdan ham yaxshi yechim chiqadi; rang va parvarish talabini saqlagan holda mos katalog matosini tanlang."},
+    {"key":"local-cafe-curtain","kind":"room_style","condition":{"room":"kitchen","style":"provence"},"priority":92,"sources":["editorial"],"recommendation":"Provans oshxonada tokchagacha yoki kafe ko'rinishidagi yengil parda yoqishi mumkin. Uning balandligi va plitadan uzoqligini tekshiring; qisman yopilgan oynada kechki maxfiylik to'liq emasligini ayting."},
+    {"key":"not-all-rods-for-eyelets","kind":"construction","condition":{},"priority":72,"sources":["measure-track","editorial"],"recommendation":"Lyuvers, halqa va rels ilgichi boshqa osish usullari. Mavjud relsga lyuversni avtomatik mos demang. Fasonni tasdiqlashdan oldin qaysi karniz turi borligini aniqlang."},
+    {"key":"repeat-order-color-batch","kind":"general","condition":{},"priority":61,"sources":["care-kvadrat","editorial"],"recommendation":"Keyinroq qo'shimcha mato olayotganda bir xil rang nomi aynan bir xil tusni kafolatlamaydi. Namuna yoki partiyani tekshirishni tavsiya qiling; ekran rasmi bo'yicha tenglik va'da qilmang."}
+  ],
+  "fasons": [
+    {"key":"living-neoclassic","name":"Mehmonxona — sodda neoklassik ikki qatlam","style":"classic","rooms":["living"],"parts":[{"role":"portyera","name":"Asosiy portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Yengil tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"}]},
+    {"key":"bedroom-modern","name":"Yotoqxona — zamonaviy tul va portyera","style":"modern","rooms":["bedroom"],"parts":[{"role":"portyera","name":"Talabga mos zich portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Kunduzgi tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"}]},
+    {"key":"bedroom-minimal","name":"Yotoqxona — minimal ikki qatlam","style":"minimal","rooms":["bedroom"],"parts":[{"role":"portyera","name":"Tekis portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Sodda tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]},
+    {"key":"couple-classic","name":"Kelin-kuyov — klassik tul va portyera","style":"classic","rooms":["wedding"],"parts":[{"role":"portyera","name":"Asosiy portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Bezakli yoki sodda tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"}]},
+    {"key":"couple-modern","name":"Kelin-kuyov — zamonaviy sodda ikki qatlam","style":"modern","rooms":["wedding"],"parts":[{"role":"portyera","name":"Sokin rangli portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Kunduzgi tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"}]},
+    {"key":"kids-simple","name":"Bolalar xonasi — sodda ikki qatlam","style":"modern","rooms":["kids"],"parts":[{"role":"portyera","name":"Ehtiyojga mos portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"},{"role":"tul","name":"Yengil kunduzgi tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]},
+    {"key":"kitchen-short","name":"Oshxona — tokchagacha sodda parda","style":"provence","rooms":["kitchen"],"parts":[{"role":"portyera","name":"Mijoz o'lchagan qisqa portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]},
+    {"key":"living-hightech","name":"Mehmonxona — xay-tek tekis ikki qatlam","style":"hi_tech","rooms":["living"],"parts":[{"role":"portyera","name":"Gulsiz portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Sodda kunduzgi tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]},
+    {"key":"living-minimal","name":"Mehmonxona — minimal bezaksiz ikki qatlam","style":"minimal","rooms":["living"],"parts":[{"role":"portyera","name":"Tekis portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Sodda tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]},
+    {"key":"office-simple","name":"Ofis — qulay sodda portyera","style":"modern","rooms":["office"],"parts":[{"role":"portyera","name":"Ish joyiga mos portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_economy"}]}
+  ],
+  "product_enrichment": [
+    {"code":"VELVET-MILANO","description":"Baxmal ko'rinishidagi premium portyera. Katalogdagi shaffoflik — blackout; xona chetlaridagi yorug'lik montajga ham bog'liq. Klassik mehmonxona, kelin-kuyov yoki uyqu xonasida didga mos tanlanadi. Tarkib va parvarish faqat yorliq bilan aniqlanadi.","rooms":["living","bedroom","wedding"],"aliases":["baxmal","barxat","velvet","бархат","бахмал"]},
+    {"code":"VELVET-CHEK","description":"Geometrik naqshli tor enli blackout portyera. Rulon eni va naqsh yo'nalishini hisobda tekshirish kerak; barcha balandlikka choksiz yetadi deb bo'lmaydi. Baxmal nomidan tarkib yoki yuvish rejimi aniqlanmaydi.","rooms":["living","bedroom"],"aliases":["naqshli baxmal","geometrik blackout","бархат с узором"]},
+    {"code":"BLACKOUT-DUO","description":"Katalogda blackout deb belgilangan sodda portyera. Kunduzgi uyqu yoki kuchli qoraytirish ehtiyojiga nomzod; butun xonaning qorong'iligi chet va ustki tirqishlarga ham bog'liq. Ikki qatlam degani avtomatik ikki alohida sotuv matosi emas.","rooms":["bedroom","living","kids","wedding","office"],"aliases":["blekaut","blackout","qoraytiruvchi","блэкаут","затемнение"]},
+    {"code":"LINEN-GREY","description":"Zig'ir ko'rinishli kulrang yarim shaffof portyera. Zamonaviy xona va ofisga sokin tekstura beradi. 'Linen' nomi 100% tabiiy zig'ir degani emas; tarkibi tasdiqlanmagan. To'liq qorong'ilik uchun blackout o'rnini bosmaydi.","rooms":["living","office","bedroom"],"aliases":["zig'ir ko'rinishli","lyon","лен","лён","linen"]},
+    {"code":"OFFICE-MINIMAL","description":"Gulsiz oq yarim shaffof ekonom portyera. Ofis, sodda mehmonxona yoki oshxona uchun ko'rib chiqiladi; vazifasi yorug'likni yumshatish. Blackout emas, kechki maxfiylik va yuvish haroratini kafolatlamaydi.","rooms":["office","living","kitchen"],"aliases":["sodda parda","arzon gulsiz","minimal","однотонная","недорогая"]},
+    {"code":"KIDS-RAINBOW","description":"Bolalar uchun rangli shaffof mato. Kunduzgi bezak qatlamiga mos; blackout emas. Katalogdagi parvarish — 30°C, oqartiruvchisiz. Kunduz uxlaydigan bola uchun alohida qoraytiruvchi qatlam va xavfsiz osish kerak.","rooms":["kids"],"aliases":["bolalar tuli","rangli tul","детская","радужная"]},
+    {"code":"CARMEL-KITCHEN","description":"Oshxona uchun provans ko'rinishidagi yarim shaffof mato. Mijoz o'lchagan qisqa portyera sifatida ko'rib chiqiladi. Matoning o'zi rim/rulon mexanizmi emas; mexanizmli parda narxi alohida tasdiqlanadi. Parvarish yorliqdan aniqlanadi.","rooms":["kitchen"],"aliases":["oshxona pardasi","provans","кухонная","прованс"]},
+    {"code":"TUL-DANTEL","description":"Dantel naqshli shaffof tul. Mehmonxona va kelin-kuyov xonasiga kunduzgi bezak qatlam sifatida tanlanadi. Kechasi chiroq yonganda to'liq maxfiylik bermaydi; parvarish yorlig'ini tekshirish kerak.","rooms":["living","wedding","bedroom"],"aliases":["dantelli tul","krujeva","тюль с кружевом","кружево"]},
+    {"code":"TUL-OQ-ODDIY","description":"Sodda oq shaffof tul, kunduz yorug'ligini saqlaydigan qatlam. Xonaga mos zich portyera bilan juftlash mumkin; o'zi blackout yoki kechki maxfiylik yechimi emas. Yuvish rejimi yorliq bilan tasdiqlanadi.","rooms":["living","bedroom","office","kitchen","kids","wedding"],"aliases":["oq tul","vual","voal","белая тюль","вуаль"]},
+    {"code":"ASTAR-SOFT","description":"Yumshoq oddiy astar matosi. Katalogda semi deb belgilangan; uni blackout yoki termo-astar deb atash mumkin emas. Portyera tuzilishi va osilishiga qo'shimcha qatlam sifatida, mijoz roziligi bilan ishlatiladi.","rooms":[],"aliases":["oddiy astar","podkladka","подкладка","lining"]},
+    {"code":"KANT-ATLAS","description":"Atlas ko'rinishli dekorativ kant, metr bilan hisoblanadi. Bu m² bilan narxlanadigan asosiy portyera emas; tayyor lenta sifatida narxi va miqdori alohida ko'rsatiladi. Tarkibi/kelib chiqishi nomidan taxmin qilinmaydi.","rooms":[],"aliases":["kant","bezak lenta","dekor lenta","кант","тесьма"]},
+    {"code":"LAMBREKAN-KLASSIK","description":"Klassik lambrekan uchun mato. Karniz ustini bezashda ixtiyoriy bo'lak; har premium yoki klassik buyurtmaga shart emas. Semi matoning o'zi blackout kafolati emas; ochilish va tozalash qulayligi tekshiriladi.","rooms":["living","wedding"],"aliases":["lambreken","lambrekan","svag","ламбрекен"]},
+    {"code":"BORDO-SATIN","description":"Bordo satin ko'rinishli yarim shaffof portyera. Klassik yoki sharqona xonada rang aksenti bo'lishi mumkin. Satin/atlas nomi tabiiy ipak yoki blackout degani emas; tarkib/parvarish noma'lum bo'lsa aniqlashtiriladi.","rooms":["living","wedding"],"aliases":["atlas","satin","saten","сатин","атлас"]},
+    {"code":"GRAFIT-HITECH","description":"Gulsiz grafit yarim shaffof portyera, xay-tek va zamonaviy sokin ko'rinish uchun. To'q rangiga qaramay blackout emas; kuchli qoraytirish talabi bo'lsa boshqa katalog matosi tanlanadi.","rooms":["living","office","bedroom"],"aliases":["xay tek","haytek","hi tech","grafit","хай тек","графит"]}
+  ]
+}

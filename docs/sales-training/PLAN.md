@@ -5,7 +5,7 @@ Branch: backend va agent repolarida `feat/25-sales-training`; `main`ga push yoki
 
 ## Maqsad va chegaralar
 
-Asosiy ish — parda bo'yicha bilim, ehtiyojni aniqlash, mos variant tanlash, e'tirozga javob va savdoni yakunlash sifati. DeepSeek modelining vaznlari qayta o'qitilmaydi: boshqariladigan bilimlar, versiyali system prompt va zarur tool yordamchilari yaxshilanadi. Bu farq yakuniy hisobotda aniq yoziladi.
+Asosiy ish — parda bo'yicha bilim, ehtiyojni aniqlash, mos variant tanlash, e'tirozga javob va savdoni yakunlash sifati. O'zbekiston bozoridagi tul, portyera, blackout/dimout, xay-tek, klassik/neoklassik, kelin-kuyov xonasi, balkon va mahalliy o'lchov/narx atamalari markazda bo'ladi. Mahsulot tavsiflari va fason modellari ham shu muhitga mos boyitiladi. DeepSeek modelining vaznlari qayta o'qitilmaydi: boshqariladigan bilimlar, versiyali system prompt va zarur tool yordamchilari yaxshilanadi. Bu farq yakuniy hisobotda aniq yoziladi.
 
 90/100 — maqsad, oldindan berilgan natija emas. Yakuniy javobda haqiqiy o'lchov, o'tmagan ssenariylar va qolgan cheklovlar ko'rsatiladi. Ovoz, mobil UI, umumiy billing va deploy auditi bu ishning markazi emas.
 
