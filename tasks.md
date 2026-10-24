@@ -285,6 +285,7 @@
 
 - [x] 17.1 Bazaning tekshirilgan backup'i, alohida branch va `docs/sales-training/PLAN.md` ish rejasi.
 - [x] 17.2 Manbali 118 qoida, mahsulot/fason boyitish paketi, versiyali sotuv prompti, dry-run va snapshot orqali qaytarish; 465 backend testi o'tdi.
+- [x] 17.2a Tul maxfiyligi va plita xavfsizligi state noma'lum bo'lsa ham qidiriladi; 30 savolli retrieval va paketning 10 testi o'tdi.
 - [ ] 17.3 Kalitsiz regressiya tekshiruvlari va tejamkor yakuniy API baholash.
 
 ## Ish tartibi (bog'liqliklar)
