@@ -185,3 +185,20 @@ def test_existing_snapshot_cannot_be_overwritten(
         apply_sales_pack(load_sales_pack(), author=sales_environment["author"], snapshot_path=path)
     assert path.read_text() == "old snapshot"
     assert not PromptVersion.objects.exists()
+
+
+def test_list_tags_keep_their_shape_owner_values_and_rollback(
+    sales_environment: dict[str, Any], tmp_path: Path
+) -> None:
+    product = sales_environment["product"]
+    product.tags = ["owner_tag", "portyera"]
+    product.save(update_fields=["tags"])
+    path = tmp_path / "list-tags.json"
+    apply_sales_pack(load_sales_pack(), author=sales_environment["author"], snapshot_path=path)
+    product.refresh_from_db()
+    assert isinstance(product.tags, list)
+    assert product.tags[:2] == ["owner_tag", "portyera"]
+    assert "sodda parda" in product.tags
+    rollback_sales_pack(path, author=sales_environment["author"])
+    product.refresh_from_db()
+    assert product.tags == ["owner_tag", "portyera"]
