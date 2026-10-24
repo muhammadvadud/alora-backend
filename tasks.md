@@ -281,6 +281,12 @@
 - [x] 16.8 **Sotuv dashboard'i** — `GET analytics/dashboard/?period=day|week|month|custom`: buyurtmalar (holatlar), sotuv summalari, suhbat konversiyasi, AI xarajati, top matolar, xodimlar reytingi, kunlik qator, oldingi davr bilan taqqoslash; manager+. Swagger teglari `/api/v1/` prefiksidan keyingi segment bo'yicha (`SCHEMA_PATH_PREFIX`) — har API o'z bo'limida
 - [~] 16.7 `docs/API-GUIDE.md` — 16.1–16.6 shartnomalari (so'rov/javob namunalari), mobil `docs/API-CONTRACT.md` bilan sinxron
 
+## Bosqich 17 — Parda sotuv bilimlari (2026-10-25)
+
+- [x] 17.1 Bazaning tekshirilgan backup'i, alohida branch va `docs/sales-training/PLAN.md` ish rejasi.
+- [ ] 17.2 Manbali bilim paketi, versiyali sotuv prompti va qaytarish imkoniyati.
+- [ ] 17.3 Kalitsiz regressiya tekshiruvlari va tejamkor yakuniy API baholash.
+
 ## Ish tartibi (bog'liqliklar)
 
 ```
