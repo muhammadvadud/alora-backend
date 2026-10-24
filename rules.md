@@ -348,6 +348,21 @@ tannarx maydoni faqat admin uchun ochiq qilindi.
 
 ## 17. Kelishilgan chetlanishlar (jurnal)
 
+### 17.7 Sotuv bilimlari uchun versiyali paket (2026-10-25)
+
+Buyurtmachi bilim, mahsulot tavsifi va fasonlarni O'zbekiston bozoriga mos
+boyitish, avval backup olish va natijani alohida branchda saqlashni so'radi.
+`apps/knowledge/data/` dagi versiyali paket import manbasi; ishlash paytidagi
+yagona manba avvalgidek Django DB. `knowledge/services.py` import/validatsiya/
+qaytarish mantiqini, management command esa orkestratsiyani bajaradi. Mavjud
+mahsulot narxi, tarkibi va tasdiqlangan parvarishi to'qilmaydi; tavsif/teg/xona
+mosligi boyitiladi, fason koeffitsientlari amaldagi CalcRule'dan olinadi.
+Almashtiriladigan eski bilim faqat aniq matn bo'yicha o'chirilmasdan nofaol
+qilinadi; boshqa manager qoidalari saqlanadi. Importdan oldin 0600 snapshot,
+commitdan keyin bitta katalog resync xabari; dry-run va rollback majburiy.
+Yangi servis, model maydoni yoki tashqi bog'liqlik qo'shilmaydi. Muqobil:
+qo'lda DB tahriri — takrorlanish va qaytarish izini bermagani uchun rad etildi.
+
 > 0-bo'lim 7-bandiga ko'ra TZ yoki qoidadan har qanday chetlanish shu yerga yoziladi.
 > Yozilmagan chetlanish — xato hisoblanadi.
 
