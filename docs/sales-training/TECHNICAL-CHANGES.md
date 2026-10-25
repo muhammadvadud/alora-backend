@@ -1,5 +1,7 @@
 # Zarur texnik o'zgarishlar
 
+Bu fayl birinchi baholash bosqichini yozadi; keyingi rang, PII va usage tuzatishlari hamda 473 testli joriy tekshiruv [FOLLOWUP.md](FOLLOWUP.md)da.
+
 Asosiy maqsad bilim/sotuv sifati; umumiy infratuzilma kamchiliklarini tuzatish bu ishga qo'shilmaydi.
 
 ## Bilimni joriy qilish

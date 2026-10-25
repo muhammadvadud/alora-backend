@@ -1,5 +1,7 @@
 # Yakuniy natija
 
+Keyingi davomiy ishlar va joriy holat: [FOLLOWUP.md](FOLLOWUP.md). Unda rang/yetkazish, prompt v4, PII himoyasi va usage hisobining keyingi tuzatishlari yozilgan. Quyidagi 91/100 baho birinchi 24 navbatli baholashga tegishli; yangi sinovsiz oshirilmagan.
+
 2026-10-25, Asia/Tashkent. Matnli parda sotuv yordamchisi bilim/prompt/tool dalillari orqali yaxshilandi. Sinov doirasidagi ekspert bahosi **91/100**. Model vaznlari fine-tuning qilinmadi. Narx formulalari va mobil kod o'zgarmadi.
 
 ## Nima joriy qilindi

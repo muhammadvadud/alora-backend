@@ -45,3 +45,11 @@ SSE user xabarini agentdan oldin saqlaydi. Shu haqiqiy Message UUID ikkala usage
 Yangi 7 ta billing regressiyasi va barcha backend tekshiruvlari: 473 passed, 87% coverage. Tahrirlangan 6 modul mypy'dan, tegishli fayllar ruff/format'dan o'tdi. Go build/vet/lint/race va log/usage ID regressiyalari ham o'tdi. Ushbu bosqichda DeepSeek chaqirilmadi.
 
 Qo'llashdan oldin alohida `before-usage-fix.dump` olindi va pg_restore ro'yxati tekshirildi. Bazada non-null ID'li dublikat guruhlar yo'qligi aniqlandi. Migrations: pricing/0005_precise_usage_costs, usage/0002_precise_usage_costs. Eski bo'sh ID'li qaydlar va nolga yo'qotilgan tarixiy xarajatlar taxminan o'chirilmagan yoki qayta narxlanmagan. Legacy/ovozli yo'lda message_id hali berilmasa, shu yo'lning mukammal idempotentligi alohida navbatda qoladi. Tariflarni provayder va kun/soatga avtomatik moslash bu tuzatishning bir qismi emas; hisobotdagi summa konfiguratsiyadagi tarif bo'yicha hisobdir, invoice emas.
+
+## Joriy holat va keyingi navbat
+
+Ikkala migratsiya asosiy bazaga xatosiz qo'llandi. Django, Celery workerlar va beat qayta yuklandi, Go yangi image bilan ko'tarildi. /health/ DB/Redis/gRPC uchun ok, Go /readyz ok, ikkala worker pingga javob berdi. Snapshotlardan keyingi ikkita sintetik suhbat arxivlandi, o'chirilmadi. Test DB/Redis va backup tekshiruv bazasi olib tashlandi. after-followup.dump hamda test loglari maxfiy backup katalogida.
+
+before-followup.dump alohida bazaga to'liq tiklandi. Product, ProductVariant, Fason va FasonPart jadvallari satrlarining tartiblangan JSON hash'i asosiy baza bilan bir xil chiqdi. Shu davomiy ishda mahsulot/fason ma'lumotlari o'zgarmagani shu yo'l bilan ham tasdiqlandi.
+
+Asosiy keyingi navbatlar: ovoz provayderi va mobil oqim integratsiyasi; ovoz/legacy usage ID'si; tariflarning vaqtga mos konfiguratsiyasi; belgilanmagan PII shakllari uchun kengroq strategiya. Bu bandlar bajarildi deb ko'rsatilmaydi. Mahsulot tarkibi/parvarishi/kelib chiqishi bo'yicha ma'lumot yig'ish esa buyurtmachi talabiga ko'ra alohida keyingi suhbatga qoldiriladi.
