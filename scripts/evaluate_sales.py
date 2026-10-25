@@ -234,7 +234,7 @@ def main() -> None:
             record["tools"] = [
                 event.get("tool") for event in record["events"] if event.get("kind") == "tool_call"
             ]
-            usage = next(
+            usage: dict[str, Any] = next(
                 (
                     event.get("usage", {})
                     for event in record["events"]

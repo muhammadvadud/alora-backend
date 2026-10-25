@@ -1,6 +1,6 @@
 # Bilim va katalog paketi
 
-Paket: `apps/knowledge/data/sales_v1.json`, versiya `2026.10.25.1`.
+Paket: `apps/knowledge/data/sales_v1.json`, yakuniy versiya `2026.10.25.3`; joriy DB prompt v3.
 
 - 118 ta yangi, manbasi ko'rsatilgan ixcham qoida; eng uzun qoida 234 belgi.
 - 55 ta eski aniq tavsiya matni almashtirish ro'yxatida. Ular o'chirilmaydi, nofaol qilinadi.

@@ -22,40 +22,40 @@ Agent repoda ish boshlanishidan oldin 37 ta tracked faylda va qo'shimcha untrack
 ## 1. Bilim auditi va manbalar
 
 - [x] Bazadagi 57 qoida birma-bir ko'rildi.
-- [ ] Xato yoki haddan tashqari qat'iy eski qoidalar aniq matn bo'yicha versiyali almashtirish ro'yxatiga olinadi; yozuvlar o'chirilmaydi.
-- [ ] Birlamchi manbalardan yorug'lik/maxfiylik, o'lchov, osish/fason, mato parvarishi, bolalar xavfsizligi va issiqlik bo'yicha qisqa bilimlar tayyorlanadi.
-- [ ] Har yangi qoidaga manba ID yoki loyiha muharrirlik siyosati belgilanadi. Tashqi do'kon narxlari va zaxirasi Alora katalogiga ko'chirilmaydi.
+- [x] Xato yoki haddan tashqari qat'iy eski qoidalar aniq matn bo'yicha versiyali almashtirish ro'yxatiga olinadi; yozuvlar o'chirilmaydi.
+- [x] Birlamchi manbalardan yorug'lik/maxfiylik, o'lchov, osish/fason, mato parvarishi, bolalar xavfsizligi va issiqlik bo'yicha qisqa bilimlar tayyorlanadi.
+- [x] Har yangi qoidaga manba ID yoki loyiha muharrirlik siyosati belgilanadi. Tashqi do'kon narxlari va zaxirasi Alora katalogiga ko'chirilmaydi.
 
 ## 2. Bilim paketi va sotuv prompti
 
-- [ ] Idempotent, dry-run va rollback imkoniyatli bilim paketi joriy qilinadi.
-- [ ] Umumiy prompt ixcham bo'ladi; katta bilim bazasi har navbatga to'liq qo'shilmaydi.
-- [ ] Xona/uslub va funksional talablar ajratiladi: blackout o'rniga semi taklif qilinsa cheklov yashirilmaydi.
-- [ ] Narx, mato xususiyati, kafolat, muddat, chegirma va to'lov holati faqat tegishli ma'lumotdan olinadi.
-- [ ] Bir savol, qisqa tavsiya, talabni qayta so'ramaslik, asosli e'tiroz yechimi va bosimsiz yakunlash o'rgatiladi.
-- [ ] Sotuvchi va mijozga murojaat uslubi aniq ajratiladi; ruscha/o'zbek lotin/kirill qoidalari belgilanadi.
+- [x] Idempotent, dry-run va rollback imkoniyatli bilim paketi joriy qilinadi.
+- [x] Umumiy prompt ixcham bo'ladi; katta bilim bazasi har navbatga to'liq qo'shilmaydi.
+- [x] Xona/uslub va funksional talablar ajratiladi: blackout o'rniga semi taklif qilinsa cheklov yashirilmaydi.
+- [x] Narx, mato xususiyati, kafolat, muddat, chegirma va to'lov holati faqat tegishli ma'lumotdan olinadi.
+- [x] Bir savol, qisqa tavsiya, talabni qayta so'ramaslik, asosli e'tiroz yechimi va bosimsiz yakunlash o'rgatiladi.
+- [x] Sotuvchi va mijozga murojaat uslubi aniq ajratiladi; ruscha/o'zbek lotin/kirill qoidalari belgilanadi.
 
 ## 3. Faqat zarur texnik yordam
 
-- [ ] Bilimni haqiqiy suhbat savoliga mos, qisqa va ko'p tilli olish tekshiriladi.
-- [ ] Sotuvni bevosita buzadigan takroriy xizmat, paket tanlovining yo'qolishi va asossiz mahsulot tavsiyasi minimal doirada tuzatiladi.
-- [ ] Yadro arxitekturasi, narx formulasi va ombor modeli o'zgartirilmaydi. Qoida o'zgarishi kerak bo'lsa avval `rules.md`ga sabab/ADR yoziladi.
-- [ ] Yangi fason faqat mavjud va mos katalog qatlamlaridan tuziladi; ko'rinish uchun to'qima mahsulot, narx yoki soxta xususiyat yaratilmaydi.
+- [x] Bilimni haqiqiy suhbat savoliga mos, qisqa va ko'p tilli olish tekshiriladi.
+- [x] Sotuvni bevosita buzadigan takroriy xizmat, paket tanlovining yo'qolishi va asossiz mahsulot tavsiyasi minimal doirada tuzatiladi.
+- [x] Yadro arxitekturasi, narx formulasi va ombor modeli o'zgartirilmaydi. Qoida o'zgarishi kerak bo'lsa avval `rules.md`ga sabab/ADR yoziladi.
+- [x] Yangi fason faqat mavjud va mos katalog qatlamlaridan tuziladi; ko'rinish uchun to'qima mahsulot, narx yoki soxta xususiyat yaratilmaydi.
 
 ## 4. Kalitsiz sifat tekshiruvi
 
-- [ ] Bilim paketi validatsiyasi, idempotent import/rollback, prompt uzunligi, retrieval relevanti va sotuv regressiyalari uchun mazmunli testlar.
-- [ ] Agent: build, vet, lint va race testlar. Backend: ruff, format, mypy, migratsiya tekshiruvi va pytest.
-- [ ] Backend testlari asosiy DB va xizmatlardan ajratilgan muhitda bajariladi: Redis pub/sub orqali sinov ma'lumoti jonli katalogga aralashmaydi.
-- [ ] Har mantiqiy tugallangan ish alohida Conventional Commit; `tasks.md` o'sha commitda yangilanadi.
+- [x] Bilim paketi validatsiyasi, idempotent import/rollback, prompt uzunligi, retrieval relevanti va sotuv regressiyalari uchun mazmunli testlar.
+- [x] Agent: build, vet, lint va race testlar. Backend: ruff, format, mypy, migratsiya tekshiruvi va pytest.
+- [x] Backend testlari asosiy DB va xizmatlardan ajratilgan muhitda bajariladi: Redis pub/sub orqali sinov ma'lumoti jonli katalogga aralashmaydi.
+- [x] Har mantiqiy tugallangan ish alohida Conventional Commit; `tasks.md` o'sha commitda yangilanadi.
 
 ## 5. Oxirgi cheklangan jonli API baholash
 
-- [ ] Boshlanishdagi audit yozuvlari taqqoslash uchun ishlatiladi; yangi baseline uchun pulli so'rov sarflanmaydi.
-- [ ] Jonli test faqat tayyor paket joriy qilingandan va kalitsiz testlar o'tgandan keyin.
-- [ ] Pul chegarasi oldindan belgilanadi; hisob balansi maxfiy saqlanadi. Token sarfi har navbat bo'yicha jamlanadi, muvaffaqiyatsiz so'rovlar ham qayd etiladi.
-- [ ] Kam sonli ko'p navbatli ssenariy: ehtiyoj/tanlov, qoraytirish/maxfiylik, o'lchov, budjet, parvarish, bolalar xavfsizligi, e'tiroz va buyurtma. Zarur bo'lsa faqat yiqilgan holat qayta sinaladi.
-- [ ] Baholash: funksional moslik 25; fakt/narx/cheklov to'g'riligi 25; suhbat va e'tiroz 20; yakunlash/holat 15; til/ixchamlik 10; token tejamkorligi 5. Kritik to'qima narx yoki noto'g'ri tasdiq bo'lsa 90+ berilmaydi.
+- [x] Boshlanishdagi audit yozuvlari taqqoslash uchun ishlatiladi; yangi baseline uchun pulli so'rov sarflanmaydi.
+- [x] Jonli test faqat tayyor paket joriy qilingandan va kalitsiz testlar o'tgandan keyin.
+- [x] Pul chegarasi oldindan belgilanadi; hisob balansi maxfiy saqlanadi. Token sarfi har navbat bo'yicha jamlanadi, muvaffaqiyatsiz so'rovlar ham qayd etiladi.
+- [x] Kam sonli ko'p navbatli ssenariy: ehtiyoj/tanlov, qoraytirish/maxfiylik, o'lchov, budjet, parvarish, bolalar xavfsizligi, e'tiroz va buyurtma. Zarur bo'lsa faqat yiqilgan holat qayta sinaladi.
+- [x] Baholash: funksional moslik 25; fakt/narx/cheklov to'g'riligi 25; suhbat va e'tiroz 20; yakunlash/holat 15; til/ixchamlik 10; token tejamkorligi 5. Kritik to'qima narx yoki noto'g'ri tasdiq bo'lsa 90+ berilmaydi.
 
 ## Git va yakuniy topshirish
 

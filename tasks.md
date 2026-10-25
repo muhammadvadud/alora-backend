@@ -289,7 +289,7 @@
 - [x] 17.2b Mahsulot teglarining list/object shakli va egasining teglari saqlanadi; list bilan apply/rollback regressiyasi qo'shildi.
 - [x] 17.2c Jonli kuzatuvga ko'ra sotuv prompti: hisobni ixcham aytish, pul farqini to'qimaslik, ichki atamalarni chiqarmaslik va vakolatni tekshirish bilan kuchaytirildi.
 - [x] 17.2d Paketning haqiqiy rangini va tayyor budjet taqqoslashini ishlatish v3 promptda belgilandi; paketning 11 testi o'tdi.
-- [ ] 17.3 Kalitsiz regressiya tekshiruvlari va tejamkor yakuniy API baholash.
+- [x] 17.3 Kalitsiz regressiyalar, 24 API navbati/12 guruh va maqsadli qayta sinovlar; yakuniy sotuv bahosi 91/100, hisobiy sarf $0.024940098. Dalillar docs/sales-training/ ichida.
 
 ## Ish tartibi (bog'liqliklar)
 

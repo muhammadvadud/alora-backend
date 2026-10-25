@@ -20,7 +20,7 @@ Qidiruv o'zbek lotin/kirill va ruscha so'zlarni til sinonimlari orqali tenglasht
 
 ## Tekshiruv holati
 
-Paketning 10 ta kalitsiz testi o'tdi. Backend umumiy toza test bazasida 465 test o'tdi, coverage 87%. Test Redis alohida konteynerda: real katalogga test deltalari chiqmaydi. Yangi Python modullari ruff/format/mypy tekshiruvlaridan o'tdi. Butun backend lint/type tekshiruvida avvalgi modullarga tegishli muammolar ham qayd etildi; ular alohida baseline bilan ajratiladi.
+Paketning 11 ta kalitsiz testi o'tdi. Backend umumiy toza test bazasida 466 test o'tdi, coverage 86%. Test Redis alohida konteynerda: real katalogga test deltalari chiqmaydi. Yangi Python modullari ruff/format/mypy tekshiruvlaridan o'tdi. Butun backend lint/type tekshiruvida avvalgi modullarga tegishli muammolar ham qayd etildi; tegishli 13 fayl main'dan o'zgarmagani tekshirildi.
 
 ## Sotuvni buzgan yordamchi oqimlar
 
