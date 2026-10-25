@@ -204,6 +204,7 @@ def _apply_products(pack: dict[str, Any], products: list[Product]) -> None:
     changed: list[Product] = []
     for product in products:
         spec = by_code[product.code]
+        tags: list[str] | dict[str, Any]
         if isinstance(product.tags, list):
             tags = list(dict.fromkeys([*product.tags, *spec["aliases"]]))
         else:

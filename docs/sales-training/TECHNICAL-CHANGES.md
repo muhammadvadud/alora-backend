@@ -36,4 +36,8 @@ Texnik fallback prompt 1830 belgiga qisqardi; sotuv siyosati versiyali DB prompt
 
 30 ta tabiiy o'zbek lotin/kirill va rus savoli bilan real 118 qoidali paketning top-6 retrieval tekshiruvi o'tdi. Bu javob sifatining o'zi emas, kerakli bilim modelga yetishi tekshiruvi. Savol matnidagi qo'shtirnoq sifatidagi apostrof so'zga yopishib qolishi tuzatildi. Tul maxfiyligi va plita xavfsizligi umumiy faktlari state hali aniqlanmaganida ham olinadi.
 
+Jonli sinovda eski `Explain` yordamchisi chok/bukma zapasini «rulon eni mos kelmadi» deb noto'g'ri tushuntirayotgani aniqlandi. Bu matn mavjud ADR-002 ta'rifiga moslashtirildi; `waste_percent` yoki pul natijasi qayta hisoblanmadi. Formula izohi ham «chok/bukma zapasi» deydi. Chegirma izohi har siyosat uchun foizlar doim qo'shiladi degan taxminni qilmaydi.
+
+Mahsulot teglarining ro'yxat yoki obyekt shakli saqlanadi. Obyektda sales_aliases maydoni, ro'yxatda mavjud teglarni saqlagan qo'shimcha sinonimlar ishlatiladi; mobil JSON shakli o'zgartirilmaydi. Dastlabki real import ro'yxatga mos kelmagani sabab transaction bilan bekor bo'ldi, bazada qisman yangilanish qolmadi. Tuzatilgan import muvaffaqiyatli o'tdi; alohida list apply/rollback testi qo'shildi.
+
 Yakuniy API baholash va sarf natijalari `EVALUATION.md`ga yoziladi.
