@@ -45,8 +45,8 @@ class UsageRecord(TenantScopedModel):
     tool_calls = models.JSONField(default=list, blank=True, verbose_name=_("Asbob chaqiruvlari"))
     latency_ms = models.PositiveIntegerField(default=0, verbose_name=_("Kechikish (ms)"))
     cost_usd = models.DecimalField(
-        max_digits=MONEY_MAX_DIGITS,
-        decimal_places=MONEY_DECIMAL_PLACES,
+        max_digits=20,
+        decimal_places=8,
         default=Decimal(0),
         verbose_name=_("Xarajat (USD)"),
     )
@@ -61,6 +61,13 @@ class UsageRecord(TenantScopedModel):
         verbose_name = _("Foydalanish qaydnomasi")
         verbose_name_plural = _("Foydalanish qaydnomalari")
         ordering = ("-created_at",)
+        constraints = (
+            models.UniqueConstraint(
+                fields=("user", "message_id"),
+                condition=models.Q(message_id__isnull=False),
+                name="usage_user_message_uniq",
+            ),
+        )
 
     def __str__(self) -> str:
         return f"{self.user_id} · {self.model} · {self.cost_uzs} UZS"

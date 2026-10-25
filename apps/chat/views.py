@@ -22,6 +22,7 @@ from apps.chat.selectors import get_messages_for_conversation, get_transcript
 from apps.chat.serializers import ConversationSerializer, MessageSerializer
 from apps.chat.services import (
     archive_conversation,
+    begin_chat_turn,
     build_agent_context,
     check_rate_limit,
     check_usage_limit,
@@ -168,7 +169,8 @@ class ConversationMessagesView(APIView):
         check_usage_limit(user)
         check_rate_limit(user)
 
-        agent_context = build_agent_context(conversation, user)
+        turn_message = begin_chat_turn(conversation, message_text)
+        agent_context = build_agent_context(conversation, user, message_id=str(turn_message.pk))
 
         import asyncio
 
@@ -254,6 +256,8 @@ class ConversationMessagesView(APIView):
                             user_message_content=message_text,
                             ai_event_data=event_dict,
                             tenant_id=tenant_id,
+                            message_id=str(turn_message.pk),
+                            user_id=str(user.id),
                         )
             except (asyncio.CancelledError, GeneratorExit):
                 if call_ref[0] is not None:

@@ -24,7 +24,7 @@ semantikani (kalitlar, tartib, kim nimani hisoblaydi) belgilaydi.
 | `role` | `employee` \| `manager` \| `admin` | `price_quote` da qo'lda chegirma chegarasi (`DiscountPolicy.manual_max_percent_*`) |
 | `customer_mode` | `"0"` \| `"1"` | `"1"` — qurilma mijoz qo'lida: prompt'ga "tannarx, ichki izoh, chegirma chegarasini aytma" bloki |
 | `conversation_id` | Conversation UUID | `UsageRequest.conversation_id`, `MessageLogRequest.conversation_id` |
-| `message_id` | *(rejalashtirilgan)* | idempotent usage uchun; hozircha bo'sh bo'lishi mumkin |
+| `message_id` | SSE'da oldindan saqlangan USER Message UUID | Go ReportUsage va SSE bir navbatni shu ID bilan upsert qiladi; legacy/voice'da bo'sh bo'lishi mumkin |
 | `prompt_version` | *(ixtiyoriy)* | A/B: aniq prompt versiyasini ishlatish |
 
 Metadata: Django gRPC serveri `Health` dan tashqari barcha RPC'larda `x-service-token`

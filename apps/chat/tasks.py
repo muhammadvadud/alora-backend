@@ -102,8 +102,7 @@ def save_message(
         .order_by("-created_at")
         .first()
     )
-    created = message is None
-    if created:
+    if message is None:
         message = Message.objects.create(
             conversation=conversation,
             role=msg_role,
@@ -113,7 +112,7 @@ def save_message(
             **defaults,
         )
 
-    if not created:
+    else:
         for field, value in defaults.items():
             if getattr(message, field) != value:
                 setattr(message, field, value)
@@ -232,6 +231,8 @@ def save_message_and_usage(
     user_message_content: str,
     ai_event_data: dict[str, Any],
     tenant_id: str,
+    message_id: str = "",
+    user_id: str = "",
 ) -> None:
     """SSE `done` event'idan keyin xabar va foydalanish qaydnomasini saqlaydi.
 
@@ -248,7 +249,7 @@ def save_message_and_usage(
         usage = {}
 
     with transaction.atomic():
-        if user_message_content:
+        if user_message_content and not message_id:
             save_message(
                 session_id=conversation.session_id,
                 role=MessageRole.USER,
@@ -300,10 +301,10 @@ def save_message_and_usage(
 
         save_usage_record(
             session_id=conversation.session_id,
-            user_id=str(conversation.user_id),
+            user_id=user_id or str(conversation.user_id),
             tenant_id=tenant_id or str(conversation.tenant_id),
             conversation_id=str(conversation.id),
-            message_id=str(ai_message) if ai_message else "",
+            message_id=message_id or (str(ai_message) if ai_message else ""),
             provider=provider,
             model=model,
             prompt_tokens=prompt_tokens,
@@ -312,7 +313,8 @@ def save_message_and_usage(
             reasoning_tokens=reasoning_tokens,
             stt_seconds=int(usage.get("stt_seconds", 0)),
             tts_chars=int(usage.get("tts_chars", 0)),
-            tool_calls_json=json.dumps(ai_event_data.get("tool_calls", [])),
+            tool_calls_json=usage.get("tool_calls_json")
+            or json.dumps(ai_event_data.get("tool_calls", [])),
             latency_ms=int(usage.get("latency_ms", 0)),
             cost_usd=cost_usd,
             cost_uzs=cost_uzs,

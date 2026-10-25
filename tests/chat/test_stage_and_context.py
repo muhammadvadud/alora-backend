@@ -8,7 +8,7 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from apps.chat.models import Conversation
+from apps.chat.models import Conversation, Message
 from apps.chat.services import build_agent_context
 from apps.chat.tasks import update_conversation_stage
 from apps.common.choices import ConversationMode, ConversationStage
@@ -68,6 +68,9 @@ def test_gateway_passes_role_and_customer_mode_to_agent(
     assert context["role"] == "employee"
     assert context["customer_mode"] == "1"
     assert context["conversation_id"] == str(conv.id)
+    persisted = Message.objects.get(pk=context["message_id"])
+    assert persisted.conversation_id == conv.id
+    assert persisted.role == "user" and persisted.content == "salom"
 
 
 @patch("apps.chat.views.update_conversation_stage")

@@ -149,32 +149,32 @@ class ModelPricing(BaseModel):
     provider = models.CharField(max_length=64, verbose_name=_("Provayder"))
     model = models.CharField(max_length=128, verbose_name=_("Model"))
     input_per_1m = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
+        max_digits=18,
+        decimal_places=6,
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Kirish narxi / 1M"),
     )
     output_per_1m = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
+        max_digits=18,
+        decimal_places=6,
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Chiqish narxi / 1M"),
     )
     cached_input_per_1m = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
+        max_digits=18,
+        decimal_places=6,
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("Kesh kirish narxi / 1M"),
     )
     stt_per_minute = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
+        max_digits=18,
+        decimal_places=6,
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("STT narxi / daqiqa"),
     )
     tts_per_1k_chars = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
+        max_digits=18,
+        decimal_places=6,
         validators=[MinValueValidator(Decimal(0), message=NON_NEGATIVE_MESSAGE)],
         verbose_name=_("TTS narxi / 1K belgi"),
     )

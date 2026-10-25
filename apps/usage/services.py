@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
 from django.db.models import Sum
@@ -102,10 +102,7 @@ def get_user_period_usage(user: Any, period: str) -> PeriodUsage:
         user__pk=user.pk,
         created_at__gte=start,
     ).aggregate(
-        total_tokens=Sum("prompt_tokens")
-        + Sum("completion_tokens")
-        + Sum("cached_tokens")
-        + Sum("reasoning_tokens"),
+        total_tokens=Sum("prompt_tokens") + Sum("completion_tokens"),
         total_cost=Sum("cost_uzs"),
     )
     messages = UsageRecord.objects.filter(user__pk=user.pk, created_at__gte=start).count()
@@ -209,7 +206,7 @@ def calculate_cost(
     """ModelPricing bo'yicha USD va UZS dagi xarajatni hisoblaydi.
 
     Narx yo'q bo'lsa — nol qaytadi. Barcha hisob `Decimal` da, yaxlitlash
-    oxirida 2 kasr aniqligida bajariladi.
+    oxirida USD 8, UZS 2 kasr aniqligida bajariladi.
     """
 
     pricing = _model_pricing(provider, model)
@@ -217,17 +214,19 @@ def calculate_cost(
         return Decimal(0), Decimal(0)
 
     million = Decimal(1_000_000)
+    prompt_tokens = max(0, int(prompt_tokens))
+    cached_tokens = min(prompt_tokens, max(0, int(cached_tokens)))
     usd = Decimal(0)
-    usd += _decimal(pricing.input_per_1m) * Decimal(prompt_tokens) / million
+    usd += _decimal(pricing.input_per_1m) * Decimal(prompt_tokens - cached_tokens) / million
     usd += _decimal(pricing.output_per_1m) * Decimal(completion_tokens) / million
     usd += _decimal(pricing.cached_input_per_1m) * Decimal(cached_tokens) / million
-    usd += _decimal(pricing.output_per_1m) * Decimal(reasoning_tokens) / million
     usd += _decimal(pricing.stt_per_minute) * Decimal(stt_seconds) / Decimal(60)
     usd += _decimal(pricing.tts_per_1k_chars) * Decimal(tts_chars) / Decimal(1000)
 
-    usd = usd.quantize(Decimal("0.01"))
-    cost_uzs = (usd * _decimal(pricing.usd_to_uzs)).quantize(Decimal("0.01"))
-    return usd, cost_uzs
+    cost_uzs = (usd * _decimal(pricing.usd_to_uzs)).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
+    return usd.quantize(Decimal("0.00000001"), rounding=ROUND_HALF_UP), cost_uzs
 
 
 def _limit_set(value: Any) -> bool:

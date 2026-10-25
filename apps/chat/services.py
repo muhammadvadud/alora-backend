@@ -7,7 +7,8 @@ from typing import Any
 from django.core.cache import cache
 from rest_framework.exceptions import Throttled
 
-from apps.chat.models import Conversation, ConversationStatus
+from apps.chat.models import Conversation, ConversationStatus, Message
+from apps.common.choices import MessageRole
 
 
 def archive_conversation(conversation: Conversation) -> None:
@@ -54,17 +55,30 @@ def check_rate_limit(user: Any) -> None:
         raise Throttled(detail="Siz juda ko'p xabar yubordingiz. Iltimos biroz kuting.")
 
 
-def build_agent_context(conversation: Conversation, user: Any) -> dict[str, str]:
+def begin_chat_turn(conversation: Conversation, content: str) -> Message:
+    return Message.objects.create(
+        conversation=conversation,
+        role=MessageRole.USER,
+        content=content,
+    )
+
+
+def build_agent_context(
+    conversation: Conversation, user: Any, *, message_id: str = ""
+) -> dict[str, str]:
     """Go agentga yuboriladigan `ChatRequest.context` (GO-CONTRACT §1.1).
 
-    Kalitlar shartnomada qat'iy: `role`, `customer_mode`, `conversation_id`.
+    Kalitlar: `role`, `customer_mode`, `conversation_id`, ixtiyoriy `message_id`.
     Mijoz rejimi suhbatning `mode` maydonidan olinadi — mobil uni PATCH bilan
     almashtiradi, har xabarda qayta yubormaydi.
     """
     from apps.common.choices import ConversationMode
 
-    return {
+    context = {
         "role": str(getattr(user, "role", "") or ""),
         "customer_mode": "1" if conversation.mode == ConversationMode.CUSTOMER else "0",
         "conversation_id": str(conversation.id),
     }
+    if message_id:
+        context["message_id"] = message_id
+    return context

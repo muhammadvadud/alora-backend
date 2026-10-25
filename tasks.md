@@ -292,7 +292,7 @@
 - [x] 17.3 Kalitsiz regressiyalar, 24 API navbati/12 guruh va maqsadli qayta sinovlar; yakuniy sotuv bahosi 91/100, hisobiy sarf $0.024940098. Dalillar docs/sales-training/ ichida.
 - [x] 17.4 Alohida tul rangi, qisqa prompt va aniq yetkazish; 2 maqsadli navbatning hisobiy sarfi $0.002531352. Mahsulot ma'lumotlari alohida keyinga qoldirildi.
 - [x] 17.4a DB prompt v4: 5693 dan 4709 belgiga qisqardi; faqat prompt yangilandi, mahsulot/fason importi ishlatilmadi, eski prompt snapshoti saqlandi.
-- [ ] 17.5 Usage USD aniqligi, cached/reasoningni takror hisoblamaslik va SSE/Go yozuvlarini bitta xabar ID bilan birlashtirish.
+- [x] 17.5 USD 8/tariflar 6 kasr; cached/reasoning ikki marta hisoblanmaydi; SSE/Go bitta USER Message ID bilan, DB unique constraint. 473 test, 87% coverage; scoped mypy/ruff toza.
 
 ## Ish tartibi (bog'liqliklar)
 

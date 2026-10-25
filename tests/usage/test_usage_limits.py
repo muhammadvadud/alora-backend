@@ -153,11 +153,11 @@ class TestPeriodUsage:
             model="test-model",
             prompt_tokens=10,
             completion_tokens=20,
-            cached_tokens=30,
-            reasoning_tokens=40,
+            cached_tokens=3,
+            reasoning_tokens=4,
         )
         usage = get_user_period_usage(employee, UsagePeriod.DAILY)
-        assert usage.tokens == 100
+        assert usage.tokens == 30
         assert usage.messages == 1
 
 
@@ -198,7 +198,7 @@ class TestCalculateCost:
             completion_tokens=100_000,
             cached_tokens=500_000,
         )
-        assert usd == Decimal("0.50") + Decimal("0.15") + Decimal("0.05")
+        assert usd == Decimal("0.25") + Decimal("0.15") + Decimal("0.05")
         assert uzs == usd * Decimal("13000.00")
 
     def test_stt_tts_components(self, pricing):

@@ -5,7 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import uuid
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 import structlog
@@ -31,14 +31,13 @@ def _parse_json(raw: str, fallback: Any) -> Any:
         return fallback
 
 
-def _to_decimal(value: Any) -> Decimal:
-    """Qiymatni 2 kasrli Decimal ga aylantiradi."""
-    if isinstance(value, Decimal):
-        return value.quantize(MONEY_PLACES)
+def _to_decimal(value: Any, places: Decimal = MONEY_PLACES) -> Decimal:
+    """Qiymatni berilgan pul aniqligida chekli Decimal ga aylantiradi."""
     try:
-        return Decimal(str(value)).quantize(MONEY_PLACES)
-    except (TypeError, ValueError):
-        return Decimal("0.00")
+        result = Decimal(str(value))
+        return result.quantize(places, rounding=ROUND_HALF_UP) if result.is_finite() else Decimal(0)
+    except (TypeError, ValueError, InvalidOperation):
+        return Decimal(0)
 
 
 def _as_uuid(value: str) -> uuid.UUID | None:
@@ -153,6 +152,20 @@ def save_usage_record(
         logger.warning("usage_record_tenant_not_found", tenant_id=tenant_id, session_id=session_id)
         return None
 
+    if not cost_usd and not cost_uzs:
+        from apps.usage.services import calculate_cost
+
+        cost_usd, cost_uzs = calculate_cost(
+            provider,
+            model,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            cached_tokens=cached_tokens,
+            reasoning_tokens=reasoning_tokens,
+            stt_seconds=stt_seconds,
+            tts_chars=tts_chars,
+        )
+    tool_calls = _parse_json(tool_calls_json, [])
     defaults = {
         "conversation": _as_uuid(conversation_id),
         "message_id": _as_uuid(message_id),
@@ -164,9 +177,9 @@ def save_usage_record(
         "reasoning_tokens": int(reasoning_tokens or 0),
         "stt_seconds": int(stt_seconds or 0),
         "tts_chars": int(tts_chars or 0),
-        "tool_calls": _parse_json(tool_calls_json, []),
+        "tool_calls": tool_calls if isinstance(tool_calls, list) else [],
         "latency_ms": int(latency_ms or 0),
-        "cost_usd": _to_decimal(cost_usd),
+        "cost_usd": _to_decimal(cost_usd, Decimal("0.00000001")),
         "cost_uzs": _to_decimal(cost_uzs),
     }
 
@@ -209,12 +222,7 @@ def daily_usage_rollup(self, date: str | None = None, tenant_id: str = "") -> in
         UsageRecord.objects.filter(created_at__gte=start, created_at__lt=end)
         .values("tenant_id", "user_id")
         .annotate(
-            tokens=Sum(
-                F("prompt_tokens")
-                + F("completion_tokens")
-                + F("cached_tokens")
-                + F("reasoning_tokens")
-            ),
+            tokens=Sum(F("prompt_tokens") + F("completion_tokens")),
             cost_uzs=Sum("cost_uzs"),
             messages_count=Count("id"),
             conversations_count=Count("conversation", distinct=True),
