@@ -62,6 +62,12 @@ def test_sales_pack_has_referenced_compact_local_knowledge() -> None:
     assert any("pogon metr" in rule["recommendation"] for rule in pack["rules"])
     assert all(len(rule["recommendation"]) <= 420 for rule in pack["rules"])
     assert all(rule["sources"] for rule in pack["rules"])
+    measurement = next(
+        rule for rule in pack["rules"] if rule["key"] == "measure_independent_dimensions"
+    )
+    assert "isbotlamaydi" in measurement["recommendation"]
+    allergy = next(rule for rule in pack["rules"] if rule["key"] == "dust-allergy-claims")
+    assert "terida sinashni maslahat bermang" in allergy["recommendation"]
 
 
 @pytest.mark.parametrize(

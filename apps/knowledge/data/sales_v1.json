@@ -1,6 +1,6 @@
 {
-  "version": "2026.10.25.4",
-  "reviewed_at": "2026-10-25",
+  "version": "2026.10.26.2",
+  "reviewed_at": "2026-10-26",
   "sources": {
     "alora": "internal:TZ-and-catalog-contract",
     "editorial": "internal:uzbekistan-sales-editorial",
@@ -301,7 +301,7 @@
     {"key":"care-spot-cleaning","kind":"general","condition":{},"priority":66,"sources":["care-sunbrella"],"recommendation":"Dog'ni kuch bilan ishqalash yoki tasodifiy oqartirgich tavsiya qilishdan saqlaning. Mato ishlab chiqaruvchisi ruxsat bergan usulni yashirin joyda sinash kerak; boshqa brendga mos kimyo bu matoga ham mos degani emas."},
     {"key":"care-lining-and-decoration","kind":"general","condition":{},"priority":68,"sources":["care-kvadrat","uz-clean"],"recommendation":"Portyera, astar, kant va bezak bir buyumda turlicha parvarish talab qilishi mumkin. Yechiladigan bezak/mahkamlagich va tozalash usulini oldindan aniqlang; gul, shokila yoki qoplamani umumiy yuvish rejimiga tashlamang."},
     {"key":"care-local-service","kind":"general","condition":{},"priority":65,"sources":["uz-clean","alora"],"recommendation":"Toshkent yoki viloyatda yuvish xizmati kerak bo'lsa yechish, olib ketish, qayta osish alohida kiritilganmi aniqlashni tavsiya qiling. Alora katalogida bunday xizmat yo'q bo'lsa uni bepul/bor deb va'da qilmang."},
-    {"key":"dust-allergy-claims","kind":"general","condition":{},"priority":67,"sources":["care-kvadrat","editorial"],"recommendation":"Changga sezgir mijozga oson tozalanadigan, ortiqcha yig'ilmaydigan fasonni muhokama qiling. 'Allergiyani davolaydi', 'chang umuman tutmaydi' yoki 'antibakterial' degan xususiyatni sertifikatsiz aytmang."},
+    {"key":"dust-allergy-claims","kind":"general","condition":{},"priority":67,"sources":["care-kvadrat","editorial"],"recommendation":"Changga sezgir mijozga oson tozalanadigan fasonni muhokama qiling. 'Allergiyani davolaydi', 'chang tutmaydi' yoki 'antibakterial' xususiyatni dalilsiz aytmang. Tarkib/allergiya xavfsizligi noma'lum bo'lsa terida sinashni maslahat bermang; yorliq yoki sertifikatni tekshirtiring."},
     {"key":"color-sample-at-home","kind":"color","condition":{},"priority":79,"sources":["editorial"],"recommendation":"Rang ekran va xona yorug'ligida boshqacha ko'rinishi mumkin. Devor/mebel yonida mato namunasini kunduz va chiroqda ko'rishni taklif qiling; foto yoki rang nomidan aynan bir xil tus deb kafolat bermang."},
     {"key":"color-neutral-not-mandatory","kind":"color","condition":{},"priority":71,"sources":["editorial"],"recommendation":"Bej, ivori, kulrang yoki tabiiy tuslar sokin yechim bo'lishi mumkin, ammo hammaga majburiy emas. Mijozning sevimli rangini interyerdagi bir element bilan bog'lang; 'faqat uchta rang mumkin' kabi qat'iy qoida yo'q."},
     {"key":"color-ivory-white","kind":"color","condition":{},"priority":73,"sources":["editorial"],"recommendation":"Oq, sutrang, krem va ivori yaqin ko'rinsa ham boshqa tuslar. Mijoz 'oq' desa iliq sutrangmi yoki sovuq oqmi aniqlash foydali; katalogda yo'q rangni bor deb aytmang."},
@@ -377,7 +377,7 @@
   "key": "measure_independent_dimensions",
   "kind": "construction",
   "condition": {},
-  "recommendation": "Oyna eni, karniz uzunligi, tayyor parda balandligi va rulon eni boshqa-boshqa o'lchovlar. Birlik noma'lum bo'lsa aniqlashtir; oyna enini karnizga ko'chirma. Rulon eni va naqsh yo'nalishi noma'lum bichish rejasini isbotlamaydi; panel/chok sonini ustaga tasdiqlat.",
+  "recommendation": "Oyna eni, karniz uzunligi, tayyor parda balandligi va rulon eni boshqa-boshqa o'lchovlar. Rulon eni balandlikdan kichikligi bichish yo'nalishi, panel/chok soni yoki chok muqarrarligini isbotlamaydi; naqsh, rapport va panel rejasi bo'yicha ustaga tasdiqlat. Birlik noma'lum bo'lsa aniqlashtir; oyna enini karnizga ko'chirma.",
   "priority": 90,
   "sources": [
     "alora",

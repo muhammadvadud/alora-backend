@@ -317,3 +317,5 @@
 ## Jonli baholashdan keyingi tuzatishlar (2026-10-25)
 
 - [~] 17.6 Sotuv xatolari uchun bilim/prompt tuzatishlari, regressiya va yangi API baholash dalillari.
+  - [x] 17.6a Token byudjeti oshganda yakuniy javobni yo'qotmaslik va eski tool natijalarini ixcham yuborish; AI agent sinovlari o'tdi.
+  - [~] 17.6b Rulon bichish va allergiya savollarida tasdiqlanmagan maslahatni cheklash; xizmatlar ro'yxatini aniq so'rovga bog'lash. Prompt v10 qo'llandi, lekin balans tugagani uchun API regressiyasi yakunlanmadi.
