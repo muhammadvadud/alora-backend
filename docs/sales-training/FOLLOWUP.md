@@ -23,3 +23,13 @@ Yetkazish holati display.delivery_status da: kiritilmagan, kiritilgan yoki ushbu
 Build/vet/lint/race, golden/e2e va yangi kalitsiz regressiyalar o'tdi. Yakunda faqat 2 ta DeepSeek foydalanuvchi navbati sinaldi: birinchisi rang yaqinligi muammosini ko'rsatdi, ikkinchisida standard/premiumdagi tul haqiqatan Oq qaytdi va javob yetkazish kiritilmaganini aytdi. Hisobiy qo'shimcha sarf $0.002531352; oldingi ish bilan jami $0.027471450. Baholash raqami shu ikki navbat asosida oshirilmadi.
 
 Keyingi bosqich — PII: aniq ism/manzil/email maydonlari va eski suhbat tarixining modelga yuborilishidagi himoya. Ochiq matnda belgilanmagan har qanday ismni aniqlash to'liq NER talab qilishi mumkin; deterministic filtrning chegarasi sinovlarda va hisobotda ochiq qoladi. Narx/o'lcham va JSON/tool-call identifikatorlarini buzmaslik shart.
+
+## Shaxsiy ma'lumot himoyasi
+
+Markaziy filtr endi telefon bilan birga `ismim`, `mening ismim`, `mijozning ismi`, `меня зовут`, `ФИО`, aniq manzil belgilari va emailni yashiradi. Strukturali customer_name/address/email/phone maydonlari ham maskalanadi. Belgilanmagan har qanday ismni taxminan topish yoki barcha manzil shakllarini tushunish da'vosi yo'q. Manzil belgisidan keyingi maxfiy matn bir segment sifatida yopiladi; nuqtali qisqartmalarni to'liq NER kabi ajratmaydi.
+
+Sessiya Store dekoratori eski tarix o'qilganda va yangi tarix yozilganda ishlaydi; matn qismlari, reasoning va tool arguments ham tekshiriladi. State'dagi erkin rang/qurilish/oyna nomlari ham qamraladi. Read paytida asl store yoki caller obyektlari o'zgarmaydi; tool-call ID va uning javob juftligi saqlanadi. Django'dagi asl suhbat yozuvlari va mavjud arxivlar o'chirilmaydi. ReAct yadrosi o'zgarmadi.
+
+JSON `UseNumber` bilan ochiladi: katta butun son aniqligi yo'qolmaydi, narx/o'lcham stringlari telefon deb o'zgartirilmaydi, identifikatorlar buzilmaydi. Oddiy matndagi katta so'm summalari va pardaga oid ma'lumotlar uchun ham regressiya bor. O'zgarishsiz JSON qayta formatlanmaydi. Nomi/manzili aniq belgilangan test xabari gRPC chegarasida modelga masksiz o'tmagani kalitsiz fake streamer bilan tekshirildi; DeepSeek'ga yangi maxfiy test matni yuborilmadi.
+
+Go build/vet/lint/race, golden/e2e va yangi PII/session/gRPC regressiyalari o'tdi. Keyingi texnik navbat: usage yozuvlari takrorlanishi va kichik USD xarajatining nolga yaxlitlanishi; mahsulot ma'lumotlari o'zgarishsiz qoladi.
