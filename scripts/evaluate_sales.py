@@ -12,6 +12,13 @@ from typing import Any
 
 SCENARIOS = [
     (
+        "followup_palette_delivery",
+        "customer",
+        [
+            "Mehmonxonam zamonaviy, devor och kulrang, grafit gulsiz portyera yoqadi. Kunduz qoraytirsin. Karnizim bor: 3 metr, balandlik 2.6 metr, budjet 5 million so'm. Uch paketni mos tul bilan hisoblang. Yetkazishni hozircha qo'shmang. Qisqa javob bering.",
+        ],
+    ),
+    (
         "sale",
         "customer",
         [

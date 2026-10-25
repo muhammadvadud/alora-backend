@@ -291,6 +291,7 @@
 - [x] 17.2d Paketning haqiqiy rangini va tayyor budjet taqqoslashini ishlatish v3 promptda belgilandi; paketning 11 testi o'tdi.
 - [x] 17.3 Kalitsiz regressiyalar, 24 API navbati/12 guruh va maqsadli qayta sinovlar; yakuniy sotuv bahosi 91/100, hisobiy sarf $0.024940098. Dalillar docs/sales-training/ ichida.
 - [ ] 17.4 Keyingi sayqal: alohida tul rangi, qisqa muloqot va aniq yetkazish; mahsulot ma'lumotlarini keyin alohida eslatish.
+- [x] 17.4a DB prompt v4: 5693 dan 4709 belgiga qisqardi; faqat prompt yangilandi, mahsulot/fason importi ishlatilmadi, eski prompt snapshoti saqlandi.
 
 ## Ish tartibi (bog'liqliklar)
 
