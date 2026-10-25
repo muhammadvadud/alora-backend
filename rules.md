@@ -348,6 +348,21 @@ tannarx maydoni faqat admin uchun ochiq qilindi.
 
 ## 17. Kelishilgan chetlanishlar (jurnal)
 
+### 17.8 Foydalanish hisobining aniqligi (2026-10-25)
+
+Buyurtmachi qolgan texnik kamchiliklarni birin-ketin tuzatishni davom
+ettirishni so'radi; mahsulot ma'lumotlari alohida keyinga qoldirildi.
+USD xarajat 8 kasrda, ModelPricing birlik tariflari 6 kasrda saqlanadi;
+UZS avvalgidek 2 kasr. Kesh tokeni input jami ichidagi qism, reasoning
+completion ichidagi tafsilot: ikki marta narxlanmaydi. Barcha narx baribir
+Django'dagi ModelPricing'dan, Go pul hisoblamaydi. SSE/Go usage bir navbat
+uchun oldindan saqlangan USER Message UUID orqali birlashtiriladi;
+user+message_id noyobligi DB'da ta'minlanadi. Tarixiy noma'lum/bo'sh ID'li
+qaydlar taxmin bilan o'chirilmaydi, yo'qotilgan kichik xarajatlar uydirma
+invoice sifatida qayta tiklanmaydi. Proto maydonlari o'zgarmaydi. Muqobil:
+faqat bitta asinxron kanalni qoldirish — ikkinchi kanalning fallback
+imkoniyatini yo'qotgani uchun tanlanmadi.
+
 ### 17.7 Sotuv bilimlari uchun versiyali paket (2026-10-25)
 
 Buyurtmachi bilim, mahsulot tavsifi va fasonlarni O'zbekiston bozoriga mos
