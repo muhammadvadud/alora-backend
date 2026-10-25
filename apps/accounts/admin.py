@@ -1,5 +1,5 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -131,8 +131,8 @@ class UserAdmin(ModelAdmin):
     @display(description="Parol", label={"has": "success", "none": "default"})
     def password_state(self, obj: User) -> tuple[str, str]:
         if obj.has_usable_password():
-            return "has", _("O'rnatilgan")
-        return "none", _("O'rnatilmagan")
+            return "has", str(_("O'rnatilgan"))
+        return "none", str(_("O'rnatilmagan"))
 
     @display(
         description=_("Rol"),

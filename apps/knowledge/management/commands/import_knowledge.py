@@ -24,7 +24,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser: Any) -> None:
         parser.add_argument("path", help="JSON fayl yo'li")
         parser.add_argument(
-            "--replace", action="store_true", help="Mavjud qoidaning condition/priority'sini yangilash"
+            "--replace",
+            action="store_true",
+            help="Mavjud qoidaning condition/priority'sini yangilash",
         )
 
     def handle(self, *args: Any, **options: Any) -> None:
@@ -51,7 +53,9 @@ class Command(BaseCommand):
                         kind=kind, condition=condition, priority=priority, recommendation=text
                     )
                     created += 1
-                elif options["replace"] and (rule.condition != condition or rule.priority != priority):
+                elif options["replace"] and (
+                    rule.condition != condition or rule.priority != priority
+                ):
                     rule.condition = condition
                     rule.priority = priority
                     rule.save(update_fields=["condition", "priority", "updated_at"])

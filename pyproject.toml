@@ -95,6 +95,7 @@ module = [
     "reportlab.*",
     "weasyprint.*",
     "grpc.*",
+    "unfold.*",
     "google.protobuf.*",
 ]
 ignore_missing_imports = true

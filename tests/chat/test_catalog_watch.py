@@ -13,7 +13,7 @@ class _FakePubSub:
     def __init__(self, messages: list) -> None:
         self._messages = messages
 
-    def subscribe(self, *_: object) -> None:  # noqa: D401
+    def subscribe(self, *_: object) -> None:
         pass
 
     def unsubscribe(self) -> None:
@@ -42,8 +42,7 @@ def _iter(messages: list) -> list:
     ):
         out = []
         try:
-            for item in servicer._iter_deltas(5, "t1", _pb2(), heartbeat_seconds=0.01):
-                out.append(item)
+            out.extend(servicer._iter_deltas(5, "t1", _pb2(), heartbeat_seconds=0.01))
         except (StopIteration, RuntimeError):
             pass
         return out
@@ -58,14 +57,20 @@ def test_watch_tinchlikda_heartbeat_yuboradi() -> None:
 
 def test_watch_delta_uzatiladi_va_eski_versiya_tashlanadi() -> None:
     delta = {
-        "version": 6, "entity": "product", "entity_id": "p1", "action": "UPSERT",
-        "tenant_id": "t1", "payload_json": "{}",
+        "version": 6,
+        "entity": "product",
+        "entity_id": "p1",
+        "action": "UPSERT",
+        "tenant_id": "t1",
+        "payload_json": "{}",
     }
     old = {**delta, "version": 5}
-    out = _iter([
-        {"type": "subscribe"},
-        {"type": "message", "data": json.dumps(old)},
-        {"type": "message", "data": json.dumps(delta)},
-    ])
+    out = _iter(
+        [
+            {"type": "subscribe"},
+            {"type": "message", "data": json.dumps(old)},
+            {"type": "message", "data": json.dumps(delta)},
+        ]
+    )
     assert [d["entity"] for d in out] == ["product"]
     assert out[0]["version"] == 6

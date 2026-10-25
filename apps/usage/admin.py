@@ -157,12 +157,12 @@ class UsageLimitAdmin(ModelAdmin):
     )
     def role_badge(self, obj: UsageLimit) -> tuple[str, str]:
         role = obj.role if obj.role else "any"
-        return role, obj.get_role_display() if obj.role else _("Har qanday")
+        return role, obj.get_role_display() if obj.role else str(_("Har qanday"))
 
     @display(description=_("Maksimal xarajat (UZS)"))
     def max_cost_display(self, obj: UsageLimit) -> str:
         if obj.is_unlimited:
-            return _("Cheksiz")
+            return str(_("Cheksiz"))
         return _fmt_uzs(obj.max_cost_uzs)
 
     @display(

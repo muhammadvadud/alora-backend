@@ -18,7 +18,7 @@ def _metadata_token(details: grpc.HandlerCallDetails) -> str:
 
     for key, value in details.invocation_metadata:
         if key.lower() == "x-service-token":
-            return value
+            return value if isinstance(value, str) else ""
     return ""
 
 

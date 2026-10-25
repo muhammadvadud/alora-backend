@@ -38,10 +38,10 @@ def _seed_pricing_models(data: dict[str, Any]) -> None:
                 "is_active": True,
             },
         )
-    
+
     CalcRule.objects.update_or_create(
         key="max_cornice_length_m",
-        defaults={"value": Decimal("100.000"), "unit": "m", "description": "", "is_active": True}
+        defaults={"value": Decimal("100.000"), "unit": "m", "description": "", "is_active": True},
     )
 
     ServicePrice.objects.all().delete()

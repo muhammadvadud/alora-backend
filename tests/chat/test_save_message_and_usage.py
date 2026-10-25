@@ -48,7 +48,9 @@ def test_toliq_assistant_matni_saqlanadi(conversation_factory, tenant) -> None:
             tenant_id=str(tenant.id),
         )
 
-    assert Message.objects.filter(conversation=conversation, role=MessageRole.ASSISTANT).count() == 1
+    assert (
+        Message.objects.filter(conversation=conversation, role=MessageRole.ASSISTANT).count() == 1
+    )
 
 
 @pytest.mark.django_db

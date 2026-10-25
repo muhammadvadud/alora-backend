@@ -313,3 +313,7 @@
 ## Dev vositalar
 
 - [x] `seed_dev_catalog` — dev katalog seed buyrug'i (idempotent, DEBUG/`--force` bilan). Test: `tests/catalog/test_seed_dev_catalog.py`
+
+## Jonli baholashdan keyingi tuzatishlar (2026-10-25)
+
+- [~] 17.6 Sotuv xatolari uchun bilim/prompt tuzatishlari, regressiya va yangi API baholash dalillari.

@@ -25,11 +25,15 @@ class Command(BaseCommand):
         group.add_argument("--rollback", type=Path)
         parser.add_argument("--snapshot", type=Path)
         parser.add_argument("--author-id")
+        parser.add_argument("--guidance-only", action="store_true")
 
     def handle(self, *args: Any, **options: Any) -> None:
         try:
+            pack = load_sales_pack()
+            if options["guidance_only"]:
+                pack = {**pack, "product_enrichment": [], "fasons": []}
             if not options["apply"] and not options["rollback"]:
-                summary = preview_sales_pack(load_sales_pack())
+                summary = preview_sales_pack(pack)
                 summary["dry_run"] = True
             else:
                 authors = User.objects.filter(role="admin", is_active=True)
@@ -44,7 +48,7 @@ class Command(BaseCommand):
                     if options["snapshot"] is None:
                         raise CommandError("--apply uchun --snapshot yo'li kerak")
                     summary = apply_sales_pack(
-                        load_sales_pack(), author=author, snapshot_path=options["snapshot"]
+                        pack, author=author, snapshot_path=options["snapshot"]
                     )
         except (ValidationError, OSError, ValueError) as error:
             raise CommandError(str(error)) from error

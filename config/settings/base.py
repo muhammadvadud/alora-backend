@@ -187,7 +187,10 @@ SPECTACULAR_SETTINGS = {
         {"name": "auth", "description": "Autentifikatsiya: login, refresh, logout, me"},
         {"name": "team", "description": "Jamoa: xodimlar boshqaruvi"},
         {"name": "catalog", "description": "Katalog: kategoriya, mahsulot, variant, rasm, fason"},
-        {"name": "pricing", "description": "Narx qoidalari, chegirmalar, hisob-kitob (calc/preview)"},
+        {
+            "name": "pricing",
+            "description": "Narx qoidalari, chegirmalar, hisob-kitob (calc/preview)",
+        },
         {"name": "conversations", "description": "Suhbatlar va SSE chat gateway"},
         {"name": "orders", "description": "Buyurtmalar: yaratish, tasdiqlash, holat, PDF"},
         {"name": "usage", "description": "AI foydalanish statistikasi (token, xarajat)"},

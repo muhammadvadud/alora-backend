@@ -202,3 +202,27 @@ def test_list_tags_keep_their_shape_owner_values_and_rollback(
     rollback_sales_pack(path, author=sales_environment["author"])
     product.refresh_from_db()
     assert product.tags == ["owner_tag", "portyera"]
+
+
+def test_guidance_only_keeps_products_and_fasons(
+    sales_environment: dict[str, Any], tmp_path: Path
+) -> None:
+    product = sales_environment["product"]
+    before = (product.description, product.recommended_rooms, product.tags)
+    out = StringIO()
+    call_command(
+        "train_sales",
+        apply=True,
+        guidance_only=True,
+        author_id=str(sales_environment["author"].pk),
+        snapshot=tmp_path / "guidance.json",
+        stdout=out,
+    )
+    product.refresh_from_db()
+    assert (product.description, product.recommended_rooms, product.tags) == before
+    assert not Fason.objects.exists()
+    assert KnowledgeRule.objects.filter(pk=managed_id("rule", "quote_service_integrity")).exists()
+    assert PromptVersion.objects.filter(is_current=True).exists()
+    summary = json.loads(out.getvalue())
+    assert summary["product_descriptions"] == 0
+    assert summary["fasons"] == 0

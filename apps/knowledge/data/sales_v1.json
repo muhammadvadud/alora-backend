@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.25.3",
+  "version": "2026.10.25.4",
   "reviewed_at": "2026-10-25",
   "sources": {
     "alora": "internal:TZ-and-catalog-contract",
@@ -361,7 +361,51 @@
     {"key":"bedroom-minimal-two-layer","kind":"room_style","condition":{"room":"bedroom","style":"minimal"},"priority":94,"sources":["editorial"],"recommendation":"Minimal yotoqxonada tul va tekis blackout portyera mustaqil boshqarilishi mumkin. Lambrekan qo'shmasdan ham yaxshi yechim chiqadi; rang va parvarish talabini saqlagan holda mos katalog matosini tanlang."},
     {"key":"local-cafe-curtain","kind":"room_style","condition":{"room":"kitchen","style":"provence"},"priority":92,"sources":["editorial"],"recommendation":"Provans oshxonada tokchagacha yoki kafe ko'rinishidagi yengil parda yoqishi mumkin. Uning balandligi va plitadan uzoqligini tekshiring; qisman yopilgan oynada kechki maxfiylik to'liq emasligini ayting."},
     {"key":"not-all-rods-for-eyelets","kind":"construction","condition":{},"priority":72,"sources":["measure-track","editorial"],"recommendation":"Lyuvers, halqa va rels ilgichi boshqa osish usullari. Mavjud relsga lyuversni avtomatik mos demang. Fasonni tasdiqlashdan oldin qaysi karniz turi borligini aniqlang."},
-    {"key":"repeat-order-color-batch","kind":"general","condition":{},"priority":61,"sources":["care-kvadrat","editorial"],"recommendation":"Keyinroq qo'shimcha mato olayotganda bir xil rang nomi aynan bir xil tusni kafolatlamaydi. Namuna yoki partiyani tekshirishni tavsiya qiling; ekran rasmi bo'yicha tenglik va'da qilmang."}
+    {"key":"repeat-order-color-batch","kind":"general","condition":{},"priority":61,"sources":["care-kvadrat","editorial"],"recommendation":"Keyinroq qo'shimcha mato olayotganda bir xil rang nomi aynan bir xil tusni kafolatlamaydi. Namuna yoki partiyani tekshirishni tavsiya qiling; ekran rasmi bo'yicha tenglik va'da qilmang."},
+{
+  "key": "quote_service_integrity",
+  "kind": "construction",
+  "condition": {},
+  "recommendation": "Hisobda mato va tikuv alohida. Mijoz so'ragan xizmatlarning har biri haqiqiy hisob qatorida bo'lsin; xizmat summasi yo'q bo'lsa kiritilgan dema. Qoralamadan oldin tarkibni tekshir. Xizmatni olib tashlash va umuman aytmaslik bir xil emas.",
+  "priority": 90,
+  "sources": [
+    "alora",
+    "editorial"
+  ]
+},
+{
+  "key": "measure_independent_dimensions",
+  "kind": "construction",
+  "condition": {},
+  "recommendation": "Oyna eni, karniz uzunligi, tayyor parda balandligi va rulon eni boshqa-boshqa o'lchovlar. Birlik noma'lum bo'lsa aniqlashtir; oyna enini karnizga ko'chirma. Rulon eni va naqsh yo'nalishi noma'lum bichish rejasini isbotlamaydi; panel/chok sonini ustaga tasdiqlat.",
+  "priority": 90,
+  "sources": [
+    "alora",
+    "editorial"
+  ]
+},
+{
+  "key": "quote_allowance_explanation",
+  "kind": "construction",
+  "condition": {},
+  "recommendation": "Narxlanadigan maydon ko'rinadigan maydonga teng bo'lishi shart emas: chok/bukma zapasi va yaxlitlash bor. Hisob izohida shu qismlarni kalkulyator natijasidan alohida ko'rsat. Eni × K × balandlikni zapasli maydonga teng deb yozma; zapas rulon bichish chiqindisi emas.",
+  "priority": 90,
+  "sources": [
+    "alora",
+    "editorial"
+  ]
+},
+{
+  "key": "latest_budget_scope",
+  "kind": "construction",
+  "condition": {},
+  "recommendation": "Mijoz budjet, o'lcham yoki xizmatni o'zgartirsa, eng oxirgi talab ustun. Oldingi paketga tayanib budjetga sig'adi dema; yangilangan hisobni tekshir. Qimmat e'tirozida yetarli ma'lumot bo'lsa asosiy vazifani saqlaydigan muqobilni hisoblab ko'rsat, tejashni o'ylab topma.",
+  "priority": 90,
+  "sources": [
+    "alora",
+    "editorial"
+  ]
+}
   ],
   "fasons": [
     {"key":"living-neoclassic","name":"Mehmonxona — sodda neoklassik ikki qatlam","style":"classic","rooms":["living"],"parts":[{"role":"portyera","name":"Asosiy portyera","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"},{"role":"tul","name":"Yengil tul","width_share":"1.000","height_share":"1.000","coefficient_rule":"coef_standard"}]},

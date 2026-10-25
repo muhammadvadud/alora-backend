@@ -28,8 +28,8 @@ class PromptVersionAdmin(ModelAdmin):
     @display(description=_("Joriy"), label={True: "success", False: "default"})
     def current_badge(self, obj: PromptVersion) -> tuple[bool, str]:
         if obj.is_current:
-            return True, _("Joriy")
-        return False, _("Arxiv")
+            return True, str(_("Joriy"))
+        return False, str(_("Arxiv"))
 
     @display(description=_("Matn"), ordering="version")
     def content_preview(self, obj: PromptVersion) -> str:

@@ -18,7 +18,8 @@ def admin_client(api_client):
 
 
 @pytest.mark.django_db
-def test_image_upload_success(admin_client):
+def test_image_upload_success(admin_client, settings, tmp_path):
+    settings.MEDIA_ROOT = tmp_path
     admin_user = admin_client.handler._force_user
     tenant = admin_user.tenant
     category = Category.objects.create(tenant=tenant, name="Cat", slug="cat")
