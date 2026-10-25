@@ -288,6 +288,7 @@
 - [x] 17.2a Tul maxfiyligi va plita xavfsizligi state noma'lum bo'lsa ham qidiriladi; 30 savolli retrieval va paketning 10 testi o'tdi.
 - [x] 17.2b Mahsulot teglarining list/object shakli va egasining teglari saqlanadi; list bilan apply/rollback regressiyasi qo'shildi.
 - [x] 17.2c Jonli kuzatuvga ko'ra sotuv prompti: hisobni ixcham aytish, pul farqini to'qimaslik, ichki atamalarni chiqarmaslik va vakolatni tekshirish bilan kuchaytirildi.
+- [x] 17.2d Paketning haqiqiy rangini va tayyor budjet taqqoslashini ishlatish v3 promptda belgilandi; paketning 11 testi o'tdi.
 - [ ] 17.3 Kalitsiz regressiya tekshiruvlari va tejamkor yakuniy API baholash.
 
 ## Ish tartibi (bog'liqliklar)

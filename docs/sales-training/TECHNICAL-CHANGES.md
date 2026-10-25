@@ -40,4 +40,6 @@ Jonli sinovda eski `Explain` yordamchisi chok/bukma zapasini «rulon eni mos kel
 
 Mahsulot teglarining ro'yxat yoki obyekt shakli saqlanadi. Obyektda sales_aliases maydoni, ro'yxatda mavjud teglarni saqlagan qo'shimcha sinonimlar ishlatiladi; mobil JSON shakli o'zgartirilmaydi. Dastlabki real import ro'yxatga mos kelmagani sabab transaction bilan bekor bo'ldi, bazada qisman yangilanish qolmadi. Tuzatilgan import muvaffaqiyatli o'tdi; alohida list apply/rollback testi qo'shildi.
 
+Qayta sinovda paket kartochkasida rang bo'lmagani uchun model kum rangni grafitga yaqin deb aytdi. `build_options.variants` haqiqiy rang va shaffoflikni ham beradi. Oldindan mavjud `budget_max` argumenti ishlatiladi; qaytgan Django jami bilan taqqoslash `budget_note`da tayyor beriladi. Bu mavjud `CompareOptions` usuli kabi taqqoslash, narx formulasini takrorlash emas. Modelga yangi jami yoki chegirma hisoblash topshirilmaydi. Rang farqini va aniq budjet matnini aytish promptga qo'shildi.
+
 Yakuniy API baholash va sarf natijalari `EVALUATION.md`ga yoziladi.

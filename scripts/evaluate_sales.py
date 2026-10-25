@@ -100,6 +100,13 @@ SCENARIOS = [
             "Yotoqxonaga Blackout Duo kum rang portyera: karniz 3 m, balandlik 2.7 m, K=2. Faqat mato kerak, xizmat qo'shmang. Jami qancha?",
         ],
     ),
+    (
+        "final_color_budget",
+        "customer",
+        [
+            "Mehmonxonamga gulsiz zamonaviy blackout kerak, grafit yoqadi. Karnizim bor: 3 metr, balandlik 2.6 metr. Budjet 5 million so'm. Arzon, o'rtacha va premiumni hisoblang. Qaysi rang haqiqatan borligini va qaysi paket budjetga sig'ishini aniq ayting.",
+        ],
+    ),
 ]
 
 
