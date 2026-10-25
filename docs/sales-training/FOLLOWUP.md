@@ -13,3 +13,13 @@ Avvalgi feat/25-sales-training branchida davom etiladi. Oldindan yangi DB backup
 Avval kalitsiz regressiyalar va repo tekshiruvlari bajariladi. Pullik API sinovlari faqat yakunda, oz sonli maqsadli holatlar bilan; avvalgi baho yangi tekshiruvsiz oshirilmaydi. Ovoz, mobil, umumiy billing va PII bo'yicha katta texnik ishlar alohida navbatda qoladi.
 
 Mahsulot ma'lumotlari bo'yicha keyingi eslatma: yetkazib beruvchidan haqiqiy tarkib, yuvish yorlig'i va kelib chiqish hujjatlarini qaysi tartibda yig'ishni alohida kelishish.
+
+## Birinchi bosqich natijasi
+
+Prompt v4 bazada, 4709 belgi (oldingi 5693 dan 17% qisqa). Tul rangi portyeradan mustaqil; qat'iy rang filtri variantlar soni limitidan oldin ishlaydi. Aniq pushti nomi oq rang talabiga HEX yaqinligi bilan o'tkazilmaydi. Haqiqiy pushti HEX `#F7C8D0` noto'g'ri emas: avvalgi yaqinlik chegarasi oq bilan ham mos deb hisoblagan. Mahsulotdagi rang kodi o'zgartirilmadi. Mijoz aniq pushti so'rasa shu tanlov ustun.
+
+Yetkazish holati display.delivery_status da: kiritilmagan, kiritilgan yoki ushbu hisobda narxi nol. Summa va formulalar o'zgarmadi. Price_quote so'ralmagan K kamaytirish tavsiyasini avtomatik qo'shmaydi. Og'ir 10 bo'lakli natija: curtain_calculate 2005 B, price_quote 1914 B — 2048 B limiti saqlandi.
+
+Build/vet/lint/race, golden/e2e va yangi kalitsiz regressiyalar o'tdi. Yakunda faqat 2 ta DeepSeek foydalanuvchi navbati sinaldi: birinchisi rang yaqinligi muammosini ko'rsatdi, ikkinchisida standard/premiumdagi tul haqiqatan Oq qaytdi va javob yetkazish kiritilmaganini aytdi. Hisobiy qo'shimcha sarf $0.002531352; oldingi ish bilan jami $0.027471450. Baholash raqami shu ikki navbat asosida oshirilmadi.
+
+Keyingi bosqich — PII: aniq ism/manzil/email maydonlari va eski suhbat tarixining modelga yuborilishidagi himoya. Ochiq matnda belgilanmagan har qanday ismni aniqlash to'liq NER talab qilishi mumkin; deterministic filtrning chegarasi sinovlarda va hisobotda ochiq qoladi. Narx/o'lcham va JSON/tool-call identifikatorlarini buzmaslik shart.
